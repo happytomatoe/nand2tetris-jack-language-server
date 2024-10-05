@@ -4,3 +4,6 @@ client/server
 .vscode-test
 **/tsconfig.tsbuildinfo
 tsconfig.tsbuildinfo
+**/dist
+dist
+.vscode/numbered-bookmarks.json

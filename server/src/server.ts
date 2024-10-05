@@ -1,12 +1,8 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
 import {
 	createConnection,
 	TextDocuments,
 	Diagnostic,
-	DiagnosticSeverity,
+	// DiagnosticSeverity,
 	ProposedFeatures,
 	InitializeParams,
 	DidChangeConfigurationNotification,
@@ -16,14 +12,15 @@ import {
 	TextDocumentSyncKind,
 	InitializeResult,
 	DocumentDiagnosticReportKind,
-	type DocumentDiagnosticReport
+	type DocumentDiagnosticReport,
+	DiagnosticSeverity
 } from 'vscode-languageserver/node';
 
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
-import { Compiler } from './jack/compiler';
-import { JackCompilerError } from './jack/error';
+import { Compiler, JackCompilerError } from 'jack-compiler/out/index';
+// import { JackCompilerError } from 'jack-compiler';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -122,20 +119,20 @@ connection.onDidChangeConfiguration(change => {
 	connection.languages.diagnostics.refresh();
 });
 
-function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
-	if (!hasConfigurationCapability) {
-		return Promise.resolve(globalSettings);
-	}
-	let result = documentSettings.get(resource);
-	if (!result) {
-		result = connection.workspace.getConfiguration({
-			scopeUri: resource,
-			section: 'languageServerExample'
-		});
-		documentSettings.set(resource, result);
-	}
-	return result;
-}
+// function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
+// 	if (!hasConfigurationCapability) {
+// 		return Promise.resolve(globalSettings);
+// 	}
+// 	let result = documentSettings.get(resource);
+// 	if (!result) {
+// 		result = connection.workspace.getConfiguration({
+// 			scopeUri: resource,
+// 			section: 'languageServerExample'
+// 		});
+// 		documentSettings.set(resource, result);
+// 	}
+// 	return result;
+// }
 
 // Only keep settings for open documents
 documents.onDidClose(e => {
@@ -168,18 +165,24 @@ documents.onDidChangeContent(change => {
 });
 
 async function validateTextDocument(textDocument: TextDocument): Promise<Diagnostic[]> {
+	console.log(textDocument);
 	// In this simple example we get the settings for every validate run.
-	const settings = await getDocumentSettings(textDocument.uri);
+	// const settings = await getDocumentSettings(textDocument.uri);
 
 	// The validator creates diagnostics for all uppercase words length 2 and more
 	const text = textDocument.getText();
 
 	const compiler = new Compiler();
-	const treeOrErrors = compiler.parserAndBind(text);
-	if (Array.isArray(treeOrErrors)) {
-		return treeOrErrors.map(m => toDiagnostics(textDocument, m));
+	const parsedOrErrors = compiler.parse(text);
+	if (Array.isArray(parsedOrErrors)) {
+		return parsedOrErrors.map(m => toDiagnostics(textDocument, m));
 	}
-	const validatedOrErrors = compiler.validate(treeOrErrors);
+	const bindedOrErrors = compiler.bind(parsedOrErrors);
+	if (Array.isArray(bindedOrErrors)) {
+		return bindedOrErrors.map(m => toDiagnostics(textDocument, m));
+	}
+
+	const validatedOrErrors = compiler.validate(bindedOrErrors);
 	if (Array.isArray(validatedOrErrors)) {
 		return validatedOrErrors.map(m => toDiagnostics(textDocument, m));
 	}

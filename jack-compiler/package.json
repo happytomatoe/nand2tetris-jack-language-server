@@ -4,6 +4,7 @@
 	"version": "0.0.1",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
+	"main": "./out/index.js",
 	"engines": {
 		"node": "*"
 	},
