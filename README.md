@@ -2,7 +2,7 @@
 
 Jack programming language for Nand2tetris course
 
-## Feature matrix
+## Feature
 - [x] Validation
 - [ ] Formatting
 - [ ] Code Completion
