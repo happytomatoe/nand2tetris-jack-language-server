@@ -3,7 +3,7 @@ import { print } from './printer';
 import { parse } from './parser';
 
 // https://prettier.io/docs/en/plugins.html#languages
-const languages: Partial<SupportLanguage>[] = [
+const languages: SupportLanguage[] = [
 	{
 		name: 'jack',
 		parsers: ['jack'],
@@ -17,8 +17,8 @@ const parsers: Record<string, Parser> = {
 	jack: {
 		parse,
 		astFormat: 'jack',
-		locStart: (node) => node.position.start.offset,
-		locEnd: (node) => node.position.end.offset,
+		locStart: () => -1,
+		locEnd: () => -1,
 	},
 };
 
@@ -28,4 +28,4 @@ const printers: Record<string, Printer> = {
 		print,
 	},
 };
-export default { languages, parsers, printers } as Plugin;
+export const JackPlugin: Plugin<string> = { languages, parsers, printers };

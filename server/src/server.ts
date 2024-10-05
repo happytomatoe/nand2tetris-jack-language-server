@@ -24,7 +24,7 @@ import {
 } from 'vscode-languageserver-textdocument';
 import { Compiler, JackCompilerError } from 'jack-compiler/out/index';
 import * as prettier from 'prettier';
-import prettierPluginJack from 'prettier-plugin-jack';
+import {JackPlugin} from 'prettier-plugin-jack';
 // import { JackCompilerError } from 'jack-compiler';
 
 // Create a connection for the server, using Node's IPC as a transport.
@@ -214,43 +214,6 @@ connection.onDidChangeWatchedFiles(_change => {
 	connection.console.log('We received a file change event');
 });
 
-// This handler provides the initial list of the completion items.
-connection.onCompletion(
-	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-		connection.console.log('Completion');
-		// The pass parameter contains the position of the text document in
-		// which code complete got requested. For the example we ignore this
-		// info and always provide the same completion items.
-		// return[];
-		return [
-			{
-				label: 'TypeScript',
-				kind: CompletionItemKind.Text,
-				data: 1
-			},
-			{
-				label: 'JavaScript',
-				kind: CompletionItemKind.Text,
-				data: 2
-			}
-		];
-	}
-);
-
-// This handler resolves additional information for the item selected in
-// the completion list.
-connection.onCompletionResolve(
-	(item: CompletionItem): CompletionItem => {
-		if (item.data === 1) {
-			item.detail = 'TypeScript details';
-			item.documentation = 'TypeScript documentation';
-		} else if (item.data === 2) {
-			item.detail = 'JavaScript details';
-			item.documentation = 'JavaScript documentation';
-		}
-		return item;
-	}
-);
 
 connection.onDocumentFormatting(async (formatParams: DocumentFormattingParams): Promise<TextEdit[]> => {
 	const document = documents.get(formatParams.textDocument.uri);
@@ -264,7 +227,7 @@ connection.onDocumentFormatting(async (formatParams: DocumentFormattingParams): 
 
 		const formatted = await prettier.format(text, {
 			parser: "jack",
-			plugins: [prettierPluginJack],
+			plugins: [JackPlugin],
 		});
 		connection.console.log("Formatting document: " + formatted);
 		return [TextEdit.replace(Range.create(Position.create(0, 0), document.positionAt(text.length)), formatted)];

@@ -82,7 +82,6 @@ describe("Jack binder", () => {
     for (const filePath of files) {
       const tree = parseJackFile(filePath);
       globalSymbolsListener = listenToTheTree(tree, globalSymbolsListener);
-      // console.log("Symbols for " + path.basename(filePath) + ":", globalSymbolsListener.globalSymbolTable)
     }
     expect(globalSymbolsListener.globalSymbolTable).toEqual(expected);
   });

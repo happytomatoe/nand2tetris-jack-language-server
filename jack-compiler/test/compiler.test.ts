@@ -944,7 +944,6 @@ function testFilesInFolder(folderInTestResources: string) {
         if (Array.isArray(res)) {
             throw new Error(`Unexpected compilation errors: ${res.join("\n")}`);
         } else {
-            // console.log(res)
             expect(trimAndDeleteComments(res)).toEqual(
                 trimAndDeleteComments(expected),
             );
