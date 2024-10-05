@@ -1,4 +1,4 @@
-# LSP Example
+# Nand2tetris jack language server
 
 Heavily documented sample code for https://code.visualstudio.com/api/language-extensions/language-server-extension-guide
 
