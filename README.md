@@ -1,7 +1,10 @@
 # Nand2tetris jack language server
 
-Heavily documented sample code for https://code.visualstudio.com/api/language-extensions/language-server-extension-guide
-
+Jack programming language for Nand2tetris course
+#Feature matrix
+- [x] Valdation
+- [ ] Formatting
+- [ ] Code Completion
 ## Functionality
 
 This Language Server works for plain text file. It has the following language features:
