@@ -1,5 +1,5 @@
 import { ParserRuleContext } from "antlr4";
-import { builtInTypes, intRange } from "../builtins.js";
+import { builtInTypes, intRange } from "../builtins";
 import {
   ConstructorMushReturnThis,
   DuplicatedVariableException,
@@ -20,7 +20,7 @@ import {
   UnreachableCodeError,
   VoidSubroutineReturnsValueError,
   WrongLiteralTypeError,
-} from "../error.js";
+} from "../error";
 import {
   ClassDeclarationContext,
   ClassVarDecContext,
@@ -40,15 +40,15 @@ import {
   VarNameContext,
   VarTypeContext,
   WhileStatementContext,
-} from "../generated/JackParser.js";
-import JackParserListener from "../generated/JackParserListener.js";
+} from "../generated/JackParser";
+import JackParserListener from "../generated/JackParserListener";
 import {
   GenericSymbol,
   LocalSymbolTable,
   ScopeType,
   SubroutineType,
-} from "../symbol.js";
-import { CallType, getCallType } from "./common.js";
+} from "../symbol";
+import { CallType, getCallType } from "./common";
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 /**
  * Validates Jack file
@@ -231,36 +231,36 @@ export class ValidatorListener extends JackParserListener {
       this.stopProcessingErrorsInThisScope = true;
     }
   };
-  override enterRBrace = (ctx: RBraceContext) => {
+  override enterRBrace = (_ctx: RBraceContext) => {
     this.stopProcessingErrorsInThisScope = false;
   };
   /**
    * Control flow
    */
-  override enterWhileStatement = (ctx: WhileStatementContext) => {
+  override enterWhileStatement = (_ctx: WhileStatementContext) => {
     this.controlFlowGraphNode = this.controlFlowGraphNode.left =
       new BinaryTreeNode(this.controlFlowGraphNode);
   };
 
-  override exitWhileStatement = (ctx: WhileStatementContext) => {
+  override exitWhileStatement = (_ctx: WhileStatementContext) => {
     if (this.controlFlowGraphNode?.parent != null) {
       this.controlFlowGraphNode = this.controlFlowGraphNode.parent;
     }
   };
-  override enterIfStatement = (ctx: IfStatementContext) => {
+  override enterIfStatement = (_ctx: IfStatementContext) => {
     this.controlFlowGraphNode = this.controlFlowGraphNode.left =
       new BinaryTreeNode(this.controlFlowGraphNode);
   };
-  override exitIfStatement = (ctx: IfStatementContext) => {
+  override exitIfStatement = (_ctx: IfStatementContext) => {
     if (this.controlFlowGraphNode?.parent != null) {
       this.controlFlowGraphNode = this.controlFlowGraphNode.parent;
     }
   };
-  override enterElseStatement = (ctx: ElseStatementContext) => {
+  override enterElseStatement = (_ctx: ElseStatementContext) => {
     this.controlFlowGraphNode = this.controlFlowGraphNode.right =
       new BinaryTreeNode(this.controlFlowGraphNode);
   };
-  override exitElseStatement = (ctx: ElseStatementContext) => {
+  override exitElseStatement = (_ctx: ElseStatementContext) => {
     if (this.controlFlowGraphNode?.parent != null) {
       this.controlFlowGraphNode = this.controlFlowGraphNode.parent;
     }
@@ -484,7 +484,7 @@ export class ValidatorListener extends JackParserListener {
     ctx.symbols = this.localSymbolTable.popStack();
   };
 
-  override exitClassDeclaration = (ctx: ClassDeclarationContext) => {
+  override exitClassDeclaration = (_ctx: ClassDeclarationContext) => {
     while (this.controlFlowGraphNode?.parent != undefined) {
       this.controlFlowGraphNode = this.controlFlowGraphNode.parent;
     }
@@ -540,7 +540,7 @@ class BinaryTreeNode {
     public parent?: BinaryTreeNode,
     public left?: BinaryTreeNode,
     public right?: BinaryTreeNode,
-  ) {}
+  ) { }
 
   public get returns(): boolean {
     if (this._returns) {
@@ -568,12 +568,12 @@ class BinaryTreeNode {
   printBT(prefix = "", side: Side = Side.LEFT) {
     let res = "";
     if (this._returns) {
-      res += this.#pad(prefix, side);
+      res += this.#pad(side);
       res += " " + this._returns + "\n";
       return res;
     } else {
       if (this.right == undefined && this.left == undefined) {
-        res += this.#pad(prefix, side);
+        res += this.#pad(side);
         res += " " + false + "\n";
       } else {
         res += this.left?.printBT(
@@ -593,7 +593,7 @@ class BinaryTreeNode {
     }
     return res;
   }
-  #pad(prefix: string, side: Side): string {
+  #pad(side: Side): string {
     return side == Side.LEFT ? "├──" : "└──";
   }
 }

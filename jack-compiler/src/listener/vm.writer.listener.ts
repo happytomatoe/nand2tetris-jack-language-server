@@ -2,27 +2,25 @@ import {
   ArrayAccessContext,
   ClassDeclarationContext,
   ConstantContext,
-  EqualsContext,
   ExpressionContext,
   IfElseStatementContext,
   IfExpressionContext,
   IfStatementContext,
   LetStatementContext,
   ReturnStatementContext,
-  StatementContext,
   SubroutineCallContext,
   SubroutineDeclarationContext,
   WhileExpressionContext,
   WhileStatementContext,
-} from "../generated/JackParser.js";
-import JackParserListener from "../generated/JackParserListener.js";
+} from "../generated/JackParser";
+import JackParserListener from "../generated/JackParserListener";
 import {
   GenericSymbol,
   LocalSymbolTable,
   scopeTypeToString,
   VariableSymbol,
-} from "../symbol.js";
-import { CallType, getCallType } from "./common.js";
+} from "../symbol";
+import { CallType, getCallType } from "./common";
 
 const binaryOperationToVmCmd: Record<string, string> = {
   "+": "add",
@@ -106,10 +104,10 @@ export class VMWriter extends JackParserListener {
       this.result += `    push that 0\n`;
     }
   };
-  override enterEquals = (ctx: EqualsContext) => {
+  override enterEquals = () => {
     this.afterEquals = true;
   };
-  override exitStatement = (ctx: StatementContext) => {
+  override exitStatement = () => {
     this.afterEquals = false;
   };
   override enterConstant = (ctx: ConstantContext) => {

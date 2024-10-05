@@ -1,4 +1,4 @@
-import { GenericSymbol, SubroutineType } from "./symbol.js";
+import { GenericSymbol, SubroutineType } from "./symbol";
 
 export const builtInTypes = ["int", "boolean", "char"];
 interface Range {

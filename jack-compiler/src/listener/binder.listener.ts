@@ -3,16 +3,16 @@ import {
   SubroutineBodyContext,
   SubroutineDeclarationContext,
   VarNameInDeclarationContext,
-} from "../generated/JackParser.js";
-import { DuplicatedClassError, DuplicatedSubroutineError } from "../error.js";
-import { builtInSymbols, builtInTypes } from "../builtins.js";
+} from "../generated/JackParser";
+import { DuplicatedClassError, DuplicatedSubroutineError } from "../error";
+import { builtInSymbols, builtInTypes } from "../builtins";
 import {
   GenericSymbol,
   GlobalSymbolTable,
   SubroutineInfo,
   SubroutineType,
-} from "../symbol.js";
-import JackParserListener from "../generated/JackParserListener.js";
+} from "../symbol";
+import JackParserListener from "../generated/JackParserListener";
 
 const primitives = new Set(builtInTypes);
 export type Primitive = typeof primitives extends Set<infer S> ? S : never;
@@ -85,11 +85,11 @@ export class BinderListener extends JackParserListener {
       this.stopProcessingSubroutines = false;
     }
   };
-  override enterVarNameInDeclaration = (ctx: VarNameInDeclarationContext) => {
+  override enterVarNameInDeclaration = (_ctx: VarNameInDeclarationContext) => {
     if (this.stopProcessingSubroutines) return;
     this.subroutineVarsCount++;
   };
-  override exitSubroutineBody = (ctx: SubroutineBodyContext) => {
+  override exitSubroutineBody = (_ctx: SubroutineBodyContext) => {
     if (this.stopProcessingSubroutines) return;
     this.subRoutineInfo.localVarsCount = this.subroutineVarsCount;
     this.globalSymbolTable[this.subroutineId] = {

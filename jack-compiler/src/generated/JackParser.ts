@@ -18,11 +18,11 @@ import {
   Token,
   TokenStream,
 } from "antlr4";
-import JackParserListener from "./JackParserListener.js";
+import JackParserListener from "./JackParserListener";
 // for running tests with parameters, TODO: discuss strategy for typed parameters in CI
 // eslint-disable-next-line no-unused-vars
 
-import { LocalSymbolTable, SubroutineScope } from "../symbol.js";
+import { LocalSymbolTable, SubroutineScope } from "../symbol";
 
 export default class JackParser extends Parser {
   public static readonly CLASS = 1;
@@ -1986,7 +1986,7 @@ export default class JackParser extends Parser {
     return true;
   }
   private expression_sempred(
-    localctx: ExpressionContext,
+    _localctx: ExpressionContext,
     predIndex: number,
   ): boolean {
     switch (predIndex) {

@@ -5,7 +5,7 @@ import {
   Recognizer,
   Token,
 } from "antlr4";
-import { JackCompilerError, LexerOrParserError } from "../error.js";
+import { JackCompilerError, LexerOrParserError } from "../error";
 interface LexerNoViableAltException {
   startIndex: number;
 }
@@ -13,10 +13,10 @@ export class CustomErrorListener extends ErrorListener<any> {
   public errors: JackCompilerError[] = [];
 
   override syntaxError = (
-    recognizer: Recognizer<any>,
+    _recognizer: Recognizer<any>,
     offendingSymbol: any,
     line: number,
-    column: number,
+    _column: number,
     msg: string,
     e: RecognitionException | undefined,
   ) => {
