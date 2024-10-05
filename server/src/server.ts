@@ -22,6 +22,8 @@ import {
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
+import { Compiler } from './jack/compiler';
+import { JackCompilerError } from './jack/error';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -35,7 +37,7 @@ let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) => {
-	
+
 	connection.console.log("Server on init...");
 	const capabilities = params.capabilities;
 
@@ -77,7 +79,7 @@ connection.onInitialize((params: InitializeParams) => {
 });
 
 connection.onInitialized(() => {
-	
+
 	if (hasConfigurationCapability) {
 		// Register for all configuration changes.
 		connection.client.register(DidChangeConfigurationNotification.type, undefined);
@@ -104,8 +106,8 @@ let globalSettings: ExampleSettings = defaultSettings;
 const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
 
 connection.onDidChangeConfiguration(change => {
-	
-	
+
+
 	if (hasConfigurationCapability) {
 		// Reset all cached document settings
 		documentSettings.clear();
@@ -171,43 +173,28 @@ async function validateTextDocument(textDocument: TextDocument): Promise<Diagnos
 
 	// The validator creates diagnostics for all uppercase words length 2 and more
 	const text = textDocument.getText();
-	const pattern = /\b[A-Z]{2,}\b/g;
-	let m: RegExpExecArray | null;
 
-	let problems = 0;
-	const diagnostics: Diagnostic[] = [];
-	while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
-		problems++;
-		const diagnostic: Diagnostic = {
-			severity: DiagnosticSeverity.Warning,
-			range: {
-				start: textDocument.positionAt(m.index),
-				end: textDocument.positionAt(m.index + m[0].length)
-			},
-			message: `${m[0]} is all uppercase.`,
-			source: 'ex'
-		};
-		if (hasDiagnosticRelatedInformationCapability) {
-			diagnostic.relatedInformation = [
-				{
-					location: {
-						uri: textDocument.uri,
-						range: Object.assign({}, diagnostic.range)
-					},
-					message: 'Spelling matters'
-				},
-				{
-					location: {
-						uri: textDocument.uri,
-						range: Object.assign({}, diagnostic.range)
-					},
-					message: 'Particularly for names'
-				}
-			];
-		}
-		diagnostics.push(diagnostic);
+	const compiler = new Compiler();
+	const treeOrErrors = compiler.parserAndBind(text);
+	if (Array.isArray(treeOrErrors)) {
+		return treeOrErrors.map(m => toDiagnostics(textDocument, m));
 	}
-	return diagnostics;
+	const validatedOrErrors = compiler.validate(treeOrErrors);
+	if (Array.isArray(validatedOrErrors)) {
+		return validatedOrErrors.map(m => toDiagnostics(textDocument, m));
+	}
+	return [];
+}
+
+function toDiagnostics(textDocument: TextDocument, e: JackCompilerError) {
+	return {
+		severity: DiagnosticSeverity.Error,
+		range: {
+			start: textDocument.positionAt(e.span.start),
+			end: textDocument.positionAt(e.span.end),
+		},
+		message: e.msg,
+	};
 }
 
 connection.onDidChangeWatchedFiles(_change => {
