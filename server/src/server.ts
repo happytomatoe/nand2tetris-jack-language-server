@@ -187,6 +187,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<Diagnos
 }
 
 function toDiagnostics(textDocument: TextDocument, e: JackCompilerError) {
+	console.log("Error: " + JSON.stringify(e));
 	return {
 		severity: DiagnosticSeverity.Error,
 		range: {
