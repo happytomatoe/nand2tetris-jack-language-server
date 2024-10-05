@@ -186,6 +186,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<Diagnos
 	return [];
 }
 
+
 function toDiagnostics(textDocument: TextDocument, e: JackCompilerError) {
 	console.log("Error: " + JSON.stringify(e));
 	return {

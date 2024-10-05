@@ -7,7 +7,7 @@
 	"publisher": "vscode",
 	"repository": {
 		"type": "git",
-		"url": ""
+		"url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
 	},
 	"engines": {
 		"vscode": "^1.75.0"
