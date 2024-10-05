@@ -1,0 +1,21 @@
+{
+	"name": "prettier-plugin-jack",
+	"description": "Prettier plugin for jack language",
+	"version": "0.0.1",
+	"author": "Roman Lukash",
+	"license": "MIT",
+	"main": "./out/index.js",
+	"engines": {
+		"node": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
+	},
+	"scripts": {},
+	"dependencies": {
+		"prettier": "^3.3.3",
+		"jack-compiler": "workspace:*",
+		"prettier-plugin-jack": "workspace:*"
+	}
+}

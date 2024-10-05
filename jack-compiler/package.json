@@ -15,5 +15,17 @@
 	"dependencies": {
 		"antlr4": "^4.13.2"
 	},
-	"scripts": {}
+	"scripts": {
+		"gen": "cd grammar && antlr4 -v 4.13.2 -Dlanguage=TypeScript -listener -visitor  JackLexer.g4 JackParser.g4 -o ../src/generated",
+		"test": "jest"
+	},
+	"devDependencies": {
+		"@jest/globals": "^29.7.0",
+		"@swc/cli": "0.4.1-nightly.20240914",
+		"@swc/core": "^1.7.26",
+		"@swc/jest": "^0.2.36",
+		"@types/jest": "^29.5.13",
+		"jest": "^29.7.0",
+		"ts-jest": "^29.2.5"
+	}
 }

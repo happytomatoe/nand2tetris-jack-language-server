@@ -13,13 +13,18 @@ import {
 	InitializeResult,
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
-	DiagnosticSeverity
+	DiagnosticSeverity,
+	DocumentFormattingParams,
+	Position,
+	Range,
+	TextEdit,
 } from 'vscode-languageserver/node';
-
 import {
-	TextDocument
+	TextDocument,
 } from 'vscode-languageserver-textdocument';
 import { Compiler, JackCompilerError } from 'jack-compiler/out/index';
+import * as prettier from 'prettier';
+import prettierPluginJack from 'prettier-plugin-jack';
 // import { JackCompilerError } from 'jack-compiler';
 
 // Create a connection for the server, using Node's IPC as a transport.
@@ -31,6 +36,7 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
+const hasFormattingCapability = true;
 let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) => {
@@ -62,7 +68,8 @@ connection.onInitialize((params: InitializeParams) => {
 			diagnosticProvider: {
 				interFileDependencies: false,
 				workspaceDiagnostics: false
-			}
+			},
+			documentFormattingProvider: true,
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -244,6 +251,34 @@ connection.onCompletionResolve(
 		return item;
 	}
 );
+
+connection.onDocumentFormatting(async (formatParams: DocumentFormattingParams): Promise<TextEdit[]> => {
+	const document = documents.get(formatParams.textDocument.uri);
+
+	if (!document) {
+		return [];
+	}
+
+	try {
+		const text = document.getText();
+
+		const formatted = await prettier.format(text, {
+			parser: "jack",
+			plugins: [prettierPluginJack],
+		});
+		connection.console.log("Formatting document: " + formatted);
+		return [TextEdit.replace(Range.create(Position.create(0, 0), document.positionAt(text.length)), formatted)];
+	} catch (error) {
+		if (typeof error == "string")
+			connection.console.error("Error formatting document:" + error);
+		if (error instanceof Error) {
+			connection.console.error("Error formatting document:" + error.message);
+
+		}
+		return [];
+	}
+});
+// console.log = connection.console.log;
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events

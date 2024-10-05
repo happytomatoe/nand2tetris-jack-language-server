@@ -1,9 +1,9 @@
-import type { Parser, Printer, SupportLanguage } from 'prettier';
+import type { Parser, Plugin, Printer, SupportLanguage } from 'prettier';
 import { print } from './printer';
 import { parse } from './parser';
 
 // https://prettier.io/docs/en/plugins.html#languages
-export const languages: Partial<SupportLanguage>[] = [
+const languages: Partial<SupportLanguage>[] = [
 	{
 		name: 'jack',
 		parsers: ['jack'],
@@ -13,7 +13,7 @@ export const languages: Partial<SupportLanguage>[] = [
 ];
 
 // https://prettier.io/docs/en/plugins.html#parsers
-export const parsers: Record<string, Parser> = {
+const parsers: Record<string, Parser> = {
 	jack: {
 		parse,
 		astFormat: 'jack',
@@ -23,8 +23,9 @@ export const parsers: Record<string, Parser> = {
 };
 
 // https://prettier.io/docs/en/plugins.html#printers
-export const printers: Record<string, Printer> = {
+const printers: Record<string, Printer> = {
 	jack: {
 		print,
 	},
 };
+export default { languages, parsers, printers } as Plugin;

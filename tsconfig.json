@@ -17,6 +17,7 @@
 	"references": [
 		{ "path": "./client" },
 		{ "path": "./server" },
-		{ "path": "./jack-compiler" }
+		{ "path": "./jack-compiler" },
+		{ "path": "./prettier-plugin-jack" }
 	]
 }

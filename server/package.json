@@ -12,9 +12,14 @@
 		"url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
 	},
 	"dependencies": {
+		"jack-compiler": "workspace:*",
+		"prettier-plugin-jack": "workspace:*",
+		"prettier": "^3.3.3",
 		"vscode-languageserver": "^9.0.1",
-		"vscode-languageserver-textdocument": "^1.0.11",
-		"jack-compiler": "workspace:*"
+		"vscode-languageserver-textdocument": "^1.0.11"
 	},
-	"scripts": {}
+	"scripts": {},
+	"devDependencies": {
+		"vscode-languageserver-types": "^3.17.5"
+	}
 }
