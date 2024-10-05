@@ -1,7 +1,8 @@
 # Nand2tetris jack language server
 
 Jack programming language for Nand2tetris course
-#Feature matrix
+
+## Feature matrix
 - [x] Valdation
 - [ ] Formatting
 - [ ] Code Completion
