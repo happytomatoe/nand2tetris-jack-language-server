@@ -7,3 +7,4 @@ tsconfig.tsbuildinfo
 **/dist
 dist
 .vscode/numbered-bookmarks.json
+jack-compiler/grammar/.antlr
