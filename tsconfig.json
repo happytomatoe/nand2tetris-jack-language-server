@@ -1,23 +1,23 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es2020",
-		"lib": ["es2020"],
-		"outDir": "out",
-		"rootDir": "src",
-		"sourceMap": true
-	},
-	"include": [
-		"src"
-	],
+	"extends":"./tsconfig.base.json",
+	
+	"files": [],
 	"exclude": [
 		"node_modules",
 		".vscode-test"
 	],
 	"references": [
-		{ "path": "./client" },
-		{ "path": "./server" },
-		{ "path": "./jack-compiler" },
-		{ "path": "./prettier-plugin-jack" }
+		{
+			"path": "./client"
+		},
+		{
+			"path": "./server"
+		},
+		{
+			"path": "./jack-compiler"
+		},
+		{
+			"path": "./prettier-plugin-jack"
+		}
 	]
 }

@@ -14,7 +14,8 @@
 	},
 	"scripts": {
 		"example": "prettier --plugin . Main.jack",
-		"test": " NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest"
+		"test": " NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest",
+		"test-w": " NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --watchAll"
 	},
 	"peerDependencies": {
 		"prettier": "^3.3.3"
