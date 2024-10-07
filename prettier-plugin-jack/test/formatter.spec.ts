@@ -12,6 +12,9 @@ describe('Formatter', () => {
   it('ComplexArrays', async () => {
     await test('ComplexArrays')
   });
+  it('Class vars', async () => {
+    await test('class_vars')
+  });
 });
 async function test(testFolder: string) {
   const inputFilePath = path.join(__dirname, "resources", testFolder, 'input.jack');

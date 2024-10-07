@@ -1,5 +1,5 @@
 import { TerminalNode } from "antlr4";
-import JackParser, { ArrayAccessContext, ClassDeclarationContext, ClassVarDecContext, ConstantContext, DoStatementContext, ElseStatementContext, ExpressionContext, ExpressionListContext, GroupedExpressionContext, IfElseStatementContext, IfExpressionContext, IfStatementContext, LetStatementContext, ParameterContext, ParameterListContext, ProgramContext, RBraceContext, ReturnStatementContext, StatementContext, StatementsContext, SubroutineBodyContext, SubroutineCallContext, SubroutineDeclarationContext, SubroutineIdContext, UnaryOperationContext, VarDeclarationContext, VarNameContext, WhileExpressionContext, WhileStatementContext } from 'jack-compiler/out/generated/JackParser';
+import JackParser, { ArrayAccessContext, ClassDeclarationContext, ClassVarDecContext, ConstantContext, DoStatementContext, ElseStatementContext, ExpressionContext, ExpressionListContext, FieldListContext, FieldNameContext, GroupedExpressionContext, IfElseStatementContext, IfExpressionContext, IfStatementContext, LetStatementContext, ParameterContext, ParameterListContext, ProgramContext, RBraceContext, ReturnStatementContext, StatementContext, StatementsContext, SubroutineBodyContext, SubroutineCallContext, SubroutineDeclarationContext, SubroutineIdContext, UnaryOperationContext, VarDeclarationContext, VarNameContext, WhileExpressionContext, WhileStatementContext } from 'jack-compiler/out/generated/JackParser';
 import JackParserVisitor from 'jack-compiler/out/generated/JackParserVisitor';
 import { Doc, doc } from 'prettier';
 import { builders } from 'prettier/doc';
@@ -32,10 +32,31 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		];
 	}
 	// classVarDec: (STATIC | FIELD) fieldList SEMICOLON;
-	visitClassVarDec = (ctx: ClassVarDecContext): builders.Doc => {
-		throw new Error("Not implemented");
-	}
 
+	visitClassVarDec = (ctx: ClassVarDecContext): builders.Doc => {
+		//TODO: check if this the right word
+		let qualifier: Doc | undefined;
+		if (ctx.STATIC() != null) {
+			qualifier = this.visitTerminal(ctx.STATIC());
+		} else if (ctx.FIELD() != null) {
+			qualifier = this.visitTerminal(ctx.FIELD());
+		} else {
+			throw new Error("Invalid qualifier for class variable " + ctx.getText());
+		}
+		return [
+			qualifier, " ", this.visitFieldList(ctx.fieldList()), this.visitTerminal(ctx.SEMICOLON())
+		];
+	}
+	// fieldList: varType fieldName ( COMMA fieldName)*;
+	visitFieldList = (ctx: FieldListContext): doc.builders.Doc => {
+		const varNames = joinWithCommas(ctx.fieldName_list().map(v => [
+			this.visitFieldName(v)
+		]));
+		return [ctx.varType().getText(), " ", varNames];
+	};
+	visitFieldName = (ctx: FieldNameContext): Doc => {
+		return ctx.getText();
+	}
 
 	// subroutineDeclaration: subroutineType subroutineDecWithoutType;
 	// subroutineType: CONSTRUCTOR | METHOD | FUNCTION;
@@ -65,17 +86,25 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		];
 	}
 
+	visitParameterList = (ctx: ParameterListContext): builders.Doc => {
+		return joinWithCommas(ctx.parameter_list().map(v => this.visitParameter(v)));
+	}
+
+	//varType parameterName
+	visitParameter = (ctx: ParameterContext): builders.Doc => {
+		return join(" ", [ctx.varType().getText(), ctx.parameterName().getText()]);
+	}
+
 	// VAR varType varNameInDeclaration (COMMA varNameInDeclaration)* SEMICOLON;
 	visitVarDeclaration = (ctx: VarDeclarationContext): builders.Doc => {
-		const t = group([
+		return group([
 			this.visitTerminal(ctx.VAR()),
 			" ",
 			ctx.varType().getText(),
 			" ",
-			joinList(ctx.varNameInDeclaration_list().map(v => this.visitVarName(v))),
+			joinWithCommas(ctx.varNameInDeclaration_list().map(v => this.visitVarName(v))),
 			this.visitTerminal(ctx.SEMICOLON())
-		])
-		return t;
+		]);
 	}
 	visitVarName = (ctx: VarNameContext): builders.Doc => {
 		return this.visitTerminal(ctx.IDENTIFIER());
@@ -105,7 +134,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		} else if (ctx.returnStatement() != null) {
 			return this.visitReturnStatement(ctx.returnStatement());
 		} else {
-			throw new Error("Not implemented");
+			throw new Error("Unknown statement type: " + ctx.getText());
 		}
 	}
 	// LET (varName | arrayAccess) equals expression SEMICOLON;
@@ -200,34 +229,46 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 	}
 	// 	subroutineId: ((className | THIS_LITERAL) DOT)? subroutineName;
 	visitSubroutineId = (ctx: SubroutineIdContext): builders.Doc => {
+		//TODO: rename
+		let leftSide: Doc | undefined = undefined;
+		if (ctx.className() != null) {
+			leftSide = ctx.className().getText()
+		} else if (ctx.THIS_LITERAL() != null) {
+			leftSide = ctx.THIS_LITERAL().getText()
+		}
 		return [
-			(ctx.className() != null ? ctx.className().getText() : ""),
-			this.visitTerminal(ctx.DOT()),
+			(leftSide != null ? [
+				leftSide, this.visitTerminal(ctx.DOT())
+			] : ""),
 			ctx.subroutineName().getText()
 		]
 	}
-	// expressionList: (expression (COMMA expression)*)?;
-	visitExpressionList = (ctx: ExpressionListContext): builders.Doc => {
-		return joinList(ctx.expression_list().map(v => this.visitExpression(v)));
-	}
-
 	//returnStatement: RETURN expression? SEMICOLON;
 	visitReturnStatement = (ctx: ReturnStatementContext): builders.Doc => {
 		return [
 			this.visitTerminal(ctx.RETURN()),
-			ctx.expression() != null ? [" ", this.visitExpression(ctx.expression())] : "",
+			ctx.expression() != null ? [
+				" ", this.visitExpression(ctx.expression())
+			] : "",
 			this.visitTerminal(ctx.SEMICOLON())
 		];
 	}
-	//expression:
-	// constant
-	// | varName
-	// | subroutineCall
-	// | arrayAccess
-	// | unaryOperation
-	// | expression binaryOperator expression
-	// | groupedExpression;
+
+	// expressionList: (expression (COMMA expression)*)?;
+	visitExpressionList = (ctx: ExpressionListContext): builders.Doc => {
+		return joinWithCommas(ctx.expression_list().map(v => this.visitExpression(v)));
+	}
+
+
 	visitExpression = (ctx: ExpressionContext): builders.Doc => {
+		//expression:
+		// constant
+		// | varName
+		// | subroutineCall
+		// | arrayAccess
+		// | unaryOperation
+		// | expression binaryOperator expression
+		// | groupedExpression;
 		if (ctx.constant() != null) {
 			return this.visitConstant(ctx.constant());
 		} else if (ctx.varName() != null) {
@@ -258,9 +299,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 	visitConstant = (ctx: ConstantContext): builders.Doc => {
 		return ctx.getText();
 	}
-	visitUnaryOperation = (ctx: UnaryOperationContext): builders.Doc => {
-		return [ctx.unaryOperator().getText(), " ", this.visitExpression(ctx.expression())];
-	}
+
 	// arrayAccess: varName LBRACKET expression RBRACKET;
 	visitArrayAccess = (ctx: ArrayAccessContext): builders.Doc => {
 		return [
@@ -270,15 +309,11 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 			this.visitTerminal(ctx.RBRACKET())
 		];
 	}
+	visitUnaryOperation = (ctx: UnaryOperationContext): builders.Doc => {
+		return [ctx.unaryOperator().getText(), this.visitExpression(ctx.expression())];
+	}
 	visitGroupedExpression = (ctx: GroupedExpressionContext): builders.Doc => {
 		return [this.visitTerminal(ctx.LPAREN()), this.visitExpression(ctx.expression()), this.visitTerminal(ctx.RPAREN())];
-	}
-	visitParameterList = (ctx: ParameterListContext): builders.Doc => {
-		return joinList(ctx.parameter_list().map(v => this.visitParameter(v)));
-	}
-	//varType parameterName
-	visitParameter = (ctx: ParameterContext): builders.Doc => {
-		return join(" ", [ctx.varType().getText(), ctx.parameterName().getText()]);
 	}
 
 	visitRBrace = (ctx: RBraceContext): builders.Doc => {
@@ -291,9 +326,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 				return [" ", node.symbol.text, " "];
 			default:
 				return node.symbol.text;
-
 		}
-
 	}
 	addHardLine(d: Doc) {
 		return [this.getHardLine(), d]
@@ -314,6 +347,6 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 
 }
 
-function joinList(docs: Doc[]) {
+function joinWithCommas(docs: Doc[]) {
 	return join(", ", docs);
 }
