@@ -1,6 +1,5 @@
 {
-	"extends":"./tsconfig.base.json",
-	
+	"extends": "./tsconfig.base.json",
 	"files": [],
 	"exclude": [
 		"node_modules",
@@ -8,16 +7,16 @@
 	],
 	"references": [
 		{
+			"path": "./jack-compiler"
+		},
+		{
+			"path": "./prettier-plugin-jack",
+		},
+		{
 			"path": "./client"
 		},
 		{
 			"path": "./server"
 		},
-		{
-			"path": "./jack-compiler"
-		},
-		{
-			"path": "./prettier-plugin-jack"
-		}
 	]
 }

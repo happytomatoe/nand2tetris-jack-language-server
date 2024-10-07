@@ -20,12 +20,12 @@ const parsers: Record<string, Parser> = {
 		locStart: () => -1,
 		locEnd: () => -1,
 	},
-};
+}
 
 // https://prettier.io/docs/en/plugins.html#printers
 const printers: Record<string, Printer> = {
 	jack: {
 		print,
 	},
-};
-export const JackPlugin: Plugin<string> = { languages, parsers, printers };
+}
+export const JackPlugin: Plugin<string> = { languages, parsers, printers }

@@ -18,7 +18,9 @@
 		"vscode-languageserver": "^9.0.1",
 		"vscode-languageserver-textdocument": "^1.0.11"
 	},
-	"scripts": {},
+	"scripts": {
+		"build":"tsc -b"
+	},
 	"devDependencies": {
 		"vscode-languageserver-types": "^3.17.5"
 	}

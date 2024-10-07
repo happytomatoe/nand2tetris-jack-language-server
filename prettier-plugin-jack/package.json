@@ -13,22 +13,26 @@
 		"url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
 	},
 	"scripts": {
+		"build": "tsc -b",
 		"example": "prettier --plugin . Main.jack",
-		"test": " NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest",
-		"test-w": " NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --watchAll"
+		"test": " mocha ",
+		"test-w": " mocha -w"
 	},
 	"peerDependencies": {
 		"prettier": "^3.3.3"
 	},
 	"dependencies": {
+		"antlr4": "^4.13.2",
 		"jack-compiler": "workspace:*"
 	},
 	"devDependencies": {
-		"@swc/cli": "0.4.1-nightly.20240914",
-		"@swc/core": "^1.7.26",
-		"@swc/jest": "^0.2.36",
-		"@types/jest": "^29.5.13",
-		"jest": "^29.7.0",
-		"ts-jest": "^29.2.5"
+		"@types/chai": "^5.0.0",
+		"@types/expect": "^24.3.0",
+		"@types/mocha": "^10.0.6",
+		"chai": "^5.1.1",
+		"mocha": "^10.3.0",
+		"nyc": "^17.1.0",
+		"ts-mocha": "^10.0.0",
+		"tsx": "^4.19.1"
 	}
 }

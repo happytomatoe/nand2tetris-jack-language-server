@@ -24,7 +24,7 @@ import {
 } from 'vscode-languageserver-textdocument';
 import { Compiler, JackCompilerError } from 'jack-compiler/out/index';
 import * as prettier from 'prettier';
-import {JackPlugin} from 'prettier-plugin-jack';
+import { JackPlugin } from 'prettier-plugin-jack/out/index';
 // import { JackCompilerError } from 'jack-compiler';
 
 // Create a connection for the server, using Node's IPC as a transport.
@@ -215,6 +215,7 @@ connection.onDidChangeWatchedFiles(_change => {
 });
 
 
+
 connection.onDocumentFormatting(async (formatParams: DocumentFormattingParams): Promise<TextEdit[]> => {
 	const document = documents.get(formatParams.textDocument.uri);
 
@@ -224,10 +225,12 @@ connection.onDocumentFormatting(async (formatParams: DocumentFormattingParams): 
 
 	try {
 		const text = document.getText();
-
 		const formatted = await prettier.format(text, {
 			parser: "jack",
 			plugins: [JackPlugin],
+			tabWidth: formatParams.options.tabSize,
+			singleQuote: false,
+			useTabs: !formatParams.options.insertSpaces,
 		});
 		connection.console.log("Formatting document: " + formatted);
 		return [TextEdit.replace(Range.create(Position.create(0, 0), document.positionAt(text.length)), formatted)];
