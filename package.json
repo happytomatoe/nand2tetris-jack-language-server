@@ -29,6 +29,11 @@
 				]
 			}
 		],
+		"grammars": [{
+             "language": "jack",
+             "scopeName": "source.jack",
+             "path": "./syntaxes/jack.tmLanguage.json"
+         }],
 		"configuration": {
 			"type": "object",
 			"title": "Example configuration",
