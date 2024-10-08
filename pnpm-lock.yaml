@@ -23,9 +23,18 @@ importers:
       eslint:
         specifier: ^8.57.1
         version: 8.57.1
+      glob:
+        specifier: ^11.0.0
+        version: 11.0.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.16.10)(ts-node@10.9.2(@swc/core@1.7.26)(@types/node@20.16.10)(typescript@5.6.2))
       mocha:
         specifier: ^10.7.3
         version: 10.7.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
@@ -2450,6 +2459,11 @@ packages:
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
     deprecated: Rimraf versions prior to v4 are no longer supported
+    hasBin: true
+
+  rimraf@6.0.1:
+    resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
+    engines: {node: 20 || >=22}
     hasBin: true
 
   run-parallel@1.2.0:
@@ -5511,6 +5525,11 @@ snapshots:
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
+
+  rimraf@6.0.1:
+    dependencies:
+      glob: 11.0.0
+      package-json-from-dist: 1.0.1
 
   run-parallel@1.2.0:
     dependencies:
