@@ -32,11 +32,13 @@
 	],
 	"repository": {
 		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.Jack",
-				"match": "\\b(while|return|field|this|if|else)\\b"
-			}]
-		},		
+			"patterns": [
+				{
+					"name": "keyword.control.Jack",
+					"match": "\\b(while|return|field|this|if|else)\\b"
+				}
+			]
+		},
 		"strings": {
 			"name": "string.quoted.double.Jack",
 			"begin": "\"",
@@ -92,17 +94,21 @@
 				}
 			]
 		},
-		"blockComment": {
+		"comment-block": {
 			"patterns": [
 				{
 					"begin": "\\/\\*\\*",
 					"end": "\\*\\/",
 					"name": "comment.block"
-				},
+				}
+			]
+		},
+		"comment-inline": {
+			"patterns": [
 				{
-					"begin": "\\/\\*",
-					"end": "\\*\\/",
-					"name": "comment.block"
+					"begin": "//",
+					"end": "\\n",
+					"name": "comment.line"
 				}
 			]
 		}
