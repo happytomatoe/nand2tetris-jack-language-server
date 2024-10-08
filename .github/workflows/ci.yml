@@ -1,38 +1,35 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: CI
+name: Run VSCode Extension Tests
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        node-version: [20]
+  test:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 9
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
-    - name: Install xvfb. Needed for electron
-      run: sudo apt-get install -y xvfb
-    - name: Run xvfb
-      run: |
-          sudo apt-get update
-          sudo apt-get -y install xorg xvfb gtk2-engines-pixbuf
-          sudo apt-get -y install dbus-x11 xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic xfonts-scalable
-          Xvfb -ac :99 -screen 0 1280x1024x16 &
-          export DISPLAY=:99
-    - name: Install dependencies
-      run: pnpm install
-    - run: pnpm run build
-    - run: pnpm t
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Compile
+        run: yarn compile
+
+      - name: Run tests
+        run: xvfb-run -a yarn test
+        if: runner.os == 'Linux'
+
+      - name: Run tests
+        run: yarn test
+        if: runner.os != 'Linux'
