@@ -66,5 +66,4 @@ export class Compiler {
     ParseTreeWalker.DEFAULT.walk(vmWriter, validateTree);
     return vmWriter.result;
   }
-
 }

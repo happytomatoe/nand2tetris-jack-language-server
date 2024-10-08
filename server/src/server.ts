@@ -2,7 +2,7 @@ import {
 	createConnection,
 	TextDocuments,
 	Diagnostic,
-	DiagnosticSeverity,
+	// DiagnosticSeverity,
 	ProposedFeatures,
 	InitializeParams,
 	DidChangeConfigurationNotification,
@@ -13,12 +13,12 @@ import {
 	InitializeResult,
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
+	DiagnosticSeverity,
 	DocumentFormattingParams,
-	TextEdit,
+	Position,
 	Range,
-	Position
+	TextEdit,
 } from 'vscode-languageserver/node';
-
 import {
 	TextDocument,
 } from 'vscode-languageserver-textdocument';
@@ -36,7 +36,9 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const hasFormattingCapability = true;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) => {
@@ -104,6 +106,7 @@ interface ExampleSettings {
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
 const defaultSettings: ExampleSettings = { maxNumberOfProblems: 1000 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let globalSettings: ExampleSettings = defaultSettings;
 
 // Cache the settings of all open documents

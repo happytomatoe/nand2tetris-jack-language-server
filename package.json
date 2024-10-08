@@ -52,7 +52,7 @@
 						"messages",
 						"verbose"
 					],
-					"default": "off",
+					"default": "verbose",
 					"description": "Traces the communication between VS Code and the language server."
 				}
 			}
@@ -63,16 +63,18 @@
 		"vscode:prepublish": "npm run compile",
 		"build": "pnpm clean && tsc -b",
 		"watch": "tsc -b -w",
-		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+		"lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --ext .ts,.tsx",
 		"test": "sh ./scripts/e2e.sh"
 	},
 	"devDependencies": {
-		"@types/mocha": "^10.0.6",
-		"@types/node": "^20",
-		"@typescript-eslint/eslint-plugin": "^7.1.0",
-		"@typescript-eslint/parser": "^7.1.0",
-		"eslint": "^8.57.0",
-		"mocha": "^10.3.0",
+		"@types/mocha": "^10.0.8",
+		"@types/node": "^20.16.10",
+		"@typescript-eslint/eslint-plugin": "^7.18.0",
+		"@typescript-eslint/parser": "^7.18.0",
+		"eslint": "^8.57.1",
+		"glob": "^11.0.0",
+		"jest": "^29.7.0",
+		"mocha": "^10.7.3",
 		"rimraf": "^6.0.1",
 		"typescript": "^5.6.2"
 	}

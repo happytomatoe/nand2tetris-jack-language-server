@@ -1,8 +1,8 @@
 import { ProgramContext } from "jack-compiler";
-import { AstPath, Doc, doc, ParserOptions } from "prettier";
+import { AstPath, Doc, ParserOptions } from "prettier";
 import { JackVisitor } from "./formatter.visitor";
+import { CommonTokenStream } from "antlr4";
 
-// const { join, line, ifBreak, group } = doc.builders;
 export function print<T>(
 	path: AstPath<T>,
 	options: ParserOptions<T>,
@@ -11,8 +11,8 @@ export function print<T>(
 ): Doc {
 
 	// console.log("Inside printer");
-	const tree = path.node as ProgramContext;
-	const val = tree.accept(new JackVisitor());
+	const [tree, tokenStream] = path.node as [ProgramContext, CommonTokenStream];
+	const val = tree.accept(new JackVisitor(tokenStream));
 	// console.log("Doc",JSON.stringify(val, null, 2));
 	return val;
 }

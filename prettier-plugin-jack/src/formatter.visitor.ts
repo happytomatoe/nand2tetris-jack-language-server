@@ -1,12 +1,15 @@
-import { TerminalNode } from "antlr4";
-import JackParser, { ArrayAccessContext, ClassDeclarationContext, ClassVarDecContext, ConstantContext, DoStatementContext, ElseStatementContext, ExpressionContext, ExpressionListContext, FieldListContext, FieldNameContext, GroupedExpressionContext, IfElseStatementContext, IfExpressionContext, IfStatementContext, LetStatementContext, ParameterContext, ParameterListContext, ProgramContext, RBraceContext, ReturnStatementContext, StatementContext, StatementsContext, SubroutineBodyContext, SubroutineCallContext, SubroutineDeclarationContext, SubroutineIdContext, UnaryOperationContext, VarDeclarationContext, VarNameContext, WhileExpressionContext, WhileStatementContext } from 'jack-compiler/out/generated/JackParser';
+import { CommonTokenStream, TerminalNode } from "antlr4";
+import JackParser, { ArrayAccessContext, BinaryOperatorContext, ClassDeclarationContext, ClassVarDecContext, ConstantContext, DoStatementContext, ElseStatementContext, ExpressionContext, ExpressionListContext, FieldListContext, FieldNameContext, GroupedExpressionContext, IfElseStatementContext, IfExpressionContext, IfStatementContext, LetStatementContext, ParameterContext, ParameterListContext, ProgramContext, RBraceContext, ReturnStatementContext, StatementContext, StatementsContext, SubroutineBodyContext, SubroutineCallContext, SubroutineDeclarationContext, SubroutineIdContext, SubroutineTypeContext, UnaryOperationContext, UnaryOperatorContext, VarDeclarationContext, VarNameContext, VarTypeContext, WhileExpressionContext, WhileStatementContext } from 'jack-compiler/out/generated/JackParser';
 import JackParserVisitor from 'jack-compiler/out/generated/JackParserVisitor';
 import { Doc, doc } from 'prettier';
 import { builders } from 'prettier/doc';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { join, line, hardline, softline, ifBreak, indent, group } = doc.builders;
 export class JackVisitor extends JackParserVisitor<Doc> {
 	private indentationLevel = 0;
 	private indentationLevelChange = 1;
+	private onStartOfTheFile = true;
+	constructor(private tokenStream: CommonTokenStream) { super(); }
 	visitProgram = (ctx: ProgramContext): builders.Doc => {
 		return this.visitClassDeclaration(ctx.classDeclaration());
 	}
@@ -18,7 +21,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 				[
 					this.visitTerminal(ctx.CLASS()),
 					" ",
-					ctx.className().getText(),
+					this.visitTerminal(ctx.className().IDENTIFIER()),
 					" ",
 					this.visitTerminal(ctx.LBRACE()),
 				],
@@ -31,20 +34,19 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 			]
 		];
 	}
-	// classVarDec: (STATIC | FIELD) fieldList SEMICOLON;
 
+	// classVarDec: (STATIC | FIELD) fieldList SEMICOLON;
 	visitClassVarDec = (ctx: ClassVarDecContext): builders.Doc => {
-		//TODO: check if this the right word
-		let qualifier: Doc | undefined;
+		let staticOrField: Doc | undefined;
 		if (ctx.STATIC() != null) {
-			qualifier = this.visitTerminal(ctx.STATIC());
+			staticOrField = this.visitTerminal(ctx.STATIC());
 		} else if (ctx.FIELD() != null) {
-			qualifier = this.visitTerminal(ctx.FIELD());
+			staticOrField = this.visitTerminal(ctx.FIELD());
 		} else {
 			throw new Error("Invalid qualifier for class variable " + ctx.getText());
 		}
 		return [
-			qualifier, " ", this.visitFieldList(ctx.fieldList()), this.visitTerminal(ctx.SEMICOLON())
+			staticOrField, " ", this.visitFieldList(ctx.fieldList()), this.visitTerminal(ctx.SEMICOLON())
 		];
 	}
 	// fieldList: varType fieldName ( COMMA fieldName)*;
@@ -52,10 +54,10 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		const varNames = joinWithCommas(ctx.fieldName_list().map(v => [
 			this.visitFieldName(v)
 		]));
-		return [ctx.varType().getText(), " ", varNames];
+		return [this.visitVarType(ctx.varType()), " ", varNames];
 	};
 	visitFieldName = (ctx: FieldNameContext): Doc => {
-		return ctx.getText();
+		return this.visitTerminal(ctx.IDENTIFIER());
 	}
 
 	// subroutineDeclaration: subroutineType subroutineDecWithoutType;
@@ -69,7 +71,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		const bodyContext: SubroutineBodyContext = subroutineDecWithoutType.subroutineBody();
 		return [
 			group([
-				ctx.subroutineType().getText(), " ",
+				this.visitSubroutineType(ctx.subroutineType()), " ",
 				subroutineDecWithoutType.subroutineReturnType().getText(), " ",
 				subroutineDecWithoutType.subroutineName().getText(),
 				this.visitTerminal(subroutineDecWithoutType.LPAREN()),
@@ -86,21 +88,38 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		];
 	}
 
+	visitSubroutineType = (ctx: SubroutineTypeContext): builders.Doc => {
+		if (ctx.CONSTRUCTOR() != null) {
+			return this.visitTerminal(ctx.CONSTRUCTOR());
+		} else if (ctx.FUNCTION() != null) {
+			return this.visitTerminal(ctx.FUNCTION());
+		} else if (ctx.METHOD() != null) {
+			return this.visitTerminal(ctx.METHOD());
+		}
+		throw new Error("Invalid subroutine type " + ctx.getText());
+	}
 	visitParameterList = (ctx: ParameterListContext): builders.Doc => {
 		return joinWithCommas(ctx.parameter_list().map(v => this.visitParameter(v)));
 	}
 
 	//varType parameterName
 	visitParameter = (ctx: ParameterContext): builders.Doc => {
-		return join(" ", [ctx.varType().getText(), ctx.parameterName().getText()]);
+		return join(" ", [this.visitVarType(ctx.varType()), ctx.parameterName().getText()]);
 	}
-
+	visitVarType = (ctx: VarTypeContext): doc.builders.Doc => {
+		const arr = [ctx.BOOLEAN(), ctx.INT(), ctx.IDENTIFIER(), ctx.CHAR()];
+		const elem = arr.find(el => el !== null)
+		if (elem) {
+			return this.visitTerminal(elem);
+		}
+		throw new Error("Invalid variable type " + ctx.getText());
+	}
 	// VAR varType varNameInDeclaration (COMMA varNameInDeclaration)* SEMICOLON;
 	visitVarDeclaration = (ctx: VarDeclarationContext): builders.Doc => {
 		return group([
 			this.visitTerminal(ctx.VAR()),
 			" ",
-			ctx.varType().getText(),
+			this.visitVarType(ctx.varType()),
 			" ",
 			joinWithCommas(ctx.varNameInDeclaration_list().map(v => this.visitVarName(v))),
 			this.visitTerminal(ctx.SEMICOLON())
@@ -149,7 +168,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		}
 		return group([
 			this.visitTerminal(ctx.LET()), " ",
-			leftSide, this.visitTerminal(ctx.equals().EQUALS()), this.visitExpression(ctx.expression()),
+			leftSide, " ", this.visitTerminal(ctx.equals().EQUALS()), " ", this.visitExpression(ctx.expression()),
 			this.visitTerminal(ctx.SEMICOLON())
 		]);
 	}
@@ -229,18 +248,17 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 	}
 	// 	subroutineId: ((className | THIS_LITERAL) DOT)? subroutineName;
 	visitSubroutineId = (ctx: SubroutineIdContext): builders.Doc => {
-		//TODO: rename
-		let leftSide: Doc | undefined = undefined;
+		let classNameOrThis: Doc | undefined = undefined;
 		if (ctx.className() != null) {
-			leftSide = ctx.className().getText()
+			classNameOrThis = this.visitTerminal(ctx.className().IDENTIFIER())
 		} else if (ctx.THIS_LITERAL() != null) {
-			leftSide = ctx.THIS_LITERAL().getText()
+			classNameOrThis = this.visitTerminal(ctx.THIS_LITERAL())
 		}
 		return [
-			(leftSide != null ? [
-				leftSide, this.visitTerminal(ctx.DOT())
+			(classNameOrThis != null ? [
+				classNameOrThis, this.visitTerminal(ctx.DOT())
 			] : ""),
-			ctx.subroutineName().getText()
+			this.visitTerminal(ctx.subroutineName().IDENTIFIER())
 		]
 	}
 	//returnStatement: RETURN expression? SEMICOLON;
@@ -272,7 +290,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		if (ctx.constant() != null) {
 			return this.visitConstant(ctx.constant());
 		} else if (ctx.varName() != null) {
-			return ctx.varName().getText();
+			return this.visitTerminal(ctx.varName().IDENTIFIER());
 		} else if (ctx.subroutineCall() != null) {
 			return this.visitSubroutineCall(ctx.subroutineCall());
 		} else if (ctx.arrayAccess() != null) {
@@ -281,7 +299,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 			return this.visitUnaryOperation(ctx.unaryOperation());
 		} else if (ctx.binaryOperator() != null) {
 			const op1 = this.visitExpression(ctx.expression(0));
-			const binaryOp = ctx.binaryOperator().getText();
+			const binaryOp = this.visitBinaryOperator(ctx.binaryOperator());
 			const t = ctx.expression(1);
 			const op2 = this.visitExpression(t);
 			return join(" ", [op1, binaryOp, op2]);
@@ -290,6 +308,17 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		}
 		throw new Error("Unknown expression " + ctx.getText());
 	}
+	visitBinaryOperator = (ctx: BinaryOperatorContext): doc.builders.Doc => {
+		return this.visitTerminalOrThrow(() => "Invalid variable type " + ctx.getText(),
+			ctx.AND(), ctx.OR(), ctx.DIV(), ctx.EQUALS(), ctx.GREATER_THAN(), ctx.LESS_THAN(), ctx.MINUS(), ctx.MUL(), ctx.PLUS());
+	}
+	visitTerminalOrThrow(errorMsg: () => string, ...args: TerminalNode[]): doc.builders.Doc {
+		const elem = args.find(el => el !== null)
+		if (elem) {
+			return this.visitTerminal(elem);
+		}
+		throw new Error(errorMsg());
+	}
 	//constant:
 	// INTEGER_LITERAL
 	// | STRING_LITERAL
@@ -297,51 +326,75 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 	// | NULL_LITERAL
 	// | THIS_LITERAL;
 	visitConstant = (ctx: ConstantContext): builders.Doc => {
-		return ctx.getText();
+		return this.visitTerminalOrThrow(() => "Invalid constant" + ctx.getText(),
+			ctx.INTEGER_LITERAL(), ctx.STRING_LITERAL(), ctx.NULL_LITERAL(), ctx.THIS_LITERAL());
 	}
 
 	// arrayAccess: varName LBRACKET expression RBRACKET;
 	visitArrayAccess = (ctx: ArrayAccessContext): builders.Doc => {
 		return [
-			ctx.varName().getText(),
+			this.visitTerminal(ctx.varName().IDENTIFIER()),
 			this.visitTerminal(ctx.LBRACKET()),
 			this.visitExpression(ctx.expression()),
 			this.visitTerminal(ctx.RBRACKET())
 		];
 	}
 	visitUnaryOperation = (ctx: UnaryOperationContext): builders.Doc => {
-		return [ctx.unaryOperator().getText(), this.visitExpression(ctx.expression())];
+		return [this.visitUnaryOperator(ctx.unaryOperator()), this.visitExpression(ctx.expression())];
 	}
+	visitUnaryOperator = (ctx: UnaryOperatorContext): doc.builders.Doc => {
+		return this.visitTerminalOrThrow(() => "Invalid unary operator " + ctx.getText(), ctx.MINUS(), ctx.TILDE());
+	};
 	visitGroupedExpression = (ctx: GroupedExpressionContext): builders.Doc => {
 		return [this.visitTerminal(ctx.LPAREN()), this.visitExpression(ctx.expression()), this.visitTerminal(ctx.RPAREN())];
 	}
 
 	visitRBrace = (ctx: RBraceContext): builders.Doc => {
-		this.indentationLevel -= this.indentationLevelChange;;
+		this.indentationLevel -= this.indentationLevelChange;
 		return this.addHardLine(this.visitTerminal(ctx.RBRACE()));
 	}
 	visitTerminal(node: TerminalNode): builders.Doc {
-		switch (node.symbol.type) {
-			case JackParser.EQUALS:
-				return [" ", node.symbol.text, " "];
-			default:
-				return node.symbol.text;
+		if (this.onStartOfTheFile) {
+			let a: Doc[] = [];
+			let leadingComment = this.tokenStream.getHiddenTokensToLeft(node.symbol.tokenIndex);
+			if (leadingComment != null &&
+				leadingComment.find(v => v.type == JackParser.LINE_COMMENT || v.type == JackParser.BLOCK_COMMENT) != undefined) {
+				a = leadingComment.map(v => v.text)
+			}
+			this.onStartOfTheFile = false;
+			return [
+				a,
+				node.symbol.text,
+			];
+
 		}
+		let res: Doc[] = [node.symbol.text];
+		// leadingComment.
+		let trailingComment = this.tokenStream.getHiddenTokensToRight(node.symbol.tokenIndex);
+		if (trailingComment != null &&
+			trailingComment.find(v => v.type == JackParser.LINE_COMMENT || v.type == JackParser.BLOCK_COMMENT) != undefined) {
+			res.push(trailingComment.map(v => v.text));
+		}
+
+		// console.log("Found comments")
+		// console.log(leadingComment);
+
+		// console.log(trailingComment);
+		return res;
+		// return node.symbol.text;
 	}
 	addHardLine(d: Doc) {
 		return [this.getHardLine(), d]
 	}
 	getHardLine() {
-		const t = hardline;
-		//TODO: change
-		let ind: any = t;
+		let ind: Doc = hardline;
 		for (let i = 0; i < this.indentationLevel; i++) {
 			ind = indent(ind);
 		}
 		return ind;
 	}
 	indent(): builders.Doc {
-		this.indentationLevel += this.indentationLevelChange;;
+		this.indentationLevel += this.indentationLevelChange;
 		return "";
 	}
 

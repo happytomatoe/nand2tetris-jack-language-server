@@ -6,49 +6,49 @@ import {ParseTreeListener} from "antlr4";
 	import { SubroutineScope, LocalSymbolTable } from "../symbol";
 
 
-import { ProgramContext } from "./JackParser";
-import { ClassDeclarationContext } from "./JackParser";
-import { ClassNameContext } from "./JackParser";
-import { ClassVarDecContext } from "./JackParser";
-import { FieldListContext } from "./JackParser";
-import { FieldNameContext } from "./JackParser";
-import { SubroutineDeclarationContext } from "./JackParser";
-import { SubroutineTypeContext } from "./JackParser";
-import { SubroutineDecWithoutTypeContext } from "./JackParser";
-import { SubroutineNameContext } from "./JackParser";
-import { SubroutineReturnTypeContext } from "./JackParser";
-import { VarTypeContext } from "./JackParser";
-import { ParameterListContext } from "./JackParser";
-import { ParameterContext } from "./JackParser";
-import { ParameterNameContext } from "./JackParser";
-import { SubroutineBodyContext } from "./JackParser";
-import { RBraceContext } from "./JackParser";
-import { VarDeclarationContext } from "./JackParser";
-import { VarNameInDeclarationContext } from "./JackParser";
-import { VarNameContext } from "./JackParser";
-import { StatementsContext } from "./JackParser";
-import { StatementContext } from "./JackParser";
-import { LetStatementContext } from "./JackParser";
-import { EqualsContext } from "./JackParser";
-import { IfElseStatementContext } from "./JackParser";
-import { IfStatementContext } from "./JackParser";
-import { IfExpressionContext } from "./JackParser";
-import { ElseStatementContext } from "./JackParser";
-import { WhileStatementContext } from "./JackParser";
-import { WhileExpressionContext } from "./JackParser";
-import { DoStatementContext } from "./JackParser";
-import { SubroutineCallContext } from "./JackParser";
-import { SubroutineIdContext } from "./JackParser";
-import { ReturnStatementContext } from "./JackParser";
-import { ExpressionListContext } from "./JackParser";
-import { ExpressionContext } from "./JackParser";
-import { GroupedExpressionContext } from "./JackParser";
-import { UnaryOperationContext } from "./JackParser";
-import { ArrayAccessContext } from "./JackParser";
-import { ConstantContext } from "./JackParser";
-import { BooleanLiteralContext } from "./JackParser";
-import { UnaryOperatorContext } from "./JackParser";
-import { BinaryOperatorContext } from "./JackParser";
+import { ProgramContext } from "./JackParser.js";
+import { ClassDeclarationContext } from "./JackParser.js";
+import { ClassNameContext } from "./JackParser.js";
+import { ClassVarDecContext } from "./JackParser.js";
+import { FieldListContext } from "./JackParser.js";
+import { FieldNameContext } from "./JackParser.js";
+import { SubroutineDeclarationContext } from "./JackParser.js";
+import { SubroutineTypeContext } from "./JackParser.js";
+import { SubroutineDecWithoutTypeContext } from "./JackParser.js";
+import { SubroutineNameContext } from "./JackParser.js";
+import { SubroutineReturnTypeContext } from "./JackParser.js";
+import { VarTypeContext } from "./JackParser.js";
+import { ParameterListContext } from "./JackParser.js";
+import { ParameterContext } from "./JackParser.js";
+import { ParameterNameContext } from "./JackParser.js";
+import { SubroutineBodyContext } from "./JackParser.js";
+import { RBraceContext } from "./JackParser.js";
+import { VarDeclarationContext } from "./JackParser.js";
+import { VarNameInDeclarationContext } from "./JackParser.js";
+import { StatementsContext } from "./JackParser.js";
+import { StatementContext } from "./JackParser.js";
+import { LetStatementContext } from "./JackParser.js";
+import { EqualsContext } from "./JackParser.js";
+import { IfElseStatementContext } from "./JackParser.js";
+import { IfStatementContext } from "./JackParser.js";
+import { IfExpressionContext } from "./JackParser.js";
+import { ElseStatementContext } from "./JackParser.js";
+import { WhileStatementContext } from "./JackParser.js";
+import { WhileExpressionContext } from "./JackParser.js";
+import { DoStatementContext } from "./JackParser.js";
+import { SubroutineCallContext } from "./JackParser.js";
+import { SubroutineIdContext } from "./JackParser.js";
+import { ReturnStatementContext } from "./JackParser.js";
+import { ExpressionListContext } from "./JackParser.js";
+import { ExpressionContext } from "./JackParser.js";
+import { ConstantContext } from "./JackParser.js";
+import { VarNameContext } from "./JackParser.js";
+import { ArrayAccessContext } from "./JackParser.js";
+import { UnaryOperationContext } from "./JackParser.js";
+import { GroupedExpressionContext } from "./JackParser.js";
+import { BooleanLiteralContext } from "./JackParser.js";
+import { UnaryOperatorContext } from "./JackParser.js";
+import { BinaryOperatorContext } from "./JackParser.js";
 
 
 /**
@@ -247,16 +247,6 @@ export default class JackParserListener extends ParseTreeListener {
 	 */
 	exitVarNameInDeclaration?: (ctx: VarNameInDeclarationContext) => void;
 	/**
-	 * Enter a parse tree produced by `JackParser.varName`.
-	 * @param ctx the parse tree
-	 */
-	enterVarName?: (ctx: VarNameContext) => void;
-	/**
-	 * Exit a parse tree produced by `JackParser.varName`.
-	 * @param ctx the parse tree
-	 */
-	exitVarName?: (ctx: VarNameContext) => void;
-	/**
 	 * Enter a parse tree produced by `JackParser.statements`.
 	 * @param ctx the parse tree
 	 */
@@ -417,25 +407,25 @@ export default class JackParserListener extends ParseTreeListener {
 	 */
 	exitExpression?: (ctx: ExpressionContext) => void;
 	/**
-	 * Enter a parse tree produced by `JackParser.groupedExpression`.
+	 * Enter a parse tree produced by `JackParser.constant`.
 	 * @param ctx the parse tree
 	 */
-	enterGroupedExpression?: (ctx: GroupedExpressionContext) => void;
+	enterConstant?: (ctx: ConstantContext) => void;
 	/**
-	 * Exit a parse tree produced by `JackParser.groupedExpression`.
+	 * Exit a parse tree produced by `JackParser.constant`.
 	 * @param ctx the parse tree
 	 */
-	exitGroupedExpression?: (ctx: GroupedExpressionContext) => void;
+	exitConstant?: (ctx: ConstantContext) => void;
 	/**
-	 * Enter a parse tree produced by `JackParser.unaryOperation`.
+	 * Enter a parse tree produced by `JackParser.varName`.
 	 * @param ctx the parse tree
 	 */
-	enterUnaryOperation?: (ctx: UnaryOperationContext) => void;
+	enterVarName?: (ctx: VarNameContext) => void;
 	/**
-	 * Exit a parse tree produced by `JackParser.unaryOperation`.
+	 * Exit a parse tree produced by `JackParser.varName`.
 	 * @param ctx the parse tree
 	 */
-	exitUnaryOperation?: (ctx: UnaryOperationContext) => void;
+	exitVarName?: (ctx: VarNameContext) => void;
 	/**
 	 * Enter a parse tree produced by `JackParser.arrayAccess`.
 	 * @param ctx the parse tree
@@ -447,15 +437,25 @@ export default class JackParserListener extends ParseTreeListener {
 	 */
 	exitArrayAccess?: (ctx: ArrayAccessContext) => void;
 	/**
-	 * Enter a parse tree produced by `JackParser.constant`.
+	 * Enter a parse tree produced by `JackParser.unaryOperation`.
 	 * @param ctx the parse tree
 	 */
-	enterConstant?: (ctx: ConstantContext) => void;
+	enterUnaryOperation?: (ctx: UnaryOperationContext) => void;
 	/**
-	 * Exit a parse tree produced by `JackParser.constant`.
+	 * Exit a parse tree produced by `JackParser.unaryOperation`.
 	 * @param ctx the parse tree
 	 */
-	exitConstant?: (ctx: ConstantContext) => void;
+	exitUnaryOperation?: (ctx: UnaryOperationContext) => void;
+	/**
+	 * Enter a parse tree produced by `JackParser.groupedExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterGroupedExpression?: (ctx: GroupedExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `JackParser.groupedExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitGroupedExpression?: (ctx: GroupedExpressionContext) => void;
 	/**
 	 * Enter a parse tree produced by `JackParser.booleanLiteral`.
 	 * @param ctx the parse tree

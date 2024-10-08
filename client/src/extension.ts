@@ -11,6 +11,7 @@ import {
 let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
+	console.log('Jack language server is active!');
 	// The server is implemented in node
 	const serverModule = context.asAbsolutePath(
 		path.join('server', 'out', 'server.js')
