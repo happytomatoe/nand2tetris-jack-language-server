@@ -23,6 +23,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
+    - name: Build/release Electron app
+      uses: samuelmeuli/action-electron-builder@v1
+      with:
+        # GitHub token, automatically provided to the action
+        # (No need to define this secret in the repo settings)
+        github_token: ${{ secrets.github_token }}
+    - name: Install xvfb. Needed for electron
+      run: sudo apt-get install -y xvfb
     - name: Install dependencies
       run: pnpm install
     - run: pnpm run build
