@@ -40,10 +40,14 @@ TILDE: '~';
 LESS_THAN: '<';
 GREATER_THAN: '>';
 
-WS: [ \t\r\n\f]+ -> channel(HIDDEN);
-BLOCK_COMMENT: '/*' .*? ('*/' | EOF) -> channel(HIDDEN);
-LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
-
+WS  :	[ \t\r\n\f]+ -> skip	;
+BLOCK_COMMENT
+	:	'/*' .*? ('*/' | EOF)  -> channel(HIDDEN)
+	;
+LINE_COMMENT
+	:	'//' ~[\r\n]*  -> channel(HIDDEN)
+	;
+  
 INTEGER_LITERAL: [0-9]+;
 TRUE: 'true';
 FALSE: 'false';

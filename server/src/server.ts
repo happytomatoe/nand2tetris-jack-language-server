@@ -1,30 +1,26 @@
+import { Compiler, JackCompilerError } from 'jack-compiler/out/index';
+import * as prettier from 'prettier';
+import { JackPlugin } from 'prettier-plugin-jack/out/index';
+import {
+	TextDocument,
+} from 'vscode-languageserver-textdocument';
 import {
 	createConnection,
 	TextDocuments,
 	Diagnostic,
-	// DiagnosticSeverity,
-	ProposedFeatures,
-	InitializeParams,
-	DidChangeConfigurationNotification,
-	CompletionItem,
-	CompletionItemKind,
-	TextDocumentPositionParams,
-	TextDocumentSyncKind,
-	InitializeResult,
-	DocumentDiagnosticReportKind,
-	type DocumentDiagnosticReport,
 	DiagnosticSeverity,
+	DidChangeConfigurationNotification,
+	DocumentDiagnosticReportKind,
 	DocumentFormattingParams,
+	InitializeParams,
+	InitializeResult,
 	Position,
+	ProposedFeatures,
 	Range,
+	TextDocumentSyncKind,
 	TextEdit,
+	type DocumentDiagnosticReport
 } from 'vscode-languageserver/node';
-import {
-	TextDocument,
-} from 'vscode-languageserver-textdocument';
-import { Compiler, JackCompilerError } from 'jack-compiler/out/index';
-import * as prettier from 'prettier';
-import { JackPlugin } from 'prettier-plugin-jack/out/index';
 // import { JackCompilerError } from 'jack-compiler';
 
 // Create a connection for the server, using Node's IPC as a transport.
@@ -36,7 +32,9 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const hasFormattingCapability = true;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) => {
@@ -104,6 +102,7 @@ interface ExampleSettings {
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
 const defaultSettings: ExampleSettings = { maxNumberOfProblems: 1000 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let globalSettings: ExampleSettings = defaultSettings;
 
 // Cache the settings of all open documents

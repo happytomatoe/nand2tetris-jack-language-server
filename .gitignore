@@ -8,3 +8,5 @@ tsconfig.tsbuildinfo
 dist
 .vscode/numbered-bookmarks.json
 jack-compiler/grammar/.antlr
+**/.vscode/numbered-bookmarks.json
+**/.antlr

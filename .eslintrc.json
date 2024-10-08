@@ -5,7 +5,6 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "overrides": [],
@@ -14,10 +13,8 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": [ "@typescript-eslint"],
   "rules": {
-    "react/react-in-jsx-scope": 0,
-    "react/no-unknown-property": ["error", { "ignore": ["directory"] }],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
@@ -25,10 +22,5 @@
         "destructuredArrayIgnorePattern": "^_"
       }
     ]
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
   }
 }

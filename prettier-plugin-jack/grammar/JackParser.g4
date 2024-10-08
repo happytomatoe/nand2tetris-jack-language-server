@@ -3,20 +3,14 @@ parser grammar JackParser;
 options {
 	tokenVocab = JackLexer;
 }
-@header {
-import { SubroutineScope, LocalSymbolTable } from "../symbol";
-}
-
 program: classDeclaration EOF;
-classDeclaration
-	locals[localSymbolTable: LocalSymbolTable | undefined ]:
+classDeclaration:
 	CLASS className LBRACE classVarDec* subroutineDeclaration* rBrace;
 className: IDENTIFIER;
 classVarDec: (STATIC | FIELD) fieldList SEMICOLON;
 fieldList: varType fieldName ( COMMA fieldName)*;
 fieldName: IDENTIFIER;
-subroutineDeclaration
-	locals[symbols: SubroutineScope | undefined]:
+subroutineDeclaration:
 	subroutineType subroutineDecWithoutType;
 subroutineType: CONSTRUCTOR | METHOD | FUNCTION;
 subroutineDecWithoutType:

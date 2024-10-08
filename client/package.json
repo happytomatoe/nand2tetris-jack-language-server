@@ -4,7 +4,7 @@
 	"author": "Roman Lukash",
 	"license": "MIT",
 	"version": "0.0.1",
-	"publisher": "vscode",
+	"publisher": "rlukash",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"

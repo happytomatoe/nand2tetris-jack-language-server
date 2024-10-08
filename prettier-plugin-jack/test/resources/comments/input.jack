@@ -1,0 +1,25 @@
+/**
+* Api doc style comment
+*/
+class List {
+    //line comment
+    static int data;
+
+    static int a, b, c; // line comment
+    /**
+    * Just a method
+    */
+    method void a(){
+        /**
+        * Dont mind me
+        * I am just a comment
+        */
+        return;
+    }
+    /*
+    * A comment
+    */
+}
+/*
+* A comment
+/

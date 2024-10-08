@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/grammar/.antlr" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete5" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete16" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete7" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete9" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete6" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete13" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete14" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete15" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete2" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete3" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete10" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete4" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete17" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete18" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete12" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete11" level="project" />
+    <orderEntry type="library" name="antlr4-4.13.2-SNAPSHOT-complete8" level="project" />
+  </component>
+</module>
