@@ -31,14 +31,14 @@ jobs:
         run: pnpm install
 
       - name: Compile
-        run: yarn build
+        run: pnpm run build
 
       - name: Run tests
-        run: xvfb-run -a yarn test
+        run: xvfb-run -a pnpm test
         if: runner.os == 'Linux'
 
       - name: Run tests
-        run: yarn test
+        run: pnpm run test
         if: runner.os != 'Linux'
 
 
