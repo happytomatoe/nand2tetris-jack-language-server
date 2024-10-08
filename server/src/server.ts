@@ -2,7 +2,7 @@ import {
 	createConnection,
 	TextDocuments,
 	Diagnostic,
-	// DiagnosticSeverity,
+	DiagnosticSeverity,
 	ProposedFeatures,
 	InitializeParams,
 	DidChangeConfigurationNotification,
@@ -13,12 +13,12 @@ import {
 	InitializeResult,
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
-	DiagnosticSeverity,
 	DocumentFormattingParams,
-	Position,
-	Range,
 	TextEdit,
+	Range,
+	Position
 } from 'vscode-languageserver/node';
+
 import {
 	TextDocument,
 } from 'vscode-languageserver-textdocument';
@@ -110,8 +110,6 @@ let globalSettings: ExampleSettings = defaultSettings;
 const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
 
 connection.onDidChangeConfiguration(change => {
-
-
 	if (hasConfigurationCapability) {
 		// Reset all cached document settings
 		documentSettings.clear();
@@ -126,20 +124,20 @@ connection.onDidChangeConfiguration(change => {
 	connection.languages.diagnostics.refresh();
 });
 
-// function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
-// 	if (!hasConfigurationCapability) {
-// 		return Promise.resolve(globalSettings);
-// 	}
-// 	let result = documentSettings.get(resource);
-// 	if (!result) {
-// 		result = connection.workspace.getConfiguration({
-// 			scopeUri: resource,
-// 			section: 'languageServerExample'
-// 		});
-// 		documentSettings.set(resource, result);
-// 	}
-// 	return result;
-// }
+function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
+	if (!hasConfigurationCapability) {
+		return Promise.resolve(globalSettings);
+	}
+	let result = documentSettings.get(resource);
+	if (!result) {
+		result = connection.workspace.getConfiguration({
+			scopeUri: resource,
+			section: 'languageServerExample'
+		});
+		documentSettings.set(resource, result);
+	}
+	return result;
+}
 
 // Only keep settings for open documents
 documents.onDidClose(e => {
@@ -174,7 +172,7 @@ documents.onDidChangeContent(change => {
 async function validateTextDocument(textDocument: TextDocument): Promise<Diagnostic[]> {
 	console.log(textDocument);
 	// In this simple example we get the settings for every validate run.
-	// const settings = await getDocumentSettings(textDocument.uri);
+	const settings = await getDocumentSettings(textDocument.uri);
 
 	// The validator creates diagnostics for all uppercase words length 2 and more
 	const text = textDocument.getText();

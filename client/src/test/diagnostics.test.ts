@@ -1,20 +1,14 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
-
 import * as vscode from 'vscode';
 import * as assert from 'assert';
 import { getDocUri, activate } from './helper';
 
 suite('Should get diagnostics', () => {
-	const docUri = getDocUri('diagnostics.txt');
+	const docUri = getDocUri('Main.jack');
 
 	test('Diagnoses uppercase texts', async () => {
 		await testDiagnostics(docUri, [
-			{ message: 'ANY is all uppercase.', range: toRange(0, 0, 0, 3), severity: vscode.DiagnosticSeverity.Warning, source: 'ex' },
-			{ message: 'ANY is all uppercase.', range: toRange(0, 14, 0, 17), severity: vscode.DiagnosticSeverity.Warning, source: 'ex' },
-			{ message: 'OS is all uppercase.', range: toRange(0, 18, 0, 20), severity: vscode.DiagnosticSeverity.Warning, source: 'ex' }
+			{ message: "extraneous input 'l' expecting {'constructor', 'function', 'method', 'field', 'static', '}'}", range: toRange(1, 1, 1, 2), severity: vscode.DiagnosticSeverity.Error },
+		
 		]);
 	});
 });
@@ -29,7 +23,7 @@ async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.D
 	await activate(docUri);
 
 	const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
-
+	console.log("Diagnostics:", actualDiagnostics)
 	assert.equal(actualDiagnostics.length, expectedDiagnostics.length);
 
 	expectedDiagnostics.forEach((expectedDiagnostic, i) => {
