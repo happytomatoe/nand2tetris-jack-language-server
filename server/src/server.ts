@@ -180,20 +180,20 @@ async function validateTextDocument(textDocument: TextDocument): Promise<Diagnos
 	// The validator creates diagnostics for all uppercase words length 2 and more
 	const text = textDocument.getText();
 
-	const compiler = new Compiler();
-	const parsedOrErrors = compiler.parse(text);
-	if (Array.isArray(parsedOrErrors)) {
-		return parsedOrErrors.map(m => toDiagnostics(textDocument, m));
-	}
-	const bindedOrErrors = compiler.bind(parsedOrErrors);
-	if (Array.isArray(bindedOrErrors)) {
-		return bindedOrErrors.map(m => toDiagnostics(textDocument, m));
-	}
+	// const compiler = new Compiler();
+	// const parsedOrErrors = compiler.parse(text);
+	// if (Array.isArray(parsedOrErrors)) {
+	// 	return parsedOrErrors.map(m => toDiagnostics(textDocument, m));
+	// }
+	// const bindedOrErrors = compiler.bind(parsedOrErrors);
+	// if (Array.isArray(bindedOrErrors)) {
+	// 	return bindedOrErrors.map(m => toDiagnostics(textDocument, m));
+	// }
 
-	const validatedOrErrors = compiler.validate(bindedOrErrors);
-	if (Array.isArray(validatedOrErrors)) {
-		return validatedOrErrors.map(m => toDiagnostics(textDocument, m));
-	}
+	// const validatedOrErrors = compiler.validate(bindedOrErrors);
+	// if (Array.isArray(validatedOrErrors)) {
+	// 	return validatedOrErrors.map(m => toDiagnostics(textDocument, m));
+	// }
 	return [];
 }
 
