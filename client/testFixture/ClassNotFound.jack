@@ -1,0 +1,3 @@
+class A{
+	field B b;
+}
