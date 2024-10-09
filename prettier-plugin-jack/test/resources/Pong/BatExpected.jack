@@ -20,7 +20,7 @@ class Bat {
                               //  (1 = left, 2 = right)
 
     /** Constructs a new bat with the given location and width. */
-    constructor Bat new(int Ax, int Ay, int Awidth, int Aheight) {
+    constructor Bat new(int Ax, int Ay, int Awidth, int Aheight){
         let x = Ax;
         let y = Ay;
         let width = Awidth;
@@ -31,49 +31,49 @@ class Bat {
     }
 
     /** Deallocates the object's memory. */
-    method void dispose() {
+    method void dispose(){
         do Memory.deAlloc(this);
         return;
     }
 
     /** Shows the bat. */
-    method void show() {
+    method void show(){
         do Screen.setColor(true);
         do draw();
         return;
     }
 
     /** Hides the bat. */
-    method void hide() {
+    method void hide(){
         do Screen.setColor(false);
         do draw();
         return;
     }
 
     /** Draws the bat. */
-    method void draw() {
+    method void draw(){
         do Screen.drawRectangle(x, y, x + width, y + height);
         return;
     }
 
     /** Sets the bat's direction (0=stop, 1=left, 2=right). */
-    method void setDirection(int Adirection) {
+    method void setDirection(int Adirection){
         let direction = Adirection;
         return;
     }
 
     /** Returns the bat's left edge. */
-    method int getLeft() {
+    method int getLeft(){
         return x;
     }
 
     /** Returns the bat's right edge. */
-    method int getRight() {
+    method int getRight(){
         return x + width;
     }
 
     /** Sets the bat's width. */
-    method void setWidth(int Awidth) {
+    method void setWidth(int Awidth){
         do hide();
         let width = Awidth;
         do show();
@@ -81,10 +81,10 @@ class Bat {
     }
 
     /** Moves the bat one step in the bat's direction. */
-    method void move() {
-        if (direction = 1) {
+    method void move(){
+        if (direction = 1){
             let x = x - 4;
-            if (x < 0) {
+            if (x < 0){
                 let x = 0;
             }
             do Screen.setColor(false);
@@ -93,7 +93,7 @@ class Bat {
             do Screen.drawRectangle(x, y, x + 3, y + height);
         } else {
             let x = x + 4;
-            if ((x + width) > 511) {
+            if ((x + width) > 511){
                 let x = 511 - width;
             }
             do Screen.setColor(false);

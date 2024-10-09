@@ -123,7 +123,6 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         this.visitTerminal(subroutineDecWithoutType.LPAREN()),
         this.visitParameterList(subroutineDecWithoutType.parameterList()),
         this.visitTerminal(subroutineDecWithoutType.RPAREN()),
-        " ",
         this.visitTerminal(bodyContext.LBRACE()),
       ]),
       // subroutineBody: LBRACE varDeclaration* statements rBrace;
@@ -252,7 +251,6 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       this.visitTerminal(ctx.LPAREN()),
       this.visitIfExpression(ctx.ifExpression()),
       this.visitTerminal(ctx.RPAREN()),
-      " ",
       this.visitTerminal(ctx.LBRACE()),
       this.visitStatements(ctx.statements()),
       this.visitRBrace(ctx.rBrace()),
@@ -282,7 +280,6 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       this.visitTerminal(ctx.LPAREN()),
       this.visitWhileExpression(ctx.whileExpression()),
       this.visitTerminal(ctx.RPAREN()),
-      " ",
       this.visitTerminal(ctx.LBRACE()),
       this.visitStatements(ctx.statements()),
       this.visitRBrace(ctx.rBrace()),

@@ -20,7 +20,7 @@ class Ball {
     field int wall;    // last wall that the ball was bounced off of
 
     /** Constructs a new ball with the given initial location and wall locations. */
-    constructor Ball new(int Ax, int Ay, int AleftWall, int ArightWall, int AtopWall, int AbottomWall) {
+    constructor Ball new(int Ax, int Ay, int AleftWall, int ArightWall, int AtopWall, int AbottomWall){
         let x = Ax;
         let y = Ay;
         let leftWall = AleftWall;
@@ -33,43 +33,43 @@ class Ball {
     }
 
     /** Deallocates the Ball's memory. */
-    method void dispose() {
+    method void dispose(){
         do Memory.deAlloc(this);
         return;
     }
 
     /** Shows the ball. */
-    method void show() {
+    method void show(){
         do Screen.setColor(true);
         do draw();
         return;
     }
 
     /** Hides the ball. */
-    method void hide() {
+    method void hide(){
         do Screen.setColor(false);
         do draw();
         return;
     }
 
     /** Draws the ball. */
-    method void draw() {
+    method void draw(){
         do Screen.drawRectangle(x, y, x + 5, y + 5);
         return;
     }
 
     /** Returns the ball's left edge. */
-    method int getLeft() {
+    method int getLeft(){
         return x;
     }
 
     /** Returns the ball's right edge. */
-    method int getRight() {
+    method int getRight(){
         return x + 5;
     }
 
     /** Computes and sets the ball's destination. */
-    method void setDestination(int destx, int desty) {
+    method void setDestination(int destx, int desty){
         var int dx, dy, temp;
         let lengthx = destx - x;
         let lengthy = desty - y;
@@ -77,7 +77,7 @@ class Ball {
         let dy = Math.abs(lengthy);
         let invert = (dx < dy);
 
-        if (invert) {
+        if (invert){
             let temp = dx;  // swap dx, dy
             let dx = dy;
             let dy = temp;
@@ -101,23 +101,23 @@ class Ball {
      * Else, returns a value according to the wall:
      * 1 (left wall), 2 (right wall), 3 (top wall), 4 (bottom wall).
      */
-    method int move() {
+    method int move(){
 
         do hide();
 
-        if (d < 0) {
+        if (d < 0){
             let d = d + straightD;
         } else {
             let d = d + diagonalD;
 
-            if (positivey) {
-                if (invert) {
+            if (positivey){
+                if (invert){
                     let x = x + 4;
                 } else {
                     let y = y + 4;
                 }
             } else {
-                if (invert) {
+                if (invert){
                     let x = x - 4;
                 } else {
                     let y = y - 4;
@@ -125,33 +125,33 @@ class Ball {
             }
         }
 
-        if (positivex) {
-            if (invert) {
+        if (positivex){
+            if (invert){
                 let y = y + 4;
             } else {
                 let x = x + 4;
             }
         } else {
-            if (invert) {
+            if (invert){
                 let y = y - 4;
             } else {
                 let x = x - 4;
             }
         }
 
-        if (~(x > leftWall)) {
+        if (~(x > leftWall)){
             let wall = 1;
             let x = leftWall;
         }
-        if (~(x < rightWall)) {
+        if (~(x < rightWall)){
             let wall = 2;
             let x = rightWall;
         }
-        if (~(y > topWall)) {
+        if (~(y > topWall)){
             let wall = 3;
             let y = topWall;
         }
-        if (~(y < bottomWall)) {
+        if (~(y < bottomWall)){
             let wall = 4;
             let y = bottomWall;
         }
@@ -166,33 +166,33 @@ class Ball {
      * of the ball according to the ball's angle and the given
      * bouncing direction (-1/0/1=left/center/right or up/center/down).
      */
-    method void bounce(int bouncingDirection) {
+    method void bounce(int bouncingDirection){
         var int newx, newy, divLengthx, divLengthy, factor;
 
         // Since results are too big, divides by 10
         let divLengthx = lengthx / 10;
         let divLengthy = lengthy / 10;
-        if (bouncingDirection = 0) {
+        if (bouncingDirection = 0){
             let factor = 10;
         } else {
-            if (((~(lengthx < 0)) & (bouncingDirection = 1)) | ((lengthx < 0) & (bouncingDirection = (-1)))) {
+            if (((~(lengthx < 0)) & (bouncingDirection = 1)) | ((lengthx < 0) & (bouncingDirection = (-1)))){
                 let factor = 20;  // bounce direction is in ball direction
             } else {
                 let factor = 5;
             } // bounce direction is against ball direction
         }
 
-        if (wall = 1) {
+        if (wall = 1){
             let newx = 506;
             let newy = (divLengthy * (-50)) / divLengthx;
             let newy = y + (newy * factor);
         } else {
-            if (wall = 2) {
+            if (wall = 2){
                 let newx = 0;
                 let newy = (divLengthy * 50) / divLengthx;
                 let newy = y + (newy * factor);
             } else {
-                if (wall = 3) {
+                if (wall = 3){
                     let newy = 250;
                     let newx = (divLengthx * (-25)) / divLengthy;
                     let newx = x + (newx * factor);

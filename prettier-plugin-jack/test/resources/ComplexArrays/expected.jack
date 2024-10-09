@@ -1,5 +1,5 @@
 class ComplexArrays {
-    function void main() {
+    function void main(){
         var Array a, b, c;
         let a = Array.new(10);
         let b = Array.new(5);
@@ -21,7 +21,7 @@ class ComplexArrays {
         do Output.printInt(c);
         do Output.println();
         let c = null;
-        if (c = null) {
+        if (c = null){
             do Main.fill(a, 10);
             let c = a[3];
             let c[1] = 33;
@@ -38,11 +38,11 @@ class ComplexArrays {
         do Output.println();
         return;
     }
-    function int double(int a) {
+    function int double(int a){
         return a * 2;
     }
-    function void fill(Array a, int size) {
-        while (size > 0) {
+    function void fill(Array a, int size){
+        while (size > 0){
             let size = size - 1;
             let a[size] = Array.new(3);
         }

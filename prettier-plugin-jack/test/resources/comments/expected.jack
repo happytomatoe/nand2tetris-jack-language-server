@@ -11,7 +11,7 @@ class List {
     /**
     * Just a method
     */
-    method void a() {
+    method void a(){
         /**
         * Dont mind me
         * I am just a comment

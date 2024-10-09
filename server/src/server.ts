@@ -72,7 +72,7 @@ connection.onInitialized(() => {
     // Register for all configuration changes.
     connection.client.register(
       DidChangeConfigurationNotification.type,
-      undefined,
+      undefined
     );
   }
   if (hasWorkspaceFolderCapability) {
@@ -107,20 +107,12 @@ documents.onDidChangeContent((change) => {
 });
 
 async function validateTextDocument(
-  textDocument: TextDocument,
+  textDocument: TextDocument
 ): Promise<Diagnostic[]> {
-  console.log(textDocument);
-  // In this simple example we get the settings for every validate run.
-  // const settings = await getDocumentSettings(textDocument.uri);
-
-  // The validator creates diagnostics for all uppercase words length 2 and more
   const text = textDocument.getText();
   const compiler = new Compiler();
   const selectedFilePath = URI.parse(textDocument.uri).fsPath;
   const dir = path.dirname(selectedFilePath);
-  // const file = path.resolve(textDocument.uri)
-  connection.console.log("Dir " + dir);
-  connection.console.log("File " + selectedFilePath);
 
   const parsedOrErrors = compiler.parse(text);
   if (Array.isArray(parsedOrErrors)) {
@@ -189,7 +181,7 @@ connection.onDocumentFormatting(
       return [
         TextEdit.replace(
           Range.create(Position.create(0, 0), document.positionAt(text.length)),
-          formatted,
+          formatted
         ),
       ];
     } catch (error) {
@@ -200,7 +192,7 @@ connection.onDocumentFormatting(
       }
       return [];
     }
-  },
+  }
 );
 
 // Make the text document manager listen on the connection
