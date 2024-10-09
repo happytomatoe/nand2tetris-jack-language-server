@@ -1,5 +1,4 @@
 class Main {
-	l
 	static Main instance; 
 	field Dino dino;
 	field Array cactusPool, cloudsPool;
