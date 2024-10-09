@@ -16,8 +16,7 @@
 		"build": "tsc -b",
 		"example": "prettier --plugin . Main.jack",
 		"test": " mocha ",
-		"test-w": " mocha -w",
-		"gen": "cd grammar && antlr4ng -Dlanguage=TypeScript -listener -visitor  JackLexer.g4 JackParser.g4 -o ../src/generated"
+		"test-w": " mocha -w"
 	},
 	"peerDependencies": {
 		"prettier": "^3.3.3"

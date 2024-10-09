@@ -1,4 +1,5 @@
-import { CommonTokenStream, TerminalNode } from "antlr4";
+import { CommonTokenStream, TerminalNode, Token } from "antlr4";
+import JackLexer from "jack-compiler/out/generated/JackLexer";
 import JackParser, { ArrayAccessContext, BinaryOperatorContext, ClassDeclarationContext, ClassVarDecContext, ConstantContext, DoStatementContext, ElseStatementContext, ExpressionContext, ExpressionListContext, FieldListContext, FieldNameContext, GroupedExpressionContext, IfElseStatementContext, IfExpressionContext, IfStatementContext, LetStatementContext, ParameterContext, ParameterListContext, ProgramContext, RBraceContext, ReturnStatementContext, StatementContext, StatementsContext, SubroutineBodyContext, SubroutineCallContext, SubroutineDeclarationContext, SubroutineIdContext, SubroutineTypeContext, UnaryOperationContext, UnaryOperatorContext, VarDeclarationContext, VarNameContext, VarTypeContext, WhileExpressionContext, WhileStatementContext } from 'jack-compiler/out/generated/JackParser';
 import JackParserVisitor from 'jack-compiler/out/generated/JackParserVisitor';
 import { Doc, doc } from 'prettier';
@@ -23,10 +24,10 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 					" ",
 					this.visitTerminal(ctx.className().IDENTIFIER()),
 					" ",
+					this.indent(),
 					this.visitTerminal(ctx.LBRACE()),
 				],
 			),
-			this.indent(),
 			[
 				ctx.classVarDec_list().map(v => this.addHardLine(this.visitClassVarDec(v))),
 				ctx.subroutineDeclaration_list().map(v => this.addHardLine(this.visitSubroutineDeclaration(v))),
@@ -78,9 +79,9 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 				this.visitParameterList(subroutineDecWithoutType.parameterList()),
 				this.visitTerminal(subroutineDecWithoutType.RPAREN()),
 				" ",
+				this.indent(),
 				this.visitTerminal(bodyContext.LBRACE()),
 			]),
-			this.indent(),
 			// subroutineBody: LBRACE varDeclaration* statements rBrace;
 			bodyContext.varDeclaration_list().map(v => this.addHardLine(this.visitVarDeclaration(v))),
 			this.visitStatements(bodyContext.statements()),
@@ -353,13 +354,27 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		this.indentationLevel -= this.indentationLevelChange;
 		return this.addHardLine(this.visitTerminal(ctx.RBRACE()));
 	}
+	transformLineComment(t: Token[]) {
+		return t.map(v => {
+			let s: Doc = v.text;
+			if (s.indexOf("\n") !== -1) {
+				s = Array<Doc>((s.match(/\n/g) || []).length).fill(this.getHardLine());
+			}
+			return s;
+		})
+	}
+
 	visitTerminal(node: TerminalNode): builders.Doc {
 		if (this.onStartOfTheFile) {
 			let a: Doc[] = [];
-			let leadingComment = this.tokenStream.getHiddenTokensToLeft(node.symbol.tokenIndex);
-			if (leadingComment != null &&
-				leadingComment.find(v => v.type == JackParser.LINE_COMMENT || v.type == JackParser.BLOCK_COMMENT) != undefined) {
-				a = leadingComment.map(v => v.text)
+			const leadingComment = this.tokenStream.getHiddenTokensToLeft(node.symbol.tokenIndex);
+			if (leadingComment != null) {
+				if (leadingComment.find(v => v.type == JackParser.BLOCK_COMMENT) != undefined) {
+					a = leadingComment.map(v => v.text);
+				} else if (leadingComment != null &&
+					leadingComment.find(v => v.type == JackParser.LINE_COMMENT) != undefined) {
+					a = this.transformLineComment(leadingComment);
+				}
 			}
 			this.onStartOfTheFile = false;
 			return [
@@ -368,20 +383,42 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 			];
 
 		}
-		let res: Doc[] = [node.symbol.text];
-		// leadingComment.
-		let trailingComment = this.tokenStream.getHiddenTokensToRight(node.symbol.tokenIndex);
-		if (trailingComment != null &&
-			trailingComment.find(v => v.type == JackParser.LINE_COMMENT || v.type == JackParser.BLOCK_COMMENT) != undefined) {
-			res.push(trailingComment.map(v => v.text));
+
+		const res: Doc[] = [node.symbol.text];
+		const trailingComment = this.tokenStream.getHiddenTokensToRight(node.symbol.tokenIndex);
+
+		if (trailingComment != null) {
+			if (trailingComment[trailingComment.length - 1].type == JackParser.WHITESPACE) {
+				const last = trailingComment[trailingComment.length - 1];
+				if ((last.text.match(/\n/g) || []).length > 1) {
+					const c = last.text.lastIndexOf("\n");
+					last.text = last.text.substring(0, c);
+					trailingComment[trailingComment.length - 1] = last;
+				} else {
+					trailingComment.pop();
+				}
+
+			}
+			if (trailingComment.find(v => v.type == JackParser.BLOCK_COMMENT) &&
+				trailingComment.find(v => v.type == JackParser.LINE_COMMENT)) {
+				if (node.symbol.type == JackParser.SEMICOLON) {
+					res.push(" ");
+				}
+				res.push(trailingComment.map(v => v.text));
+			} else if (trailingComment.find(v => v.type == JackParser.BLOCK_COMMENT) != undefined) {
+				const b = trailingComment.map(v => v.text);
+				res.push(b);
+			} else if (trailingComment.find(v => v.type == JackParser.LINE_COMMENT) != undefined) {
+				if (node.symbol.type == JackParser.SEMICOLON) {
+					res.push(" ");
+				}
+				const b = this.transformLineComment(trailingComment);
+				res.push(b);
+			} else {
+				res.push(trailingComment.map(v => v.text));
+			}
 		}
-
-		// console.log("Found comments")
-		// console.log(leadingComment);
-
-		// console.log(trailingComment);
 		return res;
-		// return node.symbol.text;
 	}
 	addHardLine(d: Doc) {
 		return [this.getHardLine(), d]
@@ -397,7 +434,6 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 		this.indentationLevel += this.indentationLevelChange;
 		return "";
 	}
-
 }
 
 function joinWithCommas(docs: Doc[]) {

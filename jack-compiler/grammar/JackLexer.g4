@@ -40,7 +40,7 @@ TILDE: '~';
 LESS_THAN: '<';
 GREATER_THAN: '>';
 
-WS: [ \t\r\n\f]+ -> channel(HIDDEN);
+WHITESPACE: [ \t\r\n\f]+ -> channel(HIDDEN);
 BLOCK_COMMENT: '/*' .*? ('*/' | EOF) -> channel(HIDDEN);
 LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
 

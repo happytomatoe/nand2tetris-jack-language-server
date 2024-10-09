@@ -2,10 +2,12 @@
 * Api doc style comment
 */
 class List {
-    //line comment
-    static int data;
+//line comment 1
+    static int data;// line comment 2
 
-    static int a, b, c; // line comment
+
+
+    static int a, b, c;// line comment 3
     /**
     * Just a method
     */

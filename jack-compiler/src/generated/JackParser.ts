@@ -19,7 +19,7 @@ import JackParserVisitor from "./JackParserVisitor.js";
 type int = number;
 
 
-	import { SubroutineScope, LocalSymbolTable } from "../symbol";
+import { SubroutineScope, LocalSymbolTable } from "../symbol";
 
 export default class JackParser extends Parser {
 	public static readonly CLASS = 1;
@@ -58,7 +58,7 @@ export default class JackParser extends Parser {
 	public static readonly TILDE = 34;
 	public static readonly LESS_THAN = 35;
 	public static readonly GREATER_THAN = 36;
-	public static readonly WS = 37;
+	public static readonly WHITESPACE = 37;
 	public static readonly BLOCK_COMMENT = 38;
 	public static readonly LINE_COMMENT = 39;
 	public static readonly INTEGER_LITERAL = 40;
@@ -160,7 +160,8 @@ export default class JackParser extends Parser {
                                                              "OR", "TILDE", 
                                                              "LESS_THAN", 
                                                              "GREATER_THAN", 
-                                                             "WS", "BLOCK_COMMENT", 
+                                                             "WHITESPACE", 
+                                                             "BLOCK_COMMENT", 
                                                              "LINE_COMMENT", 
                                                              "INTEGER_LITERAL", 
                                                              "TRUE", "FALSE", 

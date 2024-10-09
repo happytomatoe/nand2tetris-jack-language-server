@@ -25,7 +25,7 @@
 # growl: false
 # ignore:
 #   - '/path/to/some/ignored/file'
-# inline-diffs: true
+inline-diffs: true
 # # needs to be used with grep or fgrep
 # # invert: false
 # jobs: 1

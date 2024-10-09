@@ -48,7 +48,7 @@ export default class JackLexer extends Lexer {
 	public static readonly TILDE = 34;
 	public static readonly LESS_THAN = 35;
 	public static readonly GREATER_THAN = 36;
-	public static readonly WS = 37;
+	public static readonly WHITESPACE = 37;
 	public static readonly BLOCK_COMMENT = 38;
 	public static readonly LINE_COMMENT = 39;
 	public static readonly INTEGER_LITERAL = 40;
@@ -109,7 +109,8 @@ export default class JackLexer extends Lexer {
                                                              "OR", "TILDE", 
                                                              "LESS_THAN", 
                                                              "GREATER_THAN", 
-                                                             "WS", "BLOCK_COMMENT", 
+                                                             "WHITESPACE", 
+                                                             "BLOCK_COMMENT", 
                                                              "LINE_COMMENT", 
                                                              "INTEGER_LITERAL", 
                                                              "TRUE", "FALSE", 
@@ -125,7 +126,7 @@ export default class JackLexer extends Lexer {
 		"INT", "CHAR", "BOOLEAN", "VOID", "LET", "DO", "IF", "ELSE", "WHILE", 
 		"RETURN", "LBRACE", "RBRACE", "LPAREN", "RPAREN", "LBRACKET", "RBRACKET", 
 		"DOT", "COMMA", "SEMICOLON", "EQUALS", "PLUS", "MINUS", "MUL", "DIV", 
-		"AND", "OR", "TILDE", "LESS_THAN", "GREATER_THAN", "WS", "BLOCK_COMMENT", 
+		"AND", "OR", "TILDE", "LESS_THAN", "GREATER_THAN", "WHITESPACE", "BLOCK_COMMENT", 
 		"LINE_COMMENT", "INTEGER_LITERAL", "TRUE", "FALSE", "NULL_LITERAL", "THIS_LITERAL", 
 		"IDENTIFIER", "STRING_LITERAL", "UnterminatedStringLiteral",
 	];
