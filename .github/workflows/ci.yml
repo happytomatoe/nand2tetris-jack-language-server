@@ -26,7 +26,7 @@ jobs:
       - name: Compile
         run: pnpm run build
       - name: Run unit tests
-        run: pnpm run ci 
+        run: pnpm run ci
       - name: Run tests
         run: xvfb-run -a pnpm test
         if: runner.os == 'Linux'
@@ -34,4 +34,3 @@ jobs:
       - name: Run E2E tests
         run: pnpm run test
         if: runner.os != 'Linux'
-      

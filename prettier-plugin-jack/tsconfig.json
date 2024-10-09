@@ -1,15 +1,10 @@
 {
-	"extends": "../tsconfig.base.json",
-	"compilerOptions": {
-		"baseUrl": ".",
-		"outDir": "out",
-		"rootDir": "src",
-	},
-	"include": [
-		"src"
-	],
-	"exclude": [
-		"node_modules",
-		".vscode-test"
-	]
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "out",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", ".vscode-test"]
 }

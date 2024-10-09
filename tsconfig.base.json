@@ -1,21 +1,19 @@
 {
-	"compilerOptions": {
-		// Workspace projects
-		"composite": true,
-		"target": "es2020",
-		"lib": [
-			"es2020"
-		],
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"sourceMap": true,
-		"strict": true,
-		"outDir": "out",
-		"rootDir": "src",
-		//
-		"allowJs": true,
-		"declaration": true,
-		"declarationMap": true,
-		"skipLibCheck": true,
-	},
+  "compilerOptions": {
+    // Workspace projects
+    "composite": true,
+    "target": "es2020",
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "outDir": "out",
+    "rootDir": "src",
+    //
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true
+  }
 }

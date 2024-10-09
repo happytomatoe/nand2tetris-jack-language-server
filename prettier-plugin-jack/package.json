@@ -1,40 +1,37 @@
 {
-	"name": "prettier-plugin-jack",
-	"description": "Prettier plugin for jack language",
-	"version": "0.0.1",
-	"author": "Roman Lukash",
-	"license": "MIT",
-	"main": "./out/index.js",
-	"engines": {
-		"node": "*"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
-	},
-	"scripts": {
-		"build": "tsc -b",
-		"example": "prettier --plugin . Main.jack",
-		"test": " mocha ",
-		"test-w": " mocha -w"
-	},
-	"peerDependencies": {
-		"prettier": "^3.3.3"
-	},
-	"dependencies": {
-		"antlr4": "^4.13.2",
-		"antlr4ng": "^3.0.7",
-		"jack-compiler": "workspace:*"
-	},
-	"devDependencies": {
-		"@types/chai": "^5.0.0",
-		"@types/expect": "^24.3.0",
-		"@types/mocha": "^10.0.6",
-		"antlr4ng-cli": "^2.0.0",
-		"chai": "^5.1.1",
-		"mocha": "^10.3.0",
-		"nyc": "^17.1.0",
-		"ts-mocha": "^10.0.0",
-		"tsx": "^4.19.1"
-	}
+  "name": "prettier-plugin-jack",
+  "description": "Prettier plugin for jack language",
+  "version": "0.0.1",
+  "author": "Roman Lukash",
+  "license": "MIT",
+  "main": "./out/index.js",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": " mocha ",
+    "test-w": " mocha -w"
+  },
+  "peerDependencies": {
+    "prettier": "^3.3.3"
+  },
+  "dependencies": {
+    "antlr4": "^4.13.2",
+    "jack-compiler": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/chai": "^5.0.0",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^10.0.6",
+    "chai": "^5.1.1",
+    "mocha": "^10.3.0",
+    "nyc": "^17.1.0",
+    "ts-mocha": "^10.0.0",
+    "tsx": "^4.19.1"
+  }
 }

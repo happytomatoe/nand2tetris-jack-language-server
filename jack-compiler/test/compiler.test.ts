@@ -4,27 +4,27 @@ import path from "path";
 import { ProgramContext } from "../src/generated/JackParser";
 import { Compiler } from "../src/compiler";
 describe("Jack compiler", () => {
-    test("static field", () => {
-        testCompiler(
-            `class A{
+  test("static field", () => {
+    testCompiler(
+      `class A{
             static int a;
             function void init(){
                 let a=1;
                 return;
             }
         }`,
-            `
+      `
             function A.init 0
                 push constant 1
                 pop static 0
                 push constant 0
                 return
         `,
-        );
-    });
-    test("field", () => {
-        testCompiler(
-            `
+    );
+  });
+  test("field", () => {
+    testCompiler(
+      `
             class A{
                 field int a;
                 method void init(){
@@ -32,7 +32,7 @@ describe("Jack compiler", () => {
                     return;
                 }
             }`,
-            `
+      `
             function A.init 0
                 push argument 0
                 pop pointer 0
@@ -41,11 +41,11 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
             `,
-        );
-    });
+    );
+  });
 
-    test("function with parameters", () => {
-        const input = `
+  test("function with parameters", () => {
+    const input = `
         class A{
             function void a(int a){
                     var int b;
@@ -53,7 +53,7 @@ describe("Jack compiler", () => {
                     return;
                 }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push argument 0
                 push constant 1
@@ -62,11 +62,11 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("method with parameters", () => {
-        const input = `
+  test("method with parameters", () => {
+    const input = `
         class A{
             method void a(int a){
                     var int b;
@@ -74,7 +74,7 @@ describe("Jack compiler", () => {
                     return;
                 }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push argument 0
                 pop pointer 0
@@ -85,12 +85,12 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    //Assign
-    test("boolean literal assign", () => {
-        const input = `
+  //Assign
+  test("boolean literal assign", () => {
+    const input = `
         class A{
             function void a(){
                 var boolean b;
@@ -98,7 +98,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 //true(-1)
                 push constant 1
@@ -109,10 +109,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("boolean literal assign using logical operators", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("boolean literal assign using logical operators", () => {
+    const input = `
         class A {
             function void a(){
                 var boolean b;
@@ -120,7 +120,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
            function A.a 1
                 //1>2
                 push constant 1
@@ -147,10 +147,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("char literal assign", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("char literal assign", () => {
+    const input = `
         class A{
             function void a(){
                 var char b;
@@ -158,17 +158,17 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push constant 1
                 pop local 0
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("null literal assign", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("null literal assign", () => {
+    const input = `
         class A {
             function void a(){
                 var A b;
@@ -176,17 +176,17 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push constant 0
                 pop local 0
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("this literal assign", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("this literal assign", () => {
+    const input = `
         class A{
             method void a(){
                 var A b;
@@ -195,7 +195,7 @@ describe("Jack compiler", () => {
             }
         }
          `;
-        const expected = `
+    const expected = `
         function A.a 1
             // first arg is this
             push argument 0
@@ -207,10 +207,10 @@ describe("Jack compiler", () => {
             push constant 0
             return
         `;
-        testCompiler(input, expected);
-    });
-    test("int literal assign", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("int literal assign", () => {
+    const input = `
         class A{
             function void a(){
                 var int b;
@@ -218,17 +218,17 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push constant 1
                 pop local 0
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("string literal assign", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("string literal assign", () => {
+    const input = `
         class A{
             function void a(){
                 var String b;
@@ -237,7 +237,7 @@ describe("Jack compiler", () => {
             }
         }
          `;
-        const expected = `
+    const expected = `
         function A.a 1
             // string length
             push constant 5
@@ -260,10 +260,10 @@ describe("Jack compiler", () => {
             push constant 0
             return
         `;
-        testCompiler(input, expected);
-    });
-    test("assignment for binary operation", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("assignment for binary operation", () => {
+    const input = `
         class A{
             function void a(){
                 var int b;
@@ -271,7 +271,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push constant 2
                 push constant 3
@@ -280,10 +280,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("assignment for varname", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("assignment for varname", () => {
+    const input = `
         class A{
             function void a(){
                 var boolean b,c;
@@ -293,7 +293,7 @@ describe("Jack compiler", () => {
             }
         }
          `;
-        const expected = `
+    const expected = `
             function A.a 2
                 // create true value (-1)
                 push constant 1
@@ -307,10 +307,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("assignment for subroutine call", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("assignment for subroutine call", () => {
+    const input = `
         class A{
             function int a(){
                 return 1;
@@ -322,7 +322,7 @@ describe("Jack compiler", () => {
             }
         }
          `;
-        const expected = `
+    const expected = `
             function A.a 0
                 push constant 1
                 return
@@ -334,11 +334,11 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("assign array value to a local var", () => {
-        const input = `
+  test("assign array value to a local var", () => {
+    const input = `
         class A{
             function void a(){
                 var Array arr;
@@ -348,7 +348,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 2
                 //array new 
                 push constant 10
@@ -367,11 +367,11 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("assignment for array access", () => {
-        const input = `
+  test("assignment for array access", () => {
+    const input = `
         class A{
             function void a(){
                 var Array arr;
@@ -380,7 +380,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 //  let arr = Array.new(10);
                 push constant 10
@@ -401,10 +401,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("assign array value to array value", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("assign array value to array value", () => {
+    const input = `
         class A{
             function void a(){
                 var Array arr;
@@ -413,7 +413,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 // let arr = Array.new(10);
                 push constant 10
@@ -441,10 +441,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("assignment to -1", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("assignment to -1", () => {
+    const input = `
         class A{
             function void a(){
                 var int b;
@@ -452,7 +452,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push constant 1
                 neg
@@ -460,10 +460,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("assignment to ~1", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("assignment to ~1", () => {
+    const input = `
         class A{
             function void a(){
                 var int b;
@@ -471,7 +471,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 //  ~1;
                 push constant 1
@@ -482,10 +482,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("assignment for grouped expr", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("assignment for grouped expr", () => {
+    const input = `
         class A{
             function void a(){
                 var int b;
@@ -493,7 +493,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 push constant 2
                 push constant 3
@@ -504,11 +504,11 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("if statement", () => {
-        const input = `
+  test("if statement", () => {
+    const input = `
         class A{
             function void a(){
                 var boolean b;
@@ -519,7 +519,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 //let b=true
                 push constant 1
@@ -537,10 +537,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("if else statement", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("if else statement", () => {
+    const input = `
         class A{
             function void a(){
                 var boolean b;
@@ -554,7 +554,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 2
                 //let b=true
                 push constant 1
@@ -576,10 +576,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("while constant", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("while constant", () => {
+    const input = `
         class A{
             function void a(){
                 var int i;
@@ -590,7 +590,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 1
                 // let i = 1;
                 push constant 1
@@ -616,11 +616,11 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("function call", () => {
-        const input = `
+  test("function call", () => {
+    const input = `
         class A{
             function void b(){
                 return;
@@ -630,7 +630,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.b 0
                 push constant 0
                 return
@@ -639,10 +639,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("var method call", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("var method call", () => {
+    const input = `
             class A{
                 constructor A new(){
                     return this;
@@ -657,7 +657,7 @@ describe("Jack compiler", () => {
                     return;
                 }
             }`;
-        const expected = `
+    const expected = `
             function A.new 0
                 push constant 0
                 call Memory.alloc 1
@@ -677,10 +677,10 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("var method call with params", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("var method call with params", () => {
+    const input = `
             class A{
                 constructor A new(){
                     return this;
@@ -696,7 +696,7 @@ describe("Jack compiler", () => {
                     return;
                 }
             }`;
-        const expected = `
+    const expected = `
             function A.new 0
                 push constant 0
                 call Memory.alloc 1
@@ -721,16 +721,16 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test("empty class constructor", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("empty class constructor", () => {
+    const input = `
         class A{
             constructor A new(){
                 return this;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.new 0   
             //create this     
             push constant 0
@@ -740,10 +740,10 @@ describe("Jack compiler", () => {
             push pointer 0
             return
         `;
-        testCompiler(input, expected);
-    });
-    test("class with fields and a constructor", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("class with fields and a constructor", () => {
+    const input = `
             class A{
                 field int a,b,c;
                 field char d,e,f; 
@@ -751,7 +751,7 @@ describe("Jack compiler", () => {
                     return this;
                 }
             }`;
-        const expected = `
+    const expected = `
             function A.new 0
                 push constant 6
                 call Memory.alloc 1
@@ -759,17 +759,17 @@ describe("Jack compiler", () => {
                 push pointer 0
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("return literal", () => {
-        const input = `
+  test("return literal", () => {
+    const input = `
         class A{
             method int a(){
                 return 1;
             }
         }`;
-        const expected = `
+    const expected = `
         function A.a 0
             // push this
             push argument 0
@@ -778,16 +778,16 @@ describe("Jack compiler", () => {
             push constant 1
             return
         `;
-        testCompiler(input, expected);
-    });
-    test("method return void", () => {
-        const input = `
+    testCompiler(input, expected);
+  });
+  test("method return void", () => {
+    const input = `
         class A{
             method void a(){
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
         function A.a 0
             push argument 0
             pop pointer 0
@@ -795,17 +795,17 @@ describe("Jack compiler", () => {
             push constant 0
             return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("return simple expression", () => {
-        const input = `
+  test("return simple expression", () => {
+    const input = `
         class A{
             function int a(){
                 return 1+2*3;
             }
         }`;
-        const expected = `
+    const expected = `
             function A.a 0
                 push constant 1
                 push constant 2
@@ -816,11 +816,11 @@ describe("Jack compiler", () => {
                 call Math.multiply 2
                 return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("nested expressions", () => {
-        const input = `
+  test("nested expressions", () => {
+    const input = `
         class A{
             function void a(){
                 var Array a, b, c;
@@ -832,7 +832,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
         function A.a 3
             //  let a = Array.new(10);
             push constant 10
@@ -865,11 +865,11 @@ describe("Jack compiler", () => {
             push constant 0
             return
         `;
-        testCompiler(input, expected);
-    });
+    testCompiler(input, expected);
+  });
 
-    test("mutate args", () => {
-        const input = `
+  test("mutate args", () => {
+    const input = `
         class A{
             function void fill(Array a, int size) {
                 while (size > 0) {
@@ -879,7 +879,7 @@ describe("Jack compiler", () => {
                 return;
             }
         }`;
-        const expected = `
+    const expected = `
         function A.fill 0
             label A_0
                 //size>0
@@ -908,86 +908,86 @@ describe("Jack compiler", () => {
                 push constant 0
                 return
         `;
-        testCompiler(input, expected);
-    });
-    test.concurrent.each(testResourceDirs)("%s", (folder: string) => {
-        testFilesInFolder(folder);
-    });
+    testCompiler(input, expected);
+  });
+  test.concurrent.each(testResourceDirs)("%s", (folder: string) => {
+    testFilesInFolder(folder);
+  });
 });
 function testFilesInFolder(folderInTestResources: string) {
-    const testFolder = getTestResourcePath(folderInTestResources);
-    const files = fs
-        .readdirSync(testFolder)
-        .filter((file) => file.endsWith(".jack"))
-        .map((file) => path.join(testFolder, file));
-    const trees: Record<string, ProgramContext> = {};
-    const compiler = new Compiler();
-    for (const f of files) {
-        const input = fs.readFileSync(f, { encoding: "utf8", flag: "r" });
-        const validatedOrErrors = compiler.parse(input);
-        if (Array.isArray(validatedOrErrors)) {
-            throw new Error(
-                `Unexpected compilation errors: ${validatedOrErrors.join("\n")}`,
-            );
-        }
-        const bindedOrErrors = compiler.bind(validatedOrErrors);
-        if (Array.isArray(bindedOrErrors)) {
-            throw new Error(
-                `Unexpected compilation errors: ${bindedOrErrors.join("\n")}`,
-            );
-        }
-        trees[f] = bindedOrErrors;
+  const testFolder = getTestResourcePath(folderInTestResources);
+  const files = fs
+    .readdirSync(testFolder)
+    .filter((file) => file.endsWith(".jack"))
+    .map((file) => path.join(testFolder, file));
+  const trees: Record<string, ProgramContext> = {};
+  const compiler = new Compiler();
+  for (const f of files) {
+    const input = fs.readFileSync(f, { encoding: "utf8", flag: "r" });
+    const validatedOrErrors = compiler.parse(input);
+    if (Array.isArray(validatedOrErrors)) {
+      throw new Error(
+        `Unexpected compilation errors: ${validatedOrErrors.join("\n")}`,
+      );
     }
-    for (const f of files) {
-        const expected = fs.readFileSync(f.replace(".jack", ".vm"), "utf8");
-        const res = compiler.compile(trees[f]);
-        if (Array.isArray(res)) {
-            throw new Error(`Unexpected compilation errors: ${res.join("\n")}`);
-        } else {
-            expect(trimAndDeleteComments(res)).toEqual(
-                trimAndDeleteComments(expected),
-            );
-        }
+    const bindedOrErrors = compiler.bind(validatedOrErrors);
+    if (Array.isArray(bindedOrErrors)) {
+      throw new Error(
+        `Unexpected compilation errors: ${bindedOrErrors.join("\n")}`,
+      );
     }
+    trees[f] = bindedOrErrors;
+  }
+  for (const f of files) {
+    const expected = fs.readFileSync(f.replace(".jack", ".vm"), "utf8");
+    const res = compiler.compile(trees[f]);
+    if (Array.isArray(res)) {
+      throw new Error(`Unexpected compilation errors: ${res.join("\n")}`);
+    } else {
+      expect(trimAndDeleteComments(res)).toEqual(
+        trimAndDeleteComments(expected),
+      );
+    }
+  }
 }
 
 function trimMultiline(text: string): string {
-    return text
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((str) => str.replace(/[\s\t]/g, "").length != 0)
-        .join("\n");
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((str) => str.replace(/[\s\t]/g, "").length != 0)
+    .join("\n");
 }
 function deleteComments(text: string): string {
-    return text
-        .split("\n")
-        .filter((str) => str.indexOf("//") == -1)
-        .join("\n");
+  return text
+    .split("\n")
+    .filter((str) => str.indexOf("//") == -1)
+    .join("\n");
 }
 
 const compose = <T>(fn1: (a: T) => T, ...fns: Array<(a: T) => T>) =>
-    fns.reduce((prevFn, nextFn) => (value) => prevFn(nextFn(value)), fn1);
+  fns.reduce((prevFn, nextFn) => (value) => prevFn(nextFn(value)), fn1);
 
 const trimAndDeleteComments = compose(trimMultiline, deleteComments);
 function testCompiler(input: string, expected: string): void {
-    const compiler = new Compiler();
-    const parsedOrErrors = compiler.parse(input);
-    if (Array.isArray(parsedOrErrors)) {
-        throw new Error(
-            `Unexpected compilation errors: ${parsedOrErrors.join("\n")}`,
-        );
-    }
-    const bindedOrErrors = compiler.bind(parsedOrErrors);
-    if (Array.isArray(bindedOrErrors)) {
-        throw new Error(
-            `Unexpected compilation errors: ${bindedOrErrors.join("\n")}`,
-        );
-    }
+  const compiler = new Compiler();
+  const parsedOrErrors = compiler.parse(input);
+  if (Array.isArray(parsedOrErrors)) {
+    throw new Error(
+      `Unexpected compilation errors: ${parsedOrErrors.join("\n")}`,
+    );
+  }
+  const bindedOrErrors = compiler.bind(parsedOrErrors);
+  if (Array.isArray(bindedOrErrors)) {
+    throw new Error(
+      `Unexpected compilation errors: ${bindedOrErrors.join("\n")}`,
+    );
+  }
 
-    const res = compiler.compile(bindedOrErrors);
-    if (Array.isArray(res)) {
-        throw new Error(`Unexpected compilation errors: ${res.join("\n")}`);
-    } else {
-        expect(trimAndDeleteComments(res)).toEqual(trimAndDeleteComments(expected));
-    }
+  const res = compiler.compile(bindedOrErrors);
+  if (Array.isArray(res)) {
+    throw new Error(`Unexpected compilation errors: ${res.join("\n")}`);
+  } else {
+    expect(trimAndDeleteComments(res)).toEqual(trimAndDeleteComments(expected));
+  }
 }

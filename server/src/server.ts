@@ -23,7 +23,6 @@ import { JackPlugin } from "prettier-plugin-jack/out/index";
 import * as path from "path";
 import * as fs from "fs";
 import { URI } from "vscode-uri";
-// import { JackCompilerEror } from 'jack-compiler';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -34,10 +33,6 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const hasFormattingCapability = true;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) => {
   connection.console.log("Server on init...");
@@ -51,19 +46,10 @@ connection.onInitialize((params: InitializeParams) => {
   hasWorkspaceFolderCapability = !!(
     capabilities.workspace && !!capabilities.workspace.workspaceFolders
   );
-  hasDiagnosticRelatedInformationCapability = !!(
-    capabilities.textDocument &&
-    capabilities.textDocument.publishDiagnostics &&
-    capabilities.textDocument.publishDiagnostics.relatedInformation
-  );
 
   const result: InitializeResult = {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,
-      // Tell the client that this server supports code completion.
-      completionProvider: {
-        resolveProvider: true,
-      },
       diagnosticProvider: {
         interFileDependencies: false,
         workspaceDiagnostics: false,
@@ -86,7 +72,7 @@ connection.onInitialized(() => {
     // Register for all configuration changes.
     connection.client.register(
       DidChangeConfigurationNotification.type,
-      undefined
+      undefined,
     );
   }
   if (hasWorkspaceFolderCapability) {
@@ -94,56 +80,6 @@ connection.onInitialized(() => {
       connection.console.log("Workspace folder change event received.");
     });
   }
-});
-
-// The example settings
-interface ExampleSettings {
-  maxNumberOfProblems: number;
-}
-
-// The global settings, used when the `workspace/configuration` request is not supported by the client.
-// Please note that this is not the case when using this server with the client provided in this example
-// but could happen with other clients.
-const defaultSettings: ExampleSettings = { maxNumberOfProblems: 1000 };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let globalSettings: ExampleSettings = defaultSettings;
-
-// Cache the settings of all open documents
-const documentSettings: Map<string, Thenable<ExampleSettings>> = new Map();
-
-connection.onDidChangeConfiguration((change) => {
-  if (hasConfigurationCapability) {
-    // Reset all cached document settings
-    documentSettings.clear();
-  } else {
-    globalSettings = <ExampleSettings>(
-      (change.settings.languageServerExample || defaultSettings)
-    );
-  }
-  // Refresh the diagnostics since the `maxNumberOfProblems` could have changed.
-  // We could optimize things here and re-fetch the setting first can compare it
-  // to the existing setting, but this is out of scope for this example.
-  connection.languages.diagnostics.refresh();
-});
-
-function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
-  if (!hasConfigurationCapability) {
-    return Promise.resolve(globalSettings);
-  }
-  let result = documentSettings.get(resource);
-  if (!result) {
-    result = connection.workspace.getConfiguration({
-      scopeUri: resource,
-      section: "languageServerExample",
-    });
-    documentSettings.set(resource, result);
-  }
-  return result;
-}
-
-// Only keep settings for open documents
-documents.onDidClose((e) => {
-  documentSettings.delete(e.document.uri);
 });
 
 connection.languages.diagnostics.on(async (params) => {
@@ -171,7 +107,7 @@ documents.onDidChangeContent((change) => {
 });
 
 async function validateTextDocument(
-  textDocument: TextDocument
+  textDocument: TextDocument,
 ): Promise<Diagnostic[]> {
   console.log(textDocument);
   // In this simple example we get the settings for every validate run.
@@ -217,7 +153,6 @@ async function validateTextDocument(
 }
 
 function toDiagnostics(textDocument: TextDocument, e: JackCompilerError) {
-  console.log("Error: " + JSON.stringify(e));
   return {
     severity: DiagnosticSeverity.Error,
     range: {
@@ -254,7 +189,7 @@ connection.onDocumentFormatting(
       return [
         TextEdit.replace(
           Range.create(Position.create(0, 0), document.positionAt(text.length)),
-          formatted
+          formatted,
         ),
       ];
     } catch (error) {
@@ -265,9 +200,8 @@ connection.onDocumentFormatting(
       }
       return [];
     }
-  }
+  },
 );
-// console.log = connection.console.log;
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events

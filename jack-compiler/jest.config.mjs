@@ -6,6 +6,6 @@
 export default {
   roots: ["test"],
   transform: {
-    '^.+\\.(t|j)sx?$': '@swc/jest',
+    "^.+\\.(t|j)sx?$": "@swc/jest",
   },
 };

@@ -1,5 +1,5 @@
 packages:
-  - 'server'
-  - 'client'
-  - 'jack-compiler'
-  - 'prettier-plugin-jack'
+  - "server"
+  - "client"
+  - "jack-compiler"
+  - "prettier-plugin-jack"

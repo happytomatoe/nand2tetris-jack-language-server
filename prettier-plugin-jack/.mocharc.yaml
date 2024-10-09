@@ -38,12 +38,12 @@ inline-diffs: true
 # reporter-option: # array, not object
 #   - 'foo=bar'
 #   - 'baz=quux'
-require: 'tsx'
+require: "tsx"
 # retries: 1
 # slow: '75'
 # sort: false
 spec:
-  - 'test/**/*.spec.ts' # the positional arguments!
+  - "test/**/*.spec.ts" # the positional arguments!
 # timeout: '2000' # same as "timeout: '2s'"
 # # timeout: false # same as "timeout: 0"
 # trace-warnings: true # node flags ok
@@ -51,8 +51,8 @@ spec:
 # v8-stack-trace-limit: 100 # V8 flags are prepended with "v8-"
 # watch: false
 watch-files:
-  - 'src/**/*.ts'
-  - 'test/**/*.ts'
-  - 'test/**/*.jack'
+  - "src/**/*.ts"
+  - "test/**/*.ts"
+  - "test/**/*.jack"
 # watch-ignore:
 #   - 'lib/vendor'

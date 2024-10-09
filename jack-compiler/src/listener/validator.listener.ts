@@ -534,7 +534,7 @@ class BinaryTreeNode {
     public parent?: BinaryTreeNode,
     public left?: BinaryTreeNode,
     public right?: BinaryTreeNode,
-  ) { }
+  ) {}
 
   public get returns(): boolean {
     if (this._returns) {

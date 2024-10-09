@@ -1,28 +1,28 @@
 {
-	"name": "lsp-sample-server",
-	"description": "Example implementation of a language server in node.",
-	"version": "1.0.0",
-	"author": "Microsoft Corporation",
-	"license": "MIT",
-	"engines": {
-		"node": "*"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
-	},
-	"dependencies": {
-		"jack-compiler": "workspace:*",
-		"prettier": "^3.3.3",
-		"prettier-plugin-jack": "workspace:*",
-		"vscode-languageserver": "^9.0.1",
-		"vscode-languageserver-textdocument": "^1.0.11",
-		"vscode-uri": "^3.0.8"
-	},
-	"scripts": {
-		"build": "tsc -b"
-	},
-	"devDependencies": {
-		"vscode-languageserver-types": "^3.17.5"
-	}
+  "name": "lsp-sample-server",
+  "description": "Example implementation of a language server in node.",
+  "version": "1.0.0",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
+  },
+  "dependencies": {
+    "jack-compiler": "workspace:*",
+    "prettier": "^3.3.3",
+    "prettier-plugin-jack": "workspace:*",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11",
+    "vscode-uri": "^3.0.8"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "vscode-languageserver-types": "^3.17.5"
+  }
 }

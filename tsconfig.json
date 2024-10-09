@@ -1,22 +1,19 @@
 {
-	"extends": "./tsconfig.base.json",
-	"files": [],
-	"exclude": [
-		"node_modules",
-		".vscode-test"
-	],
-	"references": [
-		{
-			"path": "./jack-compiler"
-		},
-		{
-			"path": "./prettier-plugin-jack",
-		},
-		{
-			"path": "./client"
-		},
-		{
-			"path": "./server"
-		},
-	]
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "exclude": ["node_modules", ".vscode-test"],
+  "references": [
+    {
+      "path": "./jack-compiler"
+    },
+    {
+      "path": "./prettier-plugin-jack"
+    },
+    {
+      "path": "./client"
+    },
+    {
+      "path": "./server"
+    }
+  ]
 }
