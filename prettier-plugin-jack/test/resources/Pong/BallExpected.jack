@@ -83,7 +83,7 @@ class Ball {
             let dy = temp;
             let positivex = (y < desty);
             let positivey = (x < destx);
-        }else{
+        } else {
             let positivex = (x < destx);
             let positivey = (y < desty);
         }
@@ -107,19 +107,19 @@ class Ball {
 
         if (d < 0) {
             let d = d + straightD;
-        }else{
+        } else {
             let d = d + diagonalD;
 
             if (positivey) {
                 if (invert) {
                     let x = x + 4;
-                }else{
+                } else {
                     let y = y + 4;
                 }
-            }else{
+            } else {
                 if (invert) {
                     let x = x - 4;
-                }else{
+                } else {
                     let y = y - 4;
                 }
             }
@@ -128,13 +128,13 @@ class Ball {
         if (positivex) {
             if (invert) {
                 let y = y + 4;
-            }else{
+            } else {
                 let x = x + 4;
             }
-        }else{
+        } else {
             if (invert) {
                 let y = y - 4;
-            }else{
+            } else {
                 let x = x - 4;
             }
         }
@@ -174,10 +174,10 @@ class Ball {
         let divLengthy = lengthy / 10;
         if (bouncingDirection = 0) {
             let factor = 10;
-        }else{
+        } else {
             if (((~(lengthx < 0)) & (bouncingDirection = 1)) | ((lengthx < 0) & (bouncingDirection = (-1)))) {
                 let factor = 20;  // bounce direction is in ball direction
-            }else{
+            } else {
                 let factor = 5;
             } // bounce direction is against ball direction
         }
@@ -186,17 +186,17 @@ class Ball {
             let newx = 506;
             let newy = (divLengthy * (-50)) / divLengthx;
             let newy = y + (newy * factor);
-        }else{
+        } else {
             if (wall = 2) {
                 let newx = 0;
                 let newy = (divLengthy * 50) / divLengthx;
                 let newy = y + (newy * factor);
-            }else{
+            } else {
                 if (wall = 3) {
                     let newy = 250;
                     let newx = (divLengthx * (-25)) / divLengthy;
                     let newx = x + (newx * factor);
-                }else{ // assumes wall = 4
+                } else { // assumes wall = 4
                     let newy = 0;
                     let newx = (divLengthx * 25) / divLengthy;
                     let newx = x + (newx * factor);

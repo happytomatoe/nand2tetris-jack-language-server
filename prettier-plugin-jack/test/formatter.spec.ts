@@ -18,10 +18,7 @@ describe("Formatter", () => {
   it("comments", async () => {
     await test("comments");
   });
-  it("comments", async () => {
-    await test("comments");
-  });
-  it.only("Pong test ", async function () {
+  it("Pong test ", async function () {
     await testDir("Pong");
   });
   it("bugs ", async function () {
@@ -47,8 +44,6 @@ async function testDir(dirName: string) {
         tabWidth: 4,
         insertSpaces: true,
       });
-      console.log(file);
-      console.log(actual);
       fs.writeFileSync("temp.jack", actual);
       expect(actual).to.equal(expected);
     }

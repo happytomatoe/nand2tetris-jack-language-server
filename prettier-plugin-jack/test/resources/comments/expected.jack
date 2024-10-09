@@ -3,7 +3,7 @@
 */
 class List {
     //line comment 1
-    static int data; // line comment 2
+    static int data;    // line comment 2
 
 
 

@@ -40,8 +40,7 @@ import JackParser, {
 import JackParserVisitor from "jack-compiler/out/generated/JackParserVisitor";
 import { Doc, doc } from "prettier";
 import { builders } from "prettier/doc";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { join, line, hardline, softline, ifBreak, indent, group } = doc.builders;
+const { join, hardline, indent, group } = doc.builders;
 export class JackVisitor extends JackParserVisitor<Doc> {
   private indentationLevel = 0;
   private indentationLevelChange = 1;
@@ -50,7 +49,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     super();
   }
   visitProgram = (ctx: ProgramContext): builders.Doc => {
-    return this.visitClassDeclaration(ctx.classDeclaration());
+    return [this.visitClassDeclaration(ctx.classDeclaration()), hardline];
   };
 
   //	CLASS className LBRACE classVarDec* subroutineDeclaration* rBrace;
@@ -95,7 +94,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   // fieldList: varType fieldName ( COMMA fieldName)*;
   visitFieldList = (ctx: FieldListContext): doc.builders.Doc => {
     const varNames = joinWithCommas(
-      ctx.fieldName_list().map((v) => [this.visitFieldName(v)]),
+      ctx.fieldName_list().map((v) => [this.visitFieldName(v)])
     );
     return [this.visitVarType(ctx.varType()), " ", varNames];
   };
@@ -108,9 +107,8 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   // subroutineDecWithoutType:
   // 	subroutineReturnType subroutineName LPAREN parameterList RPAREN subroutineBody;
   visitSubroutineDeclaration = (
-    ctx: SubroutineDeclarationContext,
+    ctx: SubroutineDeclarationContext
   ): builders.Doc => {
-    this.insideSubroutine = true;
     const subroutineDecWithoutType = ctx.subroutineDecWithoutType();
 
     const bodyContext: SubroutineBodyContext =
@@ -134,7 +132,6 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         .map((v) => this.addHardLine(this.visitVarDeclaration(v))),
       this.visitStatements(bodyContext.statements()),
     ];
-    this.insideSubroutine = false;
     res.push(this.visitRBrace(bodyContext.rBrace()));
     return res;
   };
@@ -151,7 +148,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   };
   visitParameterList = (ctx: ParameterListContext): builders.Doc => {
     return joinWithCommas(
-      ctx.parameter_list().map((v) => this.visitParameter(v)),
+      ctx.parameter_list().map((v) => this.visitParameter(v))
     );
   };
 
@@ -178,7 +175,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       this.visitVarType(ctx.varType()),
       " ",
       joinWithCommas(
-        ctx.varNameInDeclaration_list().map((v) => this.visitVarName(v)),
+        ctx.varNameInDeclaration_list().map((v) => this.visitVarName(v))
       ),
       this.visitTerminal(ctx.SEMICOLON()),
     ]);
@@ -268,7 +265,9 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   //elseStatement: ELSE LBRACE statements rBrace;
   visitElseStatement = (ctx: ElseStatementContext): builders.Doc => {
     return [
+      " ",
       this.visitTerminal(ctx.ELSE()),
+      " ",
       this.visitTerminal(ctx.LBRACE()),
       this.visitStatements(ctx.statements()),
       this.visitRBrace(ctx.rBrace()),
@@ -340,7 +339,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   // expressionList: (expression (COMMA expression)*)?;
   visitExpressionList = (ctx: ExpressionListContext): builders.Doc => {
     return joinWithCommas(
-      ctx.expression_list().map((v) => this.visitExpression(v)),
+      ctx.expression_list().map((v) => this.visitExpression(v))
     );
   };
 
@@ -385,7 +384,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       ctx.LESS_THAN(),
       ctx.MINUS(),
       ctx.MUL(),
-      ctx.PLUS(),
+      ctx.PLUS()
     );
   };
   visitTerminalOrThrow(
@@ -413,7 +412,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       ctx.INTEGER_LITERAL(),
       ctx.STRING_LITERAL(),
       ctx.NULL_LITERAL(),
-      ctx.THIS_LITERAL(),
+      ctx.THIS_LITERAL()
     );
   };
   visitBooleanLiteral = (ctx: BooleanLiteralContext): doc.builders.Doc => {
@@ -444,7 +443,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     return this.visitTerminalOrThrow(
       () => "Invalid unary operator " + ctx.getText(),
       ctx.MINUS(),
-      ctx.TILDE(),
+      ctx.TILDE()
     );
   };
   visitGroupedExpression = (ctx: GroupedExpressionContext): builders.Doc => {
@@ -479,7 +478,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     if (this.onStartOfTheFile) {
       let a: Doc[] = [];
       const leadingComment = this.tokenStream.getHiddenTokensToLeft(
-        node.symbol.tokenIndex,
+        node.symbol.tokenIndex
       );
       if (leadingComment != null) {
         if (
@@ -501,7 +500,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 
     const res: Doc[] = [node.symbol.text];
     const trailingComment = this.tokenStream.getHiddenTokensToRight(
-      node.symbol.tokenIndex,
+      node.symbol.tokenIndex
     );
 
     if (trailingComment != null) {
@@ -522,16 +521,13 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         trailingComment.find((v) => v.type == JackParser.BLOCK_COMMENT) &&
         trailingComment.find((v) => v.type == JackParser.LINE_COMMENT)
       ) {
-        if (node.symbol.type == JackParser.SEMICOLON) {
-          res.push(" ");
-        }
         res.push(trailingComment.map((v) => v.text));
       } else if (
         trailingComment.find((v) => v.type == JackParser.BLOCK_COMMENT) !=
         undefined
       ) {
         const commentIndex = trailingComment.findIndex(
-          (v) => v.type == JackParser.BLOCK_COMMENT,
+          (v) => v.type == JackParser.BLOCK_COMMENT
         );
         //indent newlines before comment
         const b = trailingComment.map((v, i) => {
@@ -542,7 +538,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
             res.indexOf("\n") !== -1
           ) {
             res = Array<Doc>((res.match(/\n/g) || []).length).fill(
-              this.getHardLine(),
+              this.getHardLine()
             );
           }
           return res;

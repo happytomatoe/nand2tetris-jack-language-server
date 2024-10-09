@@ -17,7 +17,7 @@ class Ball {
    
     field int leftWall, rightWall, topWall, bottomWall;  // wall locations
    
-    field int wall;   // last wall that the ball was bounced off of
+    field int wall;    // last wall that the ball was bounced off of
 
     /** Constructs a new ball with the given initial location and wall locations. */
     constructor Ball new(int Ax, int Ay,
