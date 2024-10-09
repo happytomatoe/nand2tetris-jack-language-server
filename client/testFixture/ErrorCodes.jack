@@ -1,0 +1,26 @@
+class ErrorCodes {
+    //Cannot draw cactus out of screen.Coordinates and size 
+    function int cannotDrawCactusOfScreen(){
+        return 50;
+    }
+    //Zero divider in modulo
+    function int zeroDividerMessage(){
+        return 51;
+    }
+    //Negative first arg for modulo
+    function int negativNMessage(){
+        return 52;
+    }
+    function int cantFindAvailableCactus(){
+        return 53;
+    }
+    function int  cannotDrawCloudOfScreen(){
+        return 54;
+    }
+
+    function int cantFindAvailableCloud(){
+        return 55;
+    }
+   
+    
+}   

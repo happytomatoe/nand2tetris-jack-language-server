@@ -1,0 +1,342 @@
+function Cactus.new 1
+    push constant 5
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 0
+    push argument 1
+    pop this 1
+    push this 0
+    push this 1
+	call Math.multiply 2
+    pop local 0
+    push constant 0
+    pop this 4
+    push pointer 0
+    return
+function Cactus.dispose 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Memory.deAlloc 1
+    push constant 0
+    return
+function Cactus.isVisible 0
+    push argument 0
+    pop pointer 0
+    push this 4
+    return
+function Cactus.setVisible 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 4
+    push constant 0
+    return
+function Cactus.getX 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function Cactus.getY 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function Cactus.getW 0
+    push constant 23
+    return
+function Cactus.getH 0
+    push constant 48
+    return
+function Cactus.setSpeed 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 2
+    push constant 0
+    return
+function Cactus.setX 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 0
+    push constant 0
+    return
+function Cactus.update 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Cactus.hide 1
+    push this 0
+    push this 2
+	gt
+    not
+    if-goto Cactus_0  
+    push this 0
+    push this 2
+	sub
+    pop this 0
+    push pointer 0
+    call Cactus.show 1
+    label Cactus_0 
+    push constant 0
+    return
+function Cactus.hide 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    call Screen.setColor 1
+    push pointer 0
+    call Cactus.draw 1
+    push constant 0
+    pop this 4
+    push constant 0
+    return
+function Cactus.show 0
+    push argument 0
+    pop pointer 0
+    push constant 1
+    neg
+    call Screen.setColor 1
+    push pointer 0
+    call Cactus.draw 1
+    push constant 1
+    neg
+    pop this 4
+    push constant 0
+    return
+function Cactus.draw 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push this 1
+    call Cactus.getW 0
+    call Cactus.getH 0
+    call ScreenCustom.visible 4
+	not
+    not
+    if-goto Cactus_1  
+    call ErrorCodes.cannotDrawCactusOfScreen 0
+    call Sys.error 1
+    label Cactus_1 
+    push pointer 0
+    call Cactus.drawBigType1 1
+    push constant 0
+    return
+function Cactus.drawBigType1 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push constant 9
+	add
+    push this 1
+    push this 0
+    push constant 13
+	add
+    push this 1
+    push constant 45
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 8
+	add
+    push this 1
+    push constant 1
+	add
+    push this 0
+    push constant 8
+	add
+    push this 1
+    push constant 45
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 14
+	add
+    push this 1
+    push constant 1
+	add
+    push this 0
+    push constant 14
+	add
+    push this 1
+    push constant 45
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 19
+	add
+    push this 1
+    push constant 10
+	add
+    push this 0
+    push constant 21
+	add
+    push this 1
+    push constant 26
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 18
+	add
+    push this 1
+    push constant 11
+	add
+    push this 0
+    push constant 18
+	add
+    push this 1
+    push constant 29
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 22
+	add
+    push this 1
+    push constant 11
+	add
+    push this 0
+    push constant 22
+	add
+    push this 1
+    push constant 25
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 1
+	add
+    push this 1
+    push constant 12
+	add
+    push this 0
+    push constant 3
+	add
+    push this 1
+    push constant 28
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push this 1
+    push constant 13
+	add
+    push this 0
+    push this 1
+    push constant 27
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 4
+	add
+    push this 1
+    push constant 13
+	add
+    push this 0
+    push constant 4
+	add
+    push this 1
+    push constant 30
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 5
+	add
+    push this 1
+    push constant 26
+	add
+    push this 0
+    push constant 7
+	add
+    push this 1
+    push constant 30
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 15
+	add
+    push this 1
+    push constant 26
+	add
+    push this 0
+    push constant 17
+	add
+    push this 1
+    push constant 29
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 19
+	add
+    push this 1
+    push constant 27
+	add
+    push this 0
+    push constant 20
+	add
+    push this 1
+    push constant 27
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 19
+	add
+    push this 1
+    push constant 28
+	add
+    call Screen.drawPixel 2
+    push this 0
+    push constant 2
+	add
+    push this 1
+    push constant 29
+	add
+    push this 0
+    push constant 3
+	add
+    push this 1
+    push constant 29
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 3
+	add
+    push this 1
+    push constant 30
+	add
+    call Screen.drawPixel 2
+    push this 0
+    push constant 18
+	add
+    push this 1
+    push constant 44
+	add
+    call Screen.drawPixel 2
+    push this 0
+    push constant 4
+	add
+    push this 1
+    push constant 45
+	add
+    call Screen.drawPixel 2
+    push this 0
+    push constant 6
+	add
+    push this 1
+    push constant 45
+	add
+    push this 0
+    push constant 7
+	add
+    push this 1
+    push constant 45
+	add
+    call Screen.drawLine 4
+    push this 0
+    push constant 15
+	add
+    push this 1
+    push constant 47
+	add
+    call Screen.drawPixel 2
+    push constant 0
+    return

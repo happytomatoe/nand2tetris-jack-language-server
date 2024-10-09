@@ -1,0 +1,762 @@
+function Dino.new 0
+    push constant 13
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 0
+    push argument 1
+    pop this 1
+    push this 1
+    pop this 3
+    push argument 3
+    pop this 6
+    push argument 2
+    pop this 5
+    push constant 40
+    pop this 9
+    push constant 43
+    pop this 10
+    push constant 3
+    pop this 7
+    push pointer 0
+    return
+function Dino.move 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 0
+    push argument 2
+    pop this 1
+    push constant 0
+    return
+function Dino.dispose 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Memory.deAlloc 1
+    push constant 0
+    return
+function Dino.getX 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function Dino.getY 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function Dino.getW 0
+    push argument 0
+    pop pointer 0
+    push this 9
+    return
+function Dino.getH 0
+    push argument 0
+    pop pointer 0
+    push this 10
+    return
+function Dino.update 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Dino.hide 1
+    push this 11
+	not
+    call Keys.upPressed 0
+	and
+    not
+    if-goto Dino_0  
+    push constant 1
+    neg
+    pop this 11
+    push this 5
+    pop this 4
+    label Dino_0 
+    push this 11
+    not
+    if-goto Dino_1  
+    push pointer 0
+    call Dino.calcNewPos 1
+    goto Dino_2 
+    label Dino_1 
+    push pointer 0
+    call Dino.run 1
+    label Dino_2  
+    push pointer 0
+    call Dino.show 1
+    push this 8
+    push constant 1
+	add
+    pop this 8
+    push this 8
+    push constant 29999
+	gt
+    not
+    if-goto Dino_3  
+    push constant 0
+    pop this 8
+    label Dino_3 
+    push constant 0
+    return
+function Dino.calcNewPos 2
+    push argument 0
+    pop pointer 0
+    push constant 1
+    pop local 1
+    push local 1
+    push local 1
+	call Math.multiply 2
+    pop local 0
+    push this 1
+    push this 4
+    push local 1
+	call Math.multiply 2
+	add
+    push this 6
+    push local 0
+	call Math.multiply 2
+    push constant 2
+	call Math.divide 2
+	add
+    pop this 2
+    push this 2
+    push this 3
+	gt
+    push this 2
+    push this 3
+	eq
+	or
+    not
+    if-goto Dino_4  
+    push constant 0
+    pop this 11
+    push this 3
+    pop this 1
+    goto Dino_5 
+    label Dino_4 
+    push this 2
+    pop this 1
+    push this 4
+    push this 6
+    push local 1
+    call Math.multiply 2
+	add
+    pop this 4
+    label Dino_5  
+    push constant 0
+    return
+function Dino.hide 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    call Screen.setColor 1
+    push pointer 0
+    call Dino.drawCommonPart 1
+    push pointer 0
+    call Dino.drawFeetRun2 1
+    push pointer 0
+    call Dino.drawFeetRun1 1
+    push constant 0
+    return
+function Dino.run 0
+    push argument 0
+    pop pointer 0
+    push this 8
+    push this 7
+    call MathCustom.mod 2
+    push constant 0
+	eq
+    not
+    if-goto Dino_6  
+    push this 12
+	not
+    pop this 12
+    label Dino_6 
+    push constant 0
+    return
+function Dino.show 0
+    push argument 0
+    pop pointer 0
+    push constant 1
+    neg
+    call Screen.setColor 1
+    push pointer 0
+    call Dino.drawNormal 1
+    push constant 0
+    return
+function Dino.die 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Dino.hide 1
+    push constant 1
+    neg
+    call Screen.setColor 1
+    push pointer 0
+    call Dino.drawCommonPart 1
+    push pointer 0
+    call Dino.drawNormalFeet 1
+    push pointer 0
+    call Dino.drawDeathEye 1
+    push constant 0
+    return
+function Dino.drawNormal 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Dino.drawCommonPart 1
+    push this 11
+	not
+    not
+    if-goto Dino_7  
+    push this 12
+    not
+    if-goto Dino_8  
+    push pointer 0
+    call Dino.drawFeetRun2 1
+    goto Dino_9 
+    label Dino_8 
+    push pointer 0
+    call Dino.drawFeetRun1 1
+    label Dino_9  
+    goto Dino_10 
+    label Dino_7 
+    push pointer 0
+    call Dino.drawNormalFeet 1
+    label Dino_10  
+    push constant 0
+    return
+function Dino.drawCommonPart 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push constant 22
+	add
+    push this 1
+    push this 0
+    push constant 37
+	add
+    push this 1
+    push constant 2
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 20
+	add
+    push this 1
+    push constant 2
+	add
+    push this 0
+    push constant 21
+	add
+    push this 1
+    push constant 34
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 38
+	add
+    push this 1
+    push constant 2
+	add
+    push this 0
+    push constant 39
+	add
+    push this 1
+    push constant 10
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 22
+	add
+    push this 1
+    push constant 3
+	add
+    push this 0
+    push constant 23
+	add
+    push this 1
+    push constant 32
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 26
+	add
+    push this 1
+    push constant 3
+	add
+    push this 0
+    push constant 37
+	add
+    push this 1
+    push constant 10
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 24
+	add
+    push this 1
+    push constant 5
+	add
+    push this 0
+    push constant 25
+	add
+    push this 1
+    push constant 30
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 26
+	add
+    push this 1
+    push constant 11
+	add
+    push this 0
+    push constant 29
+	add
+    push this 1
+    push constant 14
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 30
+	add
+    push this 1
+    push constant 13
+	add
+    push this 0
+    push constant 35
+	add
+    push this 1
+    push constant 14
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push this 1
+    push constant 15
+	add
+    push this 0
+    push constant 1
+	add
+    push this 1
+    push constant 26
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 18
+	add
+    push this 1
+    push constant 15
+	add
+    push this 0
+    push constant 19
+	add
+    push this 1
+    push constant 34
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 26
+	add
+    push this 1
+    push constant 15
+	add
+    push this 0
+    push constant 27
+	add
+    push this 1
+    push constant 27
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 15
+	add
+    push this 1
+    push constant 17
+	add
+    push this 0
+    push constant 17
+	add
+    push this 1
+    push constant 34
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 2
+	add
+    push this 1
+    push constant 19
+	add
+    push this 0
+    push constant 3
+	add
+    push this 1
+    push constant 28
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 12
+	add
+    push this 1
+    push constant 19
+	add
+    push this 0
+    push constant 14
+	add
+    push this 1
+    push constant 34
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 28
+	add
+    push this 1
+    push constant 19
+	add
+    push this 0
+    push constant 31
+	add
+    push this 1
+    push constant 20
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 4
+	add
+    push this 1
+    push constant 21
+	add
+    push this 0
+    push constant 5
+	add
+    push this 1
+    push constant 30
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 21
+	add
+    push this 0
+    push constant 11
+	add
+    push this 1
+    push constant 34
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 30
+	add
+    push this 1
+    push constant 21
+	add
+    push this 0
+    push constant 31
+	add
+    push this 1
+    push constant 22
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 6
+	add
+    push this 1
+    push constant 23
+	add
+    push this 0
+    push constant 9
+	add
+    push this 1
+    push constant 32
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 8
+	add
+    push this 1
+    push constant 33
+	add
+    push this 0
+    push constant 9
+	add
+    push this 1
+    push constant 34
+	add
+    call Screen.drawRectangle 4
+    push constant 0
+    return
+function Dino.drawNormalFeet 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 35
+	add
+    push this 0
+    push constant 15
+	add
+    push this 1
+    push constant 36
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 18
+	add
+    push this 1
+    push constant 35
+	add
+    push this 0
+    push constant 21
+	add
+    push this 1
+    push constant 36
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 37
+	add
+    push this 0
+    push constant 13
+	add
+    push this 1
+    push constant 38
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 20
+	add
+    push this 1
+    push constant 37
+	add
+    push this 0
+    push constant 21
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 39
+	add
+    push this 0
+    push constant 11
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 12
+	add
+    push this 1
+    push constant 41
+	add
+    push this 0
+    push constant 13
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 22
+	add
+    push this 1
+    push constant 41
+	add
+    push this 0
+    push constant 23
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push constant 0
+    return
+function Dino.drawFeetRun1 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 35
+	add
+    push this 0
+    push constant 15
+	add
+    push this 1
+    push constant 36
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 20
+	add
+    push this 1
+    push constant 35
+	add
+    push this 0
+    push constant 24
+	add
+    push this 1
+    push constant 36
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 37
+	add
+    push this 0
+    push constant 13
+	add
+    push this 1
+    push constant 38
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 39
+	add
+    push this 0
+    push constant 11
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 12
+	add
+    push this 1
+    push constant 41
+	add
+    push this 0
+    push constant 13
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push constant 0
+    return
+function Dino.drawFeetRun2 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push constant 10
+	add
+    push this 1
+    push constant 35
+	add
+    push this 0
+    push constant 13
+	add
+    push this 1
+    push constant 36
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 18
+	add
+    push this 1
+    push constant 35
+	add
+    push this 0
+    push constant 21
+	add
+    push this 1
+    push constant 36
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 12
+	add
+    push this 1
+    push constant 37
+	add
+    push this 0
+    push constant 15
+	add
+    push this 1
+    push constant 38
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 20
+	add
+    push this 1
+    push constant 37
+	add
+    push this 0
+    push constant 21
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push this 0
+    push constant 22
+	add
+    push this 1
+    push constant 41
+	add
+    push this 0
+    push constant 23
+	add
+    push this 1
+    push constant 42
+	add
+    call Screen.drawRectangle 4
+    push constant 0
+    return
+function Dino.drawDeathEye 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    call Screen.setColor 1
+    push this 0
+    push constant 24
+	add
+    push this 1
+    push constant 3
+	add
+    push this 0
+    push constant 27
+	add
+    push this 1
+    push constant 6
+	add
+    call Screen.drawRectangle 4
+    push constant 1
+    neg
+    call Screen.setColor 1
+    push this 0
+    push constant 25
+	add
+    push this 1
+    push constant 4
+	add
+    push this 0
+    push constant 26
+	add
+    push this 1
+    push constant 5
+	add
+    call Screen.drawRectangle 4
+    push constant 0
+    return

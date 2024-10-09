@@ -1,0 +1,44 @@
+function MathCustom.init 0
+    push constant 0
+    return
+function MathCustom.mod 0
+    push argument 1
+    push constant 0
+	eq
+    not
+    if-goto MathCustom_0  
+    call ErrorCodes.zeroDividerMessage 0
+    call Sys.error 1
+    label MathCustom_0 
+    push argument 0
+    push constant 0
+	lt
+    not
+    if-goto MathCustom_1  
+    call ErrorCodes.negativNMessage 0
+    call Sys.error 1
+    label MathCustom_1 
+    label MathCustom_2  
+    push constant 1
+    neg
+    not
+    if-goto MathCustom_3  
+    push argument 0
+    push argument 1
+	sub
+    push constant 0
+	lt
+    not
+    if-goto MathCustom_4  
+    push argument 0
+    return
+    label MathCustom_4 
+    push argument 0
+    push argument 1
+	sub
+    pop argument 0
+    goto MathCustom_2 
+    label MathCustom_3 
+    push constant 1
+	neg
+    return

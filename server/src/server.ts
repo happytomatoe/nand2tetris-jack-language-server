@@ -19,10 +19,13 @@ import {
 import {
 	TextDocument,
 } from 'vscode-languageserver-textdocument';
-import { Compiler, JackCompilerError } from 'jack-compiler/out/index';
+import { Compiler, JackCompilerError, ProgramContext } from 'jack-compiler/out/index';
 import * as prettier from 'prettier';
 import { JackPlugin } from 'prettier-plugin-jack/out/index';
-// import { JackCompilerError } from 'jack-compiler';
+import * as path from 'path';
+import * as fs from 'fs';
+import { URI } from 'vscode-uri';
+// import { JackCompilerEror } from 'jack-compiler';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -176,12 +179,31 @@ async function validateTextDocument(textDocument: TextDocument): Promise<Diagnos
 
 	// The validator creates diagnostics for all uppercase words length 2 and more
 	const text = textDocument.getText();
-
 	const compiler = new Compiler();
+	const selectedFilePath = URI.parse(textDocument.uri).fsPath;
+	const dir = path.dirname(selectedFilePath);
+	// const file = path.resolve(textDocument.uri)
+	connection.console.log("Dir " + dir);
+	connection.console.log("File " + selectedFilePath);
+
+
 	const parsedOrErrors = compiler.parse(text);
 	if (Array.isArray(parsedOrErrors)) {
 		return parsedOrErrors.map(m => toDiagnostics(textDocument, m));
 	}
+
+	const files = fs
+		.readdirSync(dir)
+		.filter((file) => file.endsWith(".jack"))
+		.map((file) => path.join(dir, file));
+	for (const filePath of files) {
+		if (filePath == selectedFilePath) continue;
+		const treeOrErrors = compiler.parse(filePath);
+		if (!Array.isArray(treeOrErrors)) {
+			compiler.bind(treeOrErrors);
+		}
+	}
+
 	const bindedOrErrors = compiler.bind(parsedOrErrors);
 	if (Array.isArray(bindedOrErrors)) {
 		return bindedOrErrors.map(m => toDiagnostics(textDocument, m));

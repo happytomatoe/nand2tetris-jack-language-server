@@ -1,0 +1,20 @@
+class MathCustom{
+	function void init(){
+		return;
+	}
+	function int mod(int n, int div){
+					if(div=0){
+				do Sys.error(ErrorCodes.zeroDividerMessage());
+			}
+						if(n<0){
+				do Sys.error(ErrorCodes.negativNMessage());
+			}
+					while(true){
+			if(n-div<0){
+				return n;
+			}
+			let n=n-div;
+		}
+		return -1;
+	}
+}

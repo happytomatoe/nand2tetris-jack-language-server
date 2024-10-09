@@ -22,7 +22,7 @@ export type Primitive = typeof primitives extends Set<infer S> ? S : never;
  */
 export class BinderListener extends JackParserListener {
   // key can be class or <class>.<subroutine_name>
-  public globalSymbolTable: GlobalSymbolTable = structuredClone(builtInSymbols);
+  public globalSymbolTable: GlobalSymbolTable = {} ;//structuredClone(builtInSymbols);
   public className = "";
   public errors: DuplicatedSubroutineError[] = [];
   private subRoutineInfo: SubroutineInfo = {} as SubroutineInfo;

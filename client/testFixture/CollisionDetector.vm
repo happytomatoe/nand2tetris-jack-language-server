@@ -1,0 +1,62 @@
+function CollisionDetector.colided 8
+    push argument 1
+    call Cactus.getX 1
+    pop local 4
+    push argument 1
+    call Cactus.getY 1
+    push constant 3
+	add
+    pop local 5
+    call Cactus.getW 0
+    pop local 6
+    call Cactus.getH 0
+    push constant 3
+	sub
+    pop local 7
+    push argument 0
+    call Dino.getX 1
+    pop local 0
+    push argument 0
+    call Dino.getY 1
+    pop local 1
+    push argument 0
+    call Dino.getW 1
+    push constant 1
+	sub
+    pop local 2
+    push argument 0
+    call Dino.getH 1
+    push constant 1
+	sub
+    pop local 3
+    push local 0
+    push local 2
+	add
+    push local 4
+    call CollisionDetector.gte 2
+    push local 4
+    push local 6
+	add
+    push local 0
+    call CollisionDetector.gte 2
+	and
+    push local 1
+    push local 3
+	add
+    push local 5
+    call CollisionDetector.gte 2
+	and
+    push local 5
+    push local 7
+	add
+    push local 1
+    call CollisionDetector.gte 2
+	and
+    return
+function CollisionDetector.gte 1
+    push argument 0
+    push argument 1
+    push constant 1
+	sub
+	gt
+    return

@@ -1,0 +1,7 @@
+function Keys.upPressed 1
+    call Keyboard.keyPressed 0
+    pop local 0
+    push local 0
+    push constant 131
+	eq
+    return

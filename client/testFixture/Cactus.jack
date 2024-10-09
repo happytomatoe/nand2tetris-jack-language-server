@@ -1,0 +1,110 @@
+class Cactus {
+  field int x,y, speed, type;
+  field boolean visible;
+  constructor Cactus new(int  x_,int y_) {
+     var int z;
+     let x=x_;
+     let y=y_;
+let z=x*y;
+     let visible=false;
+
+     return this;
+ }
+
+ method void dispose() {
+  do Memory.deAlloc(this);
+  return;
+}
+
+method boolean isVisible(){
+    return visible;
+}
+
+
+method void setVisible(boolean visible_){
+    let visible=visible_;
+    return ;
+}
+
+
+method int getX(){
+    return x;
+}
+method int getY(){
+    return y;
+}
+
+function int getW(){
+    return 23;
+}
+function int getH(){
+ return 48;
+}
+method void setSpeed(int speed_){
+    let speed=speed_;
+    return;
+}
+
+method void setX(int x_){
+    let x=x_;
+    return;
+}
+method void update(){
+
+     do hide();
+    //TODO: what's the clean  way to stop updating/hide/remove cactus?
+    if(x>speed){
+        let x=x-speed;
+        do show();
+    }
+
+    return;
+}
+method void hide() {
+    do Screen.setColor(false);
+    do draw();
+    let visible=false;
+    return;
+}
+
+method void show() {
+    do Screen.setColor(true);
+    do draw();
+    let visible=true;
+    return;
+}
+method void draw(){
+    if(~ScreenCustom.visible(x,y,Cactus.getW(),Cactus.getH())){
+        do Sys.error(ErrorCodes.cannotDrawCactusOfScreen());
+    }
+    do drawBigType1();
+    return;
+}
+
+
+method void drawBigType1() {
+    do Screen.drawRectangle(x+9,y,x+13,y+45);
+    do Screen.drawLine(x+8,y+1,x+8,y+45);
+    do Screen.drawLine(x+14,y+1,x+14,y+45);
+    do Screen.drawRectangle(x+19,y+10,x+21,y+26);
+    do Screen.drawLine(x+18,y+11,x+18,y+29);
+    do Screen.drawLine(x+22,y+11,x+22,y+25);
+    do Screen.drawRectangle(x+1,y+12,x+3,y+28);
+    do Screen.drawLine(x,y+13,x,y+27);
+    do Screen.drawLine(x+4,y+13,x+4,y+30);
+    do Screen.drawRectangle(x+5,y+26,x+7,y+30);
+    do Screen.drawRectangle(x+15,y+26,x+17,y+29);
+    do Screen.drawLine(x+19,y+27,x+20,y+27);
+    do Screen.drawPixel(x+19,y+28);
+    do Screen.drawLine(x+2,y+29,x+3,y+29);
+    do Screen.drawPixel(x+3,y+30);
+    do Screen.drawPixel(x+18,y+44);
+    do Screen.drawPixel(x+4,y+45);
+    do Screen.drawLine(x+6,y+45,x+7,y+45);
+    do Screen.drawPixel(x+15,y+47);
+
+    return;
+}
+
+
+}

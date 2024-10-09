@@ -1,0 +1,197 @@
+function Pebbles.new 0
+    push constant 4
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 0
+    push argument 1
+    pop this 1
+    push constant 0
+    pop this 2
+    push argument 2
+    pop this 3
+    push pointer 0
+    return
+function Pebbles.setSpeed 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 3
+    push constant 0
+    return
+function Pebbles.dispose 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Memory.deAlloc 1
+    push constant 0
+    return
+function Pebbles.update 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Pebbles.hide 1
+    push this 2
+    push this 3
+	add
+    pop this 2
+    push this 2
+    push constant 500
+	gt
+    not
+    if-goto Pebbles_0  
+    push constant 0
+    pop this 2
+    label Pebbles_0 
+    push pointer 0
+    call Pebbles.show 1
+    push constant 0
+    return
+function Pebbles.hide 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    call Screen.setColor 1
+    push pointer 0
+    call Pebbles.draw 1
+    push constant 0
+    return
+function Pebbles.show 0
+    push argument 0
+    pop pointer 0
+    push constant 1
+    neg
+    call Screen.setColor 1
+    push pointer 0
+    call Pebbles.draw 1
+    push constant 0
+    return
+function Pebbles.draw 1
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+    label Pebbles_1  
+    push local 0
+    push constant 490
+	lt
+    not
+    if-goto Pebbles_2  
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 6
+	add
+    push this 1
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 7
+	add
+    push this 1
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 8
+	add
+    push this 1
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 9
+	add
+    push this 1
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push this 1
+    push constant 3
+	add
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 1
+	add
+    push this 1
+    push constant 3
+	add
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 2
+	add
+    push this 1
+    push constant 3
+	add
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 3
+	add
+    push this 1
+    push constant 3
+	add
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 14
+	add
+    push this 1
+    push constant 3
+	add
+    call Pebbles.drawWithOffset 3
+    push pointer 0
+    push this 0
+    push local 0
+	add
+    push constant 15
+	add
+    push this 1
+    push constant 3
+	add
+    call Pebbles.drawWithOffset 3
+    push local 0
+    push constant 52
+	add
+    pop local 0
+    goto Pebbles_1 
+    label Pebbles_2 
+    push constant 0
+    return
+function Pebbles.drawWithOffset 1
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push this 2
+	sub
+    pop local 0
+    push local 0
+    push constant 0
+	lt
+    not
+    if-goto Pebbles_3  
+    push constant 512
+    push local 0
+	add
+    pop local 0
+    label Pebbles_3 
+    push local 0
+    push argument 2
+    call Screen.drawPixel 2
+    push constant 0
+    return

@@ -64,7 +64,8 @@
 		"build": "pnpm clean && tsc -b",
 		"watch": "tsc -b -w",
 		"lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --ext .ts,.tsx",
-		"test": "sh ./scripts/e2e.sh"
+		"test": "sh ./scripts/e2e.sh",
+		"ci":"pnpm -r t"
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.8",

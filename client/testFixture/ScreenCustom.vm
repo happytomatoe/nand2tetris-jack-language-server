@@ -1,0 +1,45 @@
+function ScreenCustom.visible 4
+    push constant 256
+    pop local 3
+    push constant 512
+    pop local 2
+    push argument 0
+    push argument 2
+	add
+    pop local 0
+    push argument 1
+    push argument 3
+	add
+    pop local 1
+    push argument 0
+    push constant 0
+	gt
+    push argument 0
+    push constant 0
+	eq
+	or
+    push local 0
+    push local 2
+	lt
+    push local 0
+    push local 2
+	eq
+	or
+	and
+    push argument 1
+    push constant 0
+	gt
+    push argument 1
+    push constant 0
+	eq
+	or
+	and
+    push local 1
+    push local 3
+	lt
+    push local 1
+    push local 3
+	eq
+	or
+	and
+    return

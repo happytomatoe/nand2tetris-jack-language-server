@@ -1,0 +1,69 @@
+class Pebbles {
+	field int x, y, counter, speed;
+	constructor Pebbles new(int x_, int y_, int speed_){
+		let x=x_;
+		let y=y_;
+		let counter=0;
+		let speed=speed_;
+		return this;
+	}
+	
+	method void setSpeed(int speed_){
+		let speed=speed_;
+		return;
+	}
+	method void dispose() {
+		do Memory.deAlloc(this);
+		return;
+	}
+
+	method void update(){
+		do hide();
+		let counter = counter +speed;
+		if(counter>500){
+			let counter=0;
+		}
+		do show();
+		return;
+	}
+
+	method void hide() {
+		do Screen.setColor(false);
+		do draw();
+		return;
+	}
+
+	method void show() {
+		do Screen.setColor(true);
+		do draw();
+		return;
+	}
+	method void draw() {
+		var int i;
+		let i=0;
+		while(i<490){
+			do drawWithOffset(x+i+6,y);
+			do drawWithOffset(x+i+7,y);
+			do drawWithOffset(x+i+8,y);
+			do drawWithOffset(x+i+9,y);
+			do drawWithOffset(x,y+3);
+			do drawWithOffset(x+i+1,y+3);
+			do drawWithOffset(x+i+2,y+3);
+			do drawWithOffset(x+i+3,y+3);
+			do drawWithOffset(x+i+14,y+3);
+			do drawWithOffset(x+i+15,y+3);
+			let i=i+52;
+		}
+		return;
+	}
+
+	method void drawWithOffset(int posX,int posY){
+		var int posX_;
+		let posX_=posX-counter;
+		if(posX_<0){
+			let posX_=512+posX_;
+		}
+		do Screen.drawPixel(posX_,posY);
+		return;
+	}
+}

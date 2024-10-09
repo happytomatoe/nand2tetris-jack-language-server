@@ -9,19 +9,19 @@ import JackLexer from "./generated/JackLexer";
 
 export class Compiler {
   private binder = new BinderListener();
-  private errorListener = new CustomErrorListener();
   parse(src: string): ProgramContext | JackCompilerError[] {
+    const errorListener = new CustomErrorListener();
     const lexer = new JackLexer(CharStreams.fromString(src));
     lexer.removeErrorListeners();
-    lexer.addErrorListener(this.errorListener);
+    lexer.addErrorListener(errorListener);
     const tokenStream = new CommonTokenStream(lexer);
     const parser = new JackParser(tokenStream);
     parser.removeErrorListeners();
-    parser.addErrorListener(this.errorListener);
+    parser.addErrorListener(errorListener);
     const tree = parser.program();
-    if (this.errorListener.errors.length > 0) {
+    if (errorListener.errors.length > 0) {
       console.log("Errors when parsing or lexing");
-      return this.errorListener.errors;
+      return errorListener.errors;
     }
     return tree;
   }

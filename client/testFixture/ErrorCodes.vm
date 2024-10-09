@@ -1,0 +1,18 @@
+function ErrorCodes.cannotDrawCactusOfScreen 0
+    push constant 50
+    return
+function ErrorCodes.zeroDividerMessage 0
+    push constant 51
+    return
+function ErrorCodes.negativNMessage 0
+    push constant 52
+    return
+function ErrorCodes.cantFindAvailableCactus 0
+    push constant 53
+    return
+function ErrorCodes.cannotDrawCloudOfScreen 0
+    push constant 54
+    return
+function ErrorCodes.cantFindAvailableCloud 0
+    push constant 55
+    return

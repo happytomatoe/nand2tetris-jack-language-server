@@ -1,0 +1,25 @@
+class CollisionDetector {
+    function boolean colided(Dino dino, Cactus cactus){
+        // collision x-axis?
+        var int dinoX, dinoY, dinoW, dinoH;
+        var int cactusX, cactusY, cactusW, cactusH;
+        let cactusX = cactus.getX();
+        let cactusY = cactus.getY()+3;
+        let cactusW = Cactus.getW();
+        let cactusH = Cactus.getH()-3;
+
+        let dinoX = dino.getX();
+        let dinoY = dino.getY();
+        let dinoW = dino.getW()-1;
+        let dinoH = dino.getH()-1;
+
+        return CollisionDetector.gte(dinoX + dinoW, cactusX) & 
+        CollisionDetector.gte(cactusX + cactusW , dinoX) & 
+        CollisionDetector.gte(dinoY + dinoH , cactusY) &
+        CollisionDetector.gte(cactusY + cactusH , dinoY);
+    }
+    function boolean gte(int a, int b){
+      var boolean res;
+      return a>(b-1); 
+    }
+}
