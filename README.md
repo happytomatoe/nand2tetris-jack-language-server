@@ -4,8 +4,7 @@ Jack programming language for Nand2tetris course
 
 ## Feature
 
-- [x] Validation for single file
-- [ ] Folder validation
+- [x] Validation
 - [x] Formatting
 - [ ] Code Completion
 
