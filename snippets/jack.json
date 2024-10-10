@@ -63,7 +63,7 @@
     },
     "Create a Main class with main Function": {
         "prefix": [
-            "main",
+            "main"
         ],
         "body": [
             "class Main {",
@@ -124,7 +124,7 @@
         "description": "Create a let Data Type"
     },"call a function": {
       "prefix": [
-          "do",
+          "do"
       ],
       "body": [
           "do ${1:funcName}"
@@ -134,7 +134,7 @@
   "new a object": {
       "prefix": [
           ".new",
-          "new",
+          "new"
       ],
       "body": [
           ".new(${1:});"
@@ -178,7 +178,7 @@
           "Memory.poke",
           "Memory.peek",
           "poke",
-          "peek",
+          "peek"
       ],
       "body": [
           "Memory.${1|poke,peek|}(${2:address});"
@@ -216,5 +216,5 @@
           "Screen.drawCircle(${1:x}, ${2:y}, ${3:radius});"
       ],
       "description": "Screen draw a circle function"
-  },
+  }
 }
