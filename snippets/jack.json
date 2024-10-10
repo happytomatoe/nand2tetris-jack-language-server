@@ -1,0 +1,220 @@
+{
+    "while-loop": {
+        "prefix": [
+            "while"
+        ],
+        "body": [
+            "while (${1:condition}) {",
+            "\t${0:$LINE_COMMENT code}",
+            "}"
+        ],
+        "description": "Create a while-loop"
+    },
+    "single-line if statement":{
+        "prefix": [
+            "if",
+            "else"
+        ],
+        "body": [
+            "if (${1:condition})  { ${2:code}; }"
+        ],
+        "description": "Create a single-line if statement"
+    },
+    "multi-line if statement":{
+        "prefix": [
+            "if",
+            "else"
+        ],
+        "body": [
+            "if (${1:condition}) {",
+            "\t${0:$LINE_COMMENT code}",
+            "}"
+        ],
+        "description": "Create a multi-line if statement"
+    },
+	"Create a Class": {
+        "prefix": [
+            "class",
+            "struct"
+        ],
+        "body": [
+            "class ${1:Name} {",
+            "\t${0:$LINE_COMMENT attributes and methods}",
+            "}"
+        ],
+        "description": "Create a jack class"
+    },
+    "Define a Function and Method": {
+        "prefix": [
+            "function",
+            "method",
+            "void",
+            "string",
+            "int",
+            "array",
+            "char"
+        ],
+        "body": [
+            "${1|function,method|} ${2:void} ${3:name} (${4:$BLOCK_COMMENT_START arguments $BLOCK_COMMENT_END}) {",
+            "\t${0:$LINE_COMMENT code}",
+            "}"
+        ],
+        "description": "Define a Fucntion or Method"
+    },
+    "Create a Main class with main Function": {
+        "prefix": [
+            "main",
+        ],
+        "body": [
+            "class Main {",
+            "\tfunction void main() {",
+            "\t\t${0:$LINE_COMMENT code}",
+            "\t\treturn;",
+            "\t}",
+            "}"
+        ],
+        "description": "Create a Main class with main Function"
+    },
+    "create a class field Data Type": {
+        "prefix": [
+            "field",
+            "int",
+            "string",
+            "array",
+            "char",
+            "boolean"
+        ],
+        "body": [
+            "field ${1|int,boolean,char,Array,String|} ${2:varName}"
+        ],
+        "description": "Create a class field Data Type"
+    }, "create a variable Data Type": {
+        "prefix": [
+            "var",
+            "boolean",
+            "array",
+            "string",
+            "int"
+        ],
+        "body": [
+            "var ${1|int,boolean,char,Array,String|} ${2:varName}"
+        ],
+        "description": "Create a variable object"
+    },
+    "create a static Data Type": {
+        "prefix": [
+            "static",
+            "boolean",
+            "array",
+            "string",
+            "int"
+        ],
+        "body": [
+            "static ${1|int,boolean,char,Array,String|} ${2:varName}"
+        ],
+        "description": "Create a static object"
+    },
+    "create a let Data Type": {
+        "prefix": [
+            "let"
+        ],
+        "body": [
+            "let ${1:varName} = ${2:varValue}"
+        ],
+        "description": "Create a let Data Type"
+    },"call a function": {
+      "prefix": [
+          "do",
+      ],
+      "body": [
+          "do ${1:funcName}"
+      ],
+      "description": "calling a function"
+  },
+  "new a object": {
+      "prefix": [
+          ".new",
+          "new",
+      ],
+      "body": [
+          ".new(${1:});"
+      ],
+      "description": "New a object"
+  },
+  "dispose a object": {
+      "prefix": [
+          ".dispose",
+          "dispose"
+      ],
+      "body": [
+          ".dispose();"
+      ],
+      "description": "Dispose a object"
+  },
+  "call output function": {
+      "prefix": [
+          "Output",
+          "Output.printstring",
+          "Output.println",
+          "Output.printint",
+          "Output.movecursor",
+          "Output.printchar",
+          "Output.backspace",
+          "printstring",
+          "println",
+          "printint",
+          "movecursor",
+          "printchar",
+          "backspace"
+      ],
+      "body": [
+          "Output.${1|printString,println,printInt,moveCursor,printChar,backSpace|}(${2:});"
+      ],
+      "description": "Call output function"
+  },
+  "memory operatoin": {
+      "prefix": [
+          "Memory",
+          "Memory.poke",
+          "Memory.peek",
+          "poke",
+          "peek",
+      ],
+      "body": [
+          "Memory.${1|poke,peek|}(${2:address});"
+      ],
+      "description": "Basic memory operation"
+  },
+  "Screen SetColor function": {
+      "prefix": [
+          "Screen.setcolor",
+          "setcolor"
+      ],
+      "body": [
+          "Screen.setColor(${1|true,false|});"
+      ],
+      "description": "Screen SetColor function"
+  },
+  "Screen draw a line or rectangle function": {
+      "prefix": [
+          "Screen.drawline",
+          "Screen.drawrectangle",
+          "drawline",
+          "drawrectangle"
+      ],
+      "body": [
+          "Screen.${1|drawLine,drawRectangle|}(${2:x1}, ${3:x2}, ${4:y1}, ${5:y2});"
+      ],
+      "description": "Screen draw a line or rectangle function"
+  },
+  "Screen draw a circle function": {
+      "prefix": [
+          "Screen.drawcircle",
+          "drawcircle"
+      ],
+      "body": [
+          "Screen.drawCircle(${1:x}, ${2:y}, ${3:radius});"
+      ],
+      "description": "Screen draw a circle function"
+  },
+}
