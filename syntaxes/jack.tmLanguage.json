@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "Jack",
+  "fileTypes": ["jack"],
   "patterns": [
     {
       "include": "#keywords"
@@ -24,9 +25,6 @@
       "include": "#grammar"
     },
     {
-      "include": "#blockComment"
-    },
-    {
       "include": "#meta"
     }
   ],
@@ -34,7 +32,7 @@
     "keywords": {
       "patterns": [
         {
-          "name": "keyword.control.Jack",
+          "name": "keyword.control",
           "match": "\\b(while|return|field|this|if|else)\\b"
         }
       ]
@@ -54,7 +52,13 @@
       "patterns": [
         {
           "name": "comment.line.double-slash",
-          "match": "//.*"
+          "begin": "//",
+          "end": "\\n"
+        },
+        {
+          "begin": "\\/\\*\\*",
+          "end": "\\*\\/",
+          "name": "comment.block"
         }
       ]
     },
@@ -91,24 +95,6 @@
         {
           "name": "variable.name",
           "match": "\\b(do|int|char|void|static|boolean)\\b"
-        }
-      ]
-    },
-    "comment-block": {
-      "patterns": [
-        {
-          "begin": "\\/\\*\\*",
-          "end": "\\*\\/",
-          "name": "comment.block"
-        }
-      ]
-    },
-    "comment-inline": {
-      "patterns": [
-        {
-          "begin": "//",
-          "end": "\\n",
-          "name": "comment.line"
         }
       ]
     }
