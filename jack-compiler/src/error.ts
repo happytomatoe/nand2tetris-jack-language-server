@@ -9,7 +9,7 @@ export class JackCompilerError {
     line: number,
     startInd: number,
     endIndex: number,
-    public msg: string,
+    public msg: string
   ) {
     this.span = { start: startInd, end: endIndex, line: line };
   }
@@ -27,39 +27,41 @@ export class DuplicatedSubroutineError extends JackCompilerError {
     line: number,
     startInd: number,
     endIndex: number,
-    subroutineName: string,
+    subroutineName: string
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Subroutine ${subroutineName} is already defined.`,
+      `Subroutine ${subroutineName} is already defined.`
     );
   }
 }
+
 export class DuplicatedClassError extends JackCompilerError {
   constructor(
     line: number,
     startInd: number,
     endIndex: number,
-    className: string,
+    className: string
   ) {
     super(line, startInd, endIndex, `Class ${className} is already defined.`);
   }
 }
+
 export class FilenameDoesntMatchClassName extends JackCompilerError {
   constructor(
     line: number,
     startInd: number,
     endIndex: number,
     filename: string,
-    className: string,
+    className: string
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Class name ${className} doesn't match file name ${filename}`,
+      `Class name ${className} doesn't match file name ${filename}`
     );
   }
 }
@@ -69,14 +71,14 @@ export class DuplicatedVariableException extends JackCompilerError {
     line: number,
     startInd: number,
     endIndex: number,
-    variableName: string,
+    variableName: string
   ) {
     super(
       line,
       startInd,
       endIndex,
       "Duplicated local variable, field, argument or static variable " +
-        variableName,
+        variableName
     );
   }
 }
@@ -86,17 +88,18 @@ export class UndeclaredVariableError extends JackCompilerError {
     line: number,
     startInd: number,
     endIndex: number,
-    variableName: string,
+    variableName: string
   ) {
     super(line, startInd, endIndex, "Undeclared variable " + variableName);
   }
 }
+
 export class UnknownClassError extends JackCompilerError {
   constructor(
     line: number,
     startInd: number,
     endIndex: number,
-    className: string,
+    className: string
   ) {
     super(line, startInd, endIndex, `Class ${className} doesn't exist`);
   }
@@ -108,7 +111,7 @@ export class NonVoidFunctionNoReturnError extends JackCompilerError {
       line,
       startInd,
       endIndex,
-      `A non void subroutine must return a value`,
+      `A non void subroutine must return a value`
     );
   }
 }
@@ -119,9 +122,8 @@ export class VoidSubroutineReturnsValueError extends JackCompilerError {
       line,
       startInd,
       endIndex,
-      `Cannot return a value from a void subroutine`,
+      `Cannot return a value from a void subroutine`
     );
-    Object.setPrototypeOf(this, VoidSubroutineReturnsValueError.prototype);
   }
 }
 
@@ -130,15 +132,14 @@ export class SubroutineNotAllPathsReturnError extends JackCompilerError {
     line: number,
     startInd: number,
     endIndex: number,
-    subroutineName: string,
+    subroutineName: string
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Subroutine ${subroutineName}: not all code paths return a value`,
+      `Subroutine ${subroutineName}: not all code paths return a value`
     );
-    Object.setPrototypeOf(this, SubroutineNotAllPathsReturnError.prototype);
   }
 }
 
@@ -149,51 +150,47 @@ export class IncorrectParamsNumberInSubroutineCallError extends JackCompilerErro
     endIndex: number,
     subroutineName: string,
     expectedParamsCount: number,
-    actualParamsCount: number,
+    actualParamsCount: number
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Subroutine ${subroutineName} (declared to accept ${expectedParamsCount} parameter(s)) called with  ${actualParamsCount} parameter(s)`,
-    );
-    Object.setPrototypeOf(
-      this,
-      IncorrectParamsNumberInSubroutineCallError.prototype,
+      `Subroutine ${subroutineName} (declared to accept ${expectedParamsCount} parameter(s)) called with  ${actualParamsCount} parameter(s)`
     );
   }
 }
+
 export class UnknownSubroutineCallError extends JackCompilerError {
   constructor(
     line: number,
     startInd: number,
     endIndex: number,
     subroutineName: string,
-    className?: string,
+    className?: string
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Can't find subroutine '${subroutineName}'${className ? ` in ${className}` : ""}`,
+      `Can't find subroutine '${subroutineName}'${className ? ` in ${className}` : ""}`
     );
-    Object.setPrototypeOf(this, UnknownSubroutineCallError.prototype);
   }
 }
+
 export class MethodCalledAsFunctionError extends JackCompilerError {
   constructor(
     line: number,
     startInd: number,
     endIndex: number,
-    subroutineId: string,
+    subroutineId: string
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Method ${subroutineId} was called as a function/constructor`,
+      `Method ${subroutineId} was called as a function/constructor`
     );
-    Object.setPrototypeOf(this, MethodCalledAsFunctionError.prototype);
   }
 }
 export class FunctionCalledAsMethodError extends JackCompilerError {
@@ -201,15 +198,14 @@ export class FunctionCalledAsMethodError extends JackCompilerError {
     line: number,
     startInd: number,
     endIndex: number,
-    subroutineId: string,
+    subroutineId: string
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Function or constructor ${subroutineId} was called as a method`,
+      `Function or constructor ${subroutineId} was called as a method`
     );
-    Object.setPrototypeOf(this, FunctionCalledAsMethodError.prototype);
   }
 }
 
@@ -219,23 +215,20 @@ export class IncorrectConstructorReturnType extends JackCompilerError {
       line,
       startInd,
       endIndex,
-      `The return type of a constructor must be of the class type`,
+      `The return type of a constructor must be of the class type`
     );
-    Object.setPrototypeOf(this, IncorrectConstructorReturnType.prototype);
   }
 }
 
 export class UnreachableCodeError extends JackCompilerError {
   constructor(line: number, startInd: number, endIndex: number) {
     super(line, startInd, endIndex, `Unreachable code`);
-    Object.setPrototypeOf(this, UnreachableCodeError.prototype);
   }
 }
 
 export class ConstructorMushReturnThis extends JackCompilerError {
   constructor(line: number, startInd: number, endIndex: number) {
     super(line, startInd, endIndex, `A constructor must return 'this'`);
-    Object.setPrototypeOf(this, ConstructorMushReturnThis.prototype);
   }
 }
 
@@ -245,11 +238,10 @@ export class WrongLiteralTypeError extends JackCompilerError {
     line: number,
     startInd: number,
     endIndex: number,
-    typeName: string,
+    typeName: string
   ) {
     const article = vowels.indexOf(typeName.substring(0, 1)) != -1 ? "an" : "a";
     super(line, startInd, endIndex, `${article} ${typeName} value is expected`);
-    Object.setPrototypeOf(this, WrongLiteralTypeError.prototype);
   }
 }
 
@@ -260,28 +252,25 @@ export class IntLiteralIsOutOfRange extends JackCompilerError {
     endIndex: number,
     value: number,
     min: number,
-    max: number,
+    max: number
   ) {
     super(
       line,
       startInd,
       endIndex,
-      `Integer constant(${value}) is out of range. Min value is ${min} and max value is ${max}`,
+      `Integer constant(${value}) is out of range. Min value is ${min} and max value is ${max}`
     );
-    Object.setPrototypeOf(this, IntLiteralIsOutOfRange.prototype);
   }
 }
 
 export class FieldCantBeReferencedInFunction extends JackCompilerError {
   constructor(line: number, startInd: number, endIndex: number) {
     super(line, startInd, endIndex, `Field can't be referenced in a function`);
-    Object.setPrototypeOf(this, FieldCantBeReferencedInFunction.prototype);
   }
 }
 
 export class ThisCantBeReferencedInFunction extends JackCompilerError {
   constructor(line: number, startInd: number, endIndex: number) {
     super(line, startInd, endIndex, `this can't be referenced in a function`);
-    Object.setPrototypeOf(this, ThisCantBeReferencedInFunction.prototype);
   }
 }
