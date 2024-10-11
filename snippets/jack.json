@@ -39,7 +39,7 @@
         ],
         "body": [
             "class ${1:Name} {",
-            "\t${0:$LINE_COMMENT attributes and methods}",
+            "\t${0:$LINE_COMMENT}",
             "}"
         ],
         "description": "Create a jack class"
@@ -59,7 +59,7 @@
             "\t${0:$LINE_COMMENT code}",
             "}"
         ],
-        "description": "Define a Fucntion or Method"
+        "description": "Define a Function or Method"
     },
     "Create a Main class with main Function": {
         "prefix": [
@@ -127,7 +127,7 @@
           "do"
       ],
       "body": [
-          "do ${1:funcName}"
+          "do ${1:funcName}()"
       ],
       "description": "calling a function"
   },
@@ -172,7 +172,7 @@
       ],
       "description": "Call output function"
   },
-  "memory operatoin": {
+  "memory operations": {
       "prefix": [
           "Memory",
           "Memory.poke",

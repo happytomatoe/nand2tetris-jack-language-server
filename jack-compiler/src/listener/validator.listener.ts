@@ -70,7 +70,8 @@ export class ValidatorListener extends JackParserListener {
   }
 
   override enterClassDeclaration = (ctx: ClassDeclarationContext) => {
-    const newName = ctx.className()?.getText();
+    const className = ctx.className();
+    const newName = className.getText();
     if (this.className != "") {
       throw new Error("Cannot change class name");
     }
@@ -78,9 +79,9 @@ export class ValidatorListener extends JackParserListener {
     if (this.filename != null && this.filename != this.className) {
       this.errors.push(
         new FilenameDoesntMatchClassName(
-          ctx.start.line,
-          ctx.start.start,
-          ctx.start.stop,
+          className.start.line,
+          className.start.start,
+          className.start.stop,
           this.filename,
           this.className,
         ),

@@ -136,9 +136,16 @@ async function validateTextDocument(
   if (Array.isArray(bindedOrErrors)) {
     return bindedOrErrors.map((m) => toDiagnostics(textDocument, m));
   }
-
-  const validatedOrErrors = compiler.validate(bindedOrErrors);
+  const classNameFromFilename = selectedFilePath.substring(
+    selectedFilePath.lastIndexOf(path.sep) + 1,
+    selectedFilePath.indexOf(".jack")
+  );
+  const validatedOrErrors = compiler.validate(
+    bindedOrErrors,
+    classNameFromFilename
+  );
   if (Array.isArray(validatedOrErrors)) {
+    connection.console.log("Errors: " + validatedOrErrors);
     return validatedOrErrors.map((m) => toDiagnostics(textDocument, m));
   }
   return [];
