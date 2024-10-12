@@ -1,8 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { DuplicatedClassError, DuplicatedSubroutineError } from "../src/error";
-import { BinderListener } from "../src/listener/binder.listener";
-import { SubroutineType } from "../src/symbol";
+import { BinderListener } from "../src/listener/global.symbol.listener";
+import {
+  GenericSymbol,
+  GlobalSymbolTable,
+  SubroutineType,
+} from "../src/symbol";
 import { builtInSymbols } from "../src/builtins";
 import {
   createSubroutineSymbol,
@@ -51,39 +55,92 @@ describe("Jack binder", () => {
     testBinder(input, DuplicatedClassError);
   });
   test("basic", () => {
-    const expected = {
+    const expected: GlobalSymbolTable = {
       ...builtInSymbols,
-      Fraction: {},
+      Fraction: {
+        filename: "",
+        start: { line: 7, character: 6 },
+        end: { line: 7, character: 14 },
+      },
       "Fraction.new": createSubroutineSymbol(
         SubroutineType.Constructor,
         ["x", "y"],
-        0
+        0,
+        undefined,
+        { line: 11, character: 24 },
+        { line: 11, character: 27 }
       ),
-      "Fraction.reduce": createSubroutineSymbol(SubroutineType.Method, [], 1),
+      "Fraction.reduce": createSubroutineSymbol(
+        SubroutineType.Method,
+        [],
+        1,
+        undefined,
+        { line: 19, character: 15 },
+        { line: 19, character: 21 }
+      ),
       "Fraction.getNumerator": createSubroutineSymbol(
         SubroutineType.Method,
         [],
-        0
+        0,
+
+        undefined,
+        { line: 30, character: 14 },
+        { line: 30, character: 26 }
       ),
       "Fraction.getDenominator": createSubroutineSymbol(
         SubroutineType.Method,
         [],
-        0
+        0,
+        undefined,
+        { line: 31, character: 14 },
+        { line: 31, character: 28 }
       ),
       "Fraction.plus": createSubroutineSymbol(
         SubroutineType.Method,
         ["other"],
-        1
+        1,
+        undefined,
+        { line: 34, character: 19 },
+        { line: 34, character: 23 }
       ),
-      "Fraction.dispose": createSubroutineSymbol(SubroutineType.Method, [], 0),
-      "Fraction.print": createSubroutineSymbol(SubroutineType.Method, [], 0),
+      "Fraction.dispose": createSubroutineSymbol(
+        SubroutineType.Method,
+        [],
+        0,
+        undefined,
+        { line: 43, character: 15 },
+        { line: 43, character: 22 }
+      ),
+      "Fraction.print": createSubroutineSymbol(
+        SubroutineType.Method,
+        [],
+        0,
+        undefined,
+        { line: 49, character: 15 },
+        { line: 49, character: 20 }
+      ),
       "Fraction.gcd": createSubroutineSymbol(
         SubroutineType.Function,
         ["a", "b"],
-        1
+        1,
+
+        undefined,
+        { line: 57, character: 16 },
+        { line: 57, character: 19 }
       ),
-      Main: {},
-      "Main.main": createSubroutineSymbol(SubroutineType.Function, [], 3),
+      Main: {
+        filename: "",
+        start: { line: 7, character: 6 },
+        end: { line: 7, character: 10 },
+      } as GenericSymbol,
+      "Main.main": createSubroutineSymbol(
+        SubroutineType.Function,
+        [],
+        3,
+        "",
+        { line: 8, character: 17 },
+        { line: 8, character: 21 }
+      ),
     };
     let globalSymbolsListener = new BinderListener();
 

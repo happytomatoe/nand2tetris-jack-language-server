@@ -47,7 +47,10 @@ export class BinderListener extends JackParserListener {
     this.globalSymbolTable[className] = {
       filename: this.filename,
       start: { line: id.symbol.line, character: id.symbol.column },
-      end: { line: id.symbol.line, character: id.symbol.column + 1 },
+      end: {
+        line: id.symbol.line,
+        character: id.symbol.column + id.getText().length,
+      },
     } as GenericSymbol;
     this.className = className;
   };

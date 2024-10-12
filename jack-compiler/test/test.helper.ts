@@ -10,17 +10,25 @@ import {
 } from "antlr4";
 import JackLexer from "../src/generated/JackLexer";
 import JackParser, { ProgramContext } from "../src/generated/JackParser";
-import { GenericSymbol, SubroutineInfo, SubroutineType } from "../src/symbol";
+import {
+  GenericSymbol,
+  Position,
+  SubroutineInfo,
+  SubroutineType,
+} from "../src/symbol";
 export function createSubroutineSymbol(
   type: SubroutineType,
   params: string[],
-  localVarsCount?: number
+  localVarsCount?: number,
+  filename: string = "",
+  start?: Position,
+  end?: Position
 ): GenericSymbol {
   const s = { paramNames: params, type } as SubroutineInfo;
   if (localVarsCount != undefined) {
     s.localVarsCount = localVarsCount;
   }
-  return { subroutineInfo: s } as GenericSymbol;
+  return { subroutineInfo: s, filename, start, end } as GenericSymbol;
 }
 
 export function parseJackFile(filePath: string, trace = false) {

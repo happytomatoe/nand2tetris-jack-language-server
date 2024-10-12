@@ -1,4 +1,4 @@
-import { BinderListener } from "./listener/binder.listener";
+import { BinderListener as GlobalSymbolTableListener } from "./listener/global.symbol.listener";
 import { CustomErrorListener } from "./listener/error.listener";
 import { ValidatorListener } from "./listener/validator.listener";
 import { JackCompilerError } from "./error";
@@ -9,7 +9,14 @@ import JackLexer from "./generated/JackLexer";
 import { GlobalSymbolTable } from "./symbol";
 
 export class Compiler {
-  private binder = new BinderListener();
+  private globalSymbolTableListener = new GlobalSymbolTableListener();
+  /**
+   * Parses the given source code string into an Abstract Syntax Tree (AST) using the JackLexer and JackParser.
+   *
+   * @param src - The source code string to be parsed.
+   * @returns - A ProgramContext object representing the parsed AST if no errors occurred.
+   *            An array of JackCompilerError objects if errors were encountered during parsing or lexing.
+   */
   parse(src: string): ProgramContext | JackCompilerError[] {
     const errorListener = new CustomErrorListener();
     const lexer = new JackLexer(CharStreams.fromString(src));
@@ -31,11 +38,11 @@ export class Compiler {
     tree: ProgramContext,
     fileName?: string
   ): ProgramContext | JackCompilerError[] {
-    this.binder.filename = fileName ?? "";
-    ParseTreeWalker.DEFAULT.walk(this.binder, tree);
-    if (this.binder.errors.length > 0) {
+    this.globalSymbolTableListener.filename = fileName ?? "";
+    ParseTreeWalker.DEFAULT.walk(this.globalSymbolTableListener, tree);
+    if (this.globalSymbolTableListener.errors.length > 0) {
       console.log("Errors in binder");
-      return this.binder.errors;
+      return this.globalSymbolTableListener.errors;
     }
     return tree;
   }
@@ -43,13 +50,13 @@ export class Compiler {
     tree: ProgramContext,
     filename?: string
   ): ProgramContext | JackCompilerError[] {
-    if (Object.keys(this.binder.globalSymbolTable).length == 0) {
+    if (Object.keys(this.globalSymbolTableListener.globalSymbolTable).length == 0) {
       throw new Error(
         "Please populate global symbol table using parserAndBind method"
       );
     }
     const validator = new ValidatorListener(
-      this.binder.globalSymbolTable,
+      this.globalSymbolTableListener.globalSymbolTable,
       filename
     );
     ParseTreeWalker.DEFAULT.walk(validator, tree);
@@ -67,11 +74,11 @@ export class Compiler {
       return errors;
     }
     const validateTree = treeOrErrors as ProgramContext;
-    const vmWriter = new VMWriter(this.binder.globalSymbolTable);
+    const vmWriter = new VMWriter(this.globalSymbolTableListener.globalSymbolTable);
     ParseTreeWalker.DEFAULT.walk(vmWriter, validateTree);
     return vmWriter.result;
   }
   get globalSymbolTable(): GlobalSymbolTable {
-    return this.binder.globalSymbolTable;
+    return this.globalSymbolTableListener.globalSymbolTable;
   }
 }

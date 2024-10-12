@@ -30,7 +30,7 @@ import {
   testResourceDirs,
 } from "./test.helper";
 import fs from "fs";
-import { BinderListener } from "../src/listener/binder.listener";
+import { BinderListener } from "../src/listener/global.symbol.listener";
 import path from "path";
 import { ProgramContext } from "../src/generated/JackParser";
 
