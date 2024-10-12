@@ -258,6 +258,7 @@ connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
 });
 
 connection.onDefinition((params) => {
+  // connection.console.log("Params: " + params);
   const textDocument = documents.get(params.textDocument.uri);
   if (textDocument == null) {
     return [];
@@ -280,18 +281,22 @@ connection.onDefinition((params) => {
   );
   const beforeMatches = lineBefore.match(/([A-Z][A-Za-z0-9_\\.]+)$/g) ?? [];
   const afterMatches = lineAfter.match(/^[\w]+/g) ?? [];
-  connection.console.log("Before matches: " + beforeMatches);
-  connection.console.log("After matches: " + afterMatches);
+  // connection.console.log("Before matches: " + beforeMatches);
+  // connection.console.log("After matches: " + afterMatches);
   if (beforeMatches.length == 0 || afterMatches.length == 0) {
     return [];
   }
   const classNameFunctionName = beforeMatches[0]! + afterMatches[0]!;
   const symbol = symbolTable[classNameFunctionName];
-  connection.console.log("Symbol " + classNameFunctionName);
-  if (symbol == null) {
+  // connection.console.log("Symbol " + JSON.stringify(symbol));
+  if (
+    symbol == null ||
+    symbol.filename == null ||
+    symbol.start == null ||
+    symbol.end == null
+  ) {
     return [];
   }
-
   const start = symbol.start!;
   const end = symbol.end!;
   const res = Location.create(symbol.filename!, {
