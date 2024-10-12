@@ -24,7 +24,11 @@
         "extensions": [
           "jack"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+           "light": "./icons/jack.svg",
+           "dark": "./icons/jack.svg"
+         }
       }
     ],
     "grammars": [
