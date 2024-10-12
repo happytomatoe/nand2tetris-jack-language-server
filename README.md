@@ -3,11 +3,10 @@
 Jack programming language for Nand2tetris course
 
 ## Feature
-
 - [x] Validation
 - [x] Formatting
-- [ ] Code Completion
-
+- [x] Function code Completion
+- [x] Go to function definition
 ## Functionality
 
 This Language Server works for plain text file. It has the following language features:

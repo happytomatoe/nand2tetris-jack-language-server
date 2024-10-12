@@ -29,21 +29,26 @@ export class BinderListener extends JackParserListener {
   private subroutineVarsCount = 0;
   private stopProcessingSubroutines = false;
   private subroutineId = "";
-
+  public filename: string = "";
   override enterClassDeclaration = (ctx: ClassDeclarationContext) => {
-    const id = ctx.className()!.IDENTIFIER();
+    const classNameCtx = ctx.className();
+    const id = classNameCtx.IDENTIFIER();
     const className = id.getText();
     if (this.globalSymbolTable[className] != undefined) {
       const e = new DuplicatedClassError(
-        ctx.className()!.start.line,
-        ctx.className()!.start.start,
-        ctx.className()!.stop!.stop + 1,
+        classNameCtx.start.line,
+        classNameCtx.start.start,
+        classNameCtx.stop!.stop + 1,
         className
       );
       this.errors.push(e);
       return;
     }
-    this.globalSymbolTable[className] = {} as GenericSymbol;
+    this.globalSymbolTable[className] = {
+      filename: this.filename,
+      start: { line: id.symbol.line, character: id.symbol.column },
+      end: { line: id.symbol.line, character: id.symbol.column + 1 },
+    } as GenericSymbol;
     this.className = className;
   };
 
@@ -88,14 +93,21 @@ export class BinderListener extends JackParserListener {
       this.stopProcessingSubroutines = false;
     }
   };
-  override enterVarNameInDeclaration = (_ctx: VarNameInDeclarationContext) => {
+  override enterVarNameInDeclaration = (ctx: VarNameInDeclarationContext) => {
     if (this.stopProcessingSubroutines) return;
     this.subroutineVarsCount++;
   };
-  override exitSubroutineBody = (_ctx: SubroutineBodyContext) => {
+  override exitSubroutineDeclaration = (ctx: SubroutineDeclarationContext) => {
     if (this.stopProcessingSubroutines) return;
+    const name = ctx.subroutineDecWithoutType().subroutineName().IDENTIFIER();
     this.subRoutineInfo.localVarsCount = this.subroutineVarsCount;
     this.globalSymbolTable[this.subroutineId] = {
+      filename: this.filename,
+      start: { line: name.symbol.line, character: name.symbol.column + 1 },
+      end: {
+        line: name.symbol.line,
+        character: name.symbol.column + 2,
+      },
       subroutineInfo: this.subRoutineInfo,
     };
   };

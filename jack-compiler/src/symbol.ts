@@ -12,11 +12,18 @@ export interface SubroutineInfo {
   localVarsCount?: number;
 }
 export type GlobalSymbolTable = Record<string, GenericSymbol>;
+export interface Position {
+  line: number;
+  character: number;
+}
 /**
  * Symbol that represents class or a subroutine
  */
 export interface GenericSymbol {
   subroutineInfo?: SubroutineInfo;
+  filename?: string;
+  start?: Position;
+  end?: Position;
 }
 
 type VariableType = string;

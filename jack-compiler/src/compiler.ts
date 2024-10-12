@@ -27,7 +27,11 @@ export class Compiler {
     return tree;
   }
 
-  bind(tree: ProgramContext): ProgramContext | JackCompilerError[] {
+  bind(
+    tree: ProgramContext,
+    fileName?: string
+  ): ProgramContext | JackCompilerError[] {
+    this.binder.filename = fileName ?? "";
     ParseTreeWalker.DEFAULT.walk(this.binder, tree);
     if (this.binder.errors.length > 0) {
       console.log("Errors in binder");

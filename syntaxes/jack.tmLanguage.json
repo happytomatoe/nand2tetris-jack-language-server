@@ -23,13 +23,19 @@
       "include": "#constant"
     },
     {
+      "include": "#className"
+    },
+    {
+		"include": "#subroutineName"
+	  },
+    {
+      "include": "#variableOther"
+    },
+    {
+      "include": "#variableName"
+    },
+    {
       "include": "#number"
-    },
-    {
-      "include": "#subroutineName"
-    },
-    {
-      "include": "#grammar"
     },
     {
       "include": "#punctuation"
@@ -48,7 +54,7 @@
         },
 
         {
-          "name": "keyword.other.unit.jack",
+          "name": "string.regexp",
           "match": "\\b(let|do)\\b"
         },
         {
@@ -100,19 +106,27 @@
         }
       ]
     },
-    "grammar": {
+    "variableName": {
+      "patterns": [
+        {
+          "name": "variable.name.jack",
+          "match": "\\b[a-z_]([A-Za-z0-9_])*\\b"
+        }
+      ]
+    },
+    "className": {
+      "patterns": [
+        {
+          "name": "entity.name.type.class",
+          "match": "\\b[A-Z]([A-Za-z0-9_])*\\b"
+        }
+      ]
+    },
+    "variableOther": {
       "patterns": [
         {
           "name": "entity.name.type.variable.jack",
           "match": "\\b(int|char|void|boolean)\\b"
-        },
-        {
-          "name": "variable.other.constant.jack",
-          "match": "\\b[a-z_]([A-Za-z0-9_])*\\b"
-        },
-        {
-          "name": "entity.name.type.class",
-          "match": "\\b[A-Z]([A-Za-z0-9_])*\\b"
         }
       ]
     },

@@ -21,6 +21,9 @@ import {
   CompletionList,
   InsertReplaceEdit,
   InsertTextFormat,
+  Definition,
+  LocationLink,
+  Location,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Compiler, JackCompilerError } from "jack-compiler/out/index";
@@ -30,6 +33,7 @@ import * as path from "path";
 import * as fs from "fs";
 import { URI } from "vscode-uri";
 import { assert } from "console";
+import { GlobalSymbolTable } from "jack-compiler/out/symbol";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -66,6 +70,7 @@ connection.onInitialize((params: InitializeParams) => {
         resolveProvider: true,
         triggerCharacters: ["."],
       },
+      definitionProvider: true,
     },
   };
   if (hasWorkspaceFolderCapability) {
@@ -232,10 +237,10 @@ connection.onCompletion(
       const label = k.substring(k.indexOf(".") + 1);
       const params = v.subroutineInfo?.paramNames
         .map((v, i) => {
-          return "${" + i+1 + ":" + v + "}";
+          return "${" + i + 1 + ":" + v + "}";
         })
         .join(",");
-      connection.console.log("Parameters: " + params)
+      connection.console.log("Parameters: " + params);
       return {
         label: label,
         kind: CompletionItemKind.Function,
@@ -252,6 +257,61 @@ connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
   return item;
 });
 
+connection.onDefinition((params) => {
+  connection.console.log("Params: " + JSON.stringify(params));
+  const textDocument = documents.get(params.textDocument.uri);
+  if (textDocument == null) {
+    return [];
+  }
+  const pos = params.position;
+  const lineBefore = textDocument
+    .getText()
+    .substring(
+      textDocument.offsetAt({ line: pos.line, character: 0 }),
+      textDocument.offsetAt({ line: pos.line, character: pos.character })
+    );
+  const lineAfter = textDocument
+    .getText()
+    .substring(
+      textDocument.offsetAt({ line: pos.line, character: pos.character }),
+      textDocument.offsetAt({ line: pos.line + 1, character: 0 })
+    );
+  const symbolTable: GlobalSymbolTable = createGlobalSymbolTable(
+    textDocument.uri
+  );
+  connection.console.log(
+    "Symbol table " + JSON.stringify(symbolTable, null, 2)
+  );
+  connection.console.log("Line before " + lineBefore);
+  const beforeMatches = lineBefore.matchAll(/([A-Z][A-Za-z0-9_\\.]+)$/g);
+  const afterMatches = lineAfter.matchAll(/^[\w]+/g);
+  const idStart = beforeMatches.next();
+  const idEnd = afterMatches.next();
+  console.log(idStart, idEnd);
+  if (
+    idStart.value == null ||
+    idStart.value.length == 0 ||
+    idEnd.value == null ||
+    idEnd.value.length == 0
+  ) {
+    return [];
+  }
+  const id = idStart.value[0] + idEnd.value[0];
+  connection.console.log("Function id " + id);
+  const symbol = symbolTable[id];
+  if (symbol == null) {
+    return [];
+  }
+  const start = symbol.start!;
+  const end = symbol.end!;
+  const res = Location.create(symbol.filename!, {
+    start: { line: start.line - 1, character: start.character },
+    end: { line: end.line - 1, character: end.character },
+  });
+  connection.console.log("Res = " + JSON.stringify(res));
+  return [res];
+});
+
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);
@@ -261,7 +321,7 @@ connection.listen();
 
 //Utils
 
-function createGlobalSymbolTable(textDocumentUri: string) {
+function createGlobalSymbolTable(textDocumentUri: string): GlobalSymbolTable {
   const compiler = new Compiler();
   const selectedFilePath = URI.parse(textDocumentUri).fsPath;
   const dir = path.dirname(selectedFilePath);
@@ -277,7 +337,7 @@ function createGlobalSymbolTable(textDocumentUri: string) {
     });
     const treeOrErrors = compiler.parse(content);
     if (!Array.isArray(treeOrErrors)) {
-      compiler.bind(treeOrErrors);
+      compiler.bind(treeOrErrors, filePath);
     }
   }
   assert(
