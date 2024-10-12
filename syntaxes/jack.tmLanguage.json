@@ -1,111 +1,113 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "Jack",
-	"patterns": [
-		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#strings"
-		},
-		{
-			"include": "#comment"
-		},
-		{
-			"include": "#boolean"
-		},
-		{
-			"include": "#params"
-		},
-		{
-			"include": "#functions"
-		},
-		{
-			"include": "#grammar"
-		},
-		{
-			"include": "#blockComment"
-		},
-		{
-			"include": "#meta"
-		}
-	],
-	"repository": {
-		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.Jack",
-				"match": "\\b(while|return|field|this|if|else)\\b"
-			}]
-		},		
-		"strings": {
-			"name": "string.quoted.double.Jack",
-			"begin": "\"",
-			"end": "\"",
-			"patterns": [
-				{
-					"name": "constant.character.escape.Jack",
-					"match": "\\\\."
-				}
-			]
-		},
-		"comment": {
-			"patterns": [
-				{
-					"name": "comment.line.double-slash",
-					"match": "//.*"
-				}
-			]
-		},
-		"boolean": {
-			"patterns": [
-				{
-					"name": "entity.name.tag",
-					"match": "\\b(this|let|var|class|function|method|constructor)\\b"
-				}
-			]
-		},
-		"params": {
-			"patterns": [
-				{
-					"name": "markup.bold",
-					"match": "\\b(true|false|null)\\b"
-				}
-			]
-		},
-		"functions": {
-			"patterns": [
-				{
-					"name": "entity.name.function",
-					"match": "([a-z]|[A-Z]|[0-9])+(?=\\()"
-				}
-			]
-		},
-		"grammar": {
-			"patterns": [
-				{
-					"name": "entity.name.type",
-					"match": "\\b[A-Z]([A-Za-z0-9_-])+\\b"
-				},
-				{
-					"name": "variable.name",
-					"match": "\\b(do|int|char|void|static|boolean)\\b"
-				}
-			]
-		},
-		"blockComment": {
-			"patterns": [
-				{
-					"begin": "\\/\\*\\*",
-					"end": "\\*\\/",
-					"name": "comment.block"
-				},
-				{
-					"begin": "\\/\\*",
-					"end": "\\*\\/",
-					"name": "comment.block"
-				}
-			]
-		}
-	},
-	"scopeName": "source.jack"
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "jack",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#blockComment"
+    },
+    {
+      "include": "#boolean"
+    },
+    {
+      "include": "#constant"
+    },
+    {
+      "include": "#number"
+    },
+    {
+      "include": "#subroutineName"
+    },
+    {
+      "include": "#grammar"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.jack",
+          "match": "\\b(while|return|field|this|if|else)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.jack",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.jack",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "constant": {
+      "match": "\\b(?:true|false|null)\\b",
+      "name": "constant.language.jack"
+    },
+    "number": {
+      "match": "[0-9]+",
+      "name": "constant.numeric.jack"
+    },
+    "blockComment": {
+      "patterns": [
+        {
+          "begin": "\\/\\*\\*",
+          "end": "\\*\\/",
+          "name": "comment.block.jack"
+        },
+        {
+          "begin": "\\/\\*",
+          "end": "\\*\\/",
+          "name": "comment.block.jack"
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash",
+          "match": "//.*"
+        }
+      ]
+    },
+    "boolean": {
+      "patterns": [
+        {
+          "name": "entity.name.tag",
+          "match": "\\b(this|let|var|class|function|method|constructor)\\b"
+        }
+      ]
+    },
+    "subroutineName": {
+      "patterns": [
+        {
+          "name": "entity.name.function",
+          "match": "([a-z]|[A-Z]|[0-9])+(?=\\()"
+        }
+      ]
+    },
+    "grammar": {
+      "patterns": [
+        {
+          "name": "entity.name.type",
+          "match": "\\b[A-Z]([A-Za-z0-9_-])+\\b"
+        },
+        {
+          "name": "variable.name",
+          "match": "\\b(do|int|char|void|static|boolean)\\b"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.jack"
 }
