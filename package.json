@@ -26,7 +26,8 @@
         "id": "jack",
         "extensions": [
           "jack"
-        ]
+        ],
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
@@ -40,7 +41,8 @@
       {
         "language": "jack",
         "path": "./snippets/jack.json"
-      }]
+      }
+    ]
   },
   "scripts": {
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
