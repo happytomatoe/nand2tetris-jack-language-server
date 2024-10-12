@@ -212,8 +212,6 @@ connection.onCompletion(
     if (textDocument == null) {
       return [];
     }
-    // const symbolTable = createGlobalSymbolTable(textDocument.uri);
-    // const doc = fs.readFileSync(textDocument.uri);
     const pos = _textDocumentPosition.position;
     const line = textDocument
       .getText()
@@ -234,16 +232,16 @@ connection.onCompletion(
       const label = k.substring(k.indexOf(".") + 1);
       const params = v.subroutineInfo?.paramNames
         .map((v, i) => {
-          return "${" + i + ":" + v + "}";
+          return "${" + i+1 + ":" + v + "}";
         })
         .join(",");
+      connection.console.log("Parameters: " + params)
       return {
         label: label,
         kind: CompletionItemKind.Function,
         data: k,
         insertText: label + "(" + params + ")",
         insertTextFormat: InsertTextFormat.Snippet,
-        // textEdit: TextEdit.insert(_textDocumentPosition.position, label + `()`),
       } as CompletionItem;
     });
   }
