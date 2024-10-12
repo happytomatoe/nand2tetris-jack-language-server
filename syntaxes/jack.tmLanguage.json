@@ -1,18 +1,20 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "jack",
+  "scopeName": "source.jack",
   "patterns": [
+    {
+      "include": "#comment"
+    },
+
+    {
+      "include": "#blockComment"
+    },
     {
       "include": "#keywords"
     },
     {
       "include": "#strings"
-    },
-    {
-      "include": "#comment"
-    },
-    {
-      "include": "#blockComment"
     },
     {
       "include": "#boolean"
@@ -28,6 +30,9 @@
     },
     {
       "include": "#grammar"
+    },
+    {
+      "include": "#punctuation"
     }
   ],
   "repository": {
@@ -35,20 +40,31 @@
       "patterns": [
         {
           "name": "keyword.control.jack",
-          "match": "\\b(while|return|field|this|if|else)\\b"
+          "match": "\\b(while|return|if|else)\\b"
+        },
+        {
+          "name": "keyword.other.jack",
+          "match": "\\b(var|static|field|function|method|constructor|this|class|function|method)\\b"
+        },
+
+        {
+          "name": "keyword.other.unit.jack",
+          "match": "\\b(let|do)\\b"
+        },
+        {
+          "match": "(\\+|-|\\*|/)",
+          "name": "keyword.operator.arithmetic.jack"
+        },
+        {
+          "match": "(<|>|=|~)",
+          "name": "keyword.operator.comparison.jack"
         }
       ]
     },
     "strings": {
       "name": "string.quoted.double.jack",
       "begin": "\"",
-      "end": "\"",
-      "patterns": [
-        {
-          "name": "constant.character.escape.jack",
-          "match": "\\\\."
-        }
-      ]
+      "end": "\""
     },
     "constant": {
       "match": "\\b(?:true|false|null)\\b",
@@ -58,33 +74,21 @@
       "match": "[0-9]+",
       "name": "constant.numeric.jack"
     },
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash",
+          "begin": "//",
+          "end": "\n"
+        }
+      ]
+    },
     "blockComment": {
       "patterns": [
         {
           "begin": "\\/\\*\\*",
           "end": "\\*\\/",
           "name": "comment.block.jack"
-        },
-        {
-          "begin": "\\/\\*",
-          "end": "\\*\\/",
-          "name": "comment.block.jack"
-        }
-      ]
-    },
-    "comment": {
-      "patterns": [
-        {
-          "name": "comment.line.double-slash",
-          "match": "//.*"
-        }
-      ]
-    },
-    "boolean": {
-      "patterns": [
-        {
-          "name": "entity.name.tag",
-          "match": "\\b(this|let|var|class|function|method|constructor)\\b"
         }
       ]
     },
@@ -92,22 +96,65 @@
       "patterns": [
         {
           "name": "entity.name.function",
-          "match": "([a-z]|[A-Z]|[0-9])+(?=\\()"
+          "match": "([a-z_]|[A-Z]|[0-9])+(?=\\()"
         }
       ]
     },
     "grammar": {
       "patterns": [
         {
-          "name": "entity.name.type",
-          "match": "\\b[A-Z]([A-Za-z0-9_-])+\\b"
+          "name": "entity.name.type.variable.jack",
+          "match": "\\b(int|char|void|boolean)\\b"
         },
         {
-          "name": "variable.name",
-          "match": "\\b(do|int|char|void|static|boolean)\\b"
+          "name": "variable.other.constant.jack",
+          "match": "\\b[a-z_]([A-Za-z0-9_])*\\b"
+        },
+        {
+          "name": "entity.name.type.class",
+          "match": "\\b[A-Z]([A-Za-z0-9_])*\\b"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "match": "\\{",
+          "name": "punctuation.definition.brace.curly.jack"
+        },
+        {
+          "match": "\\}",
+          "name": "punctuation.definition.brace.curly.jack"
+        },
+        {
+          "match": "\\(",
+          "name": "punctuation.definition.parenthesis.round.jack"
+        },
+        {
+          "match": "\\)",
+          "name": "punctuation.definition.parenthesis.round.jack"
+        },
+        {
+          "match": "\\[",
+          "name": "punctuation.definition.bracket.square.jack"
+        },
+        {
+          "match": "\\]",
+          "name": "punctuation.definition.bracket.square.jack"
+        },
+        {
+          "match": "\\.",
+          "name": "punctuation.separator.period.jack"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.comma.jack"
+        },
+        {
+          "match": ";",
+          "name": "punctuation.terminator.statement.jack"
         }
       ]
     }
-  },
-  "scopeName": "source.jack"
+  }
 }
