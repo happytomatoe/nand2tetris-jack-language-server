@@ -258,7 +258,6 @@ connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
 });
 
 connection.onDefinition((params) => {
-  connection.console.log("Params: " + JSON.stringify(params));
   const textDocument = documents.get(params.textDocument.uri);
   if (textDocument == null) {
     return [];
@@ -279,36 +278,26 @@ connection.onDefinition((params) => {
   const symbolTable: GlobalSymbolTable = createGlobalSymbolTable(
     textDocument.uri
   );
-  connection.console.log(
-    "Symbol table " + JSON.stringify(symbolTable, null, 2)
-  );
-  connection.console.log("Line before " + lineBefore);
-  const beforeMatches = lineBefore.matchAll(/([A-Z][A-Za-z0-9_\\.]+)$/g);
-  const afterMatches = lineAfter.matchAll(/^[\w]+/g);
-  const idStart = beforeMatches.next();
-  const idEnd = afterMatches.next();
-  console.log(idStart, idEnd);
-  if (
-    idStart.value == null ||
-    idStart.value.length == 0 ||
-    idEnd.value == null ||
-    idEnd.value.length == 0
-  ) {
+  const beforeMatches = lineBefore.match(/([A-Z][A-Za-z0-9_\\.]+)$/g) ?? [];
+  const afterMatches = lineAfter.match(/^[\w]+/g) ?? [];
+  connection.console.log("Before matches: " + beforeMatches);
+  connection.console.log("After matches: " + afterMatches);
+  if (beforeMatches.length == 0 || afterMatches.length == 0) {
     return [];
   }
-  const id = idStart.value[0] + idEnd.value[0];
-  connection.console.log("Function id " + id);
-  const symbol = symbolTable[id];
+  const classNameFunctionName = beforeMatches[0]! + afterMatches[0]!;
+  const symbol = symbolTable[classNameFunctionName];
+  connection.console.log("Symbol " + classNameFunctionName);
   if (symbol == null) {
     return [];
   }
+
   const start = symbol.start!;
   const end = symbol.end!;
   const res = Location.create(symbol.filename!, {
     start: { line: start.line - 1, character: start.character },
     end: { line: end.line - 1, character: end.character },
   });
-  connection.console.log("Res = " + JSON.stringify(res));
   return [res];
 });
 

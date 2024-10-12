@@ -103,10 +103,10 @@ export class BinderListener extends JackParserListener {
     this.subRoutineInfo.localVarsCount = this.subroutineVarsCount;
     this.globalSymbolTable[this.subroutineId] = {
       filename: this.filename,
-      start: { line: name.symbol.line, character: name.symbol.column + 1 },
+      start: { line: name.symbol.line, character: name.symbol.column },
       end: {
         line: name.symbol.line,
-        character: name.symbol.column + 2,
+        character: name.symbol.column + name.getText().length,
       },
       subroutineInfo: this.subRoutineInfo,
     };
