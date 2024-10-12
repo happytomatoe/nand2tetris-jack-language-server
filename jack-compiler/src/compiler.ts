@@ -6,6 +6,7 @@ import { VMWriter } from "./listener/vm.writer.listener";
 import JackParser, { ProgramContext } from "./generated/JackParser";
 import { CharStreams, CommonTokenStream, ParseTreeWalker } from "antlr4";
 import JackLexer from "./generated/JackLexer";
+import { GlobalSymbolTable } from "./symbol";
 
 export class Compiler {
   private binder = new BinderListener();
@@ -36,16 +37,16 @@ export class Compiler {
   }
   validate(
     tree: ProgramContext,
-    filename?: string,
+    filename?: string
   ): ProgramContext | JackCompilerError[] {
     if (Object.keys(this.binder.globalSymbolTable).length == 0) {
       throw new Error(
-        "Please populate global symbol table using parserAndBind method",
+        "Please populate global symbol table using parserAndBind method"
       );
     }
     const validator = new ValidatorListener(
       this.binder.globalSymbolTable,
-      filename,
+      filename
     );
     ParseTreeWalker.DEFAULT.walk(validator, tree);
 
@@ -53,7 +54,7 @@ export class Compiler {
   }
   compile(
     tree: ProgramContext,
-    filename?: string,
+    filename?: string
   ): string | JackCompilerError[] {
     const treeOrErrors = this.validate(tree, filename);
     if (Array.isArray(treeOrErrors)) {
@@ -65,5 +66,8 @@ export class Compiler {
     const vmWriter = new VMWriter(this.binder.globalSymbolTable);
     ParseTreeWalker.DEFAULT.walk(vmWriter, validateTree);
     return vmWriter.result;
+  }
+  get globalSymbolTable(): GlobalSymbolTable {
+    return this.binder.globalSymbolTable;
   }
 }

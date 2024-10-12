@@ -10,6 +10,18 @@ import {
 } from "antlr4";
 import JackLexer from "../src/generated/JackLexer";
 import JackParser, { ProgramContext } from "../src/generated/JackParser";
+import { GenericSymbol, SubroutineInfo, SubroutineType } from "../src/symbol";
+export function createSubroutineSymbol(
+  type: SubroutineType,
+  params: string[],
+  localVarsCount?: number
+): GenericSymbol {
+  const s = { paramNames: params, type } as SubroutineInfo;
+  if (localVarsCount != undefined) {
+    s.localVarsCount = localVarsCount;
+  }
+  return { subroutineInfo: s } as GenericSymbol;
+}
 
 export function parseJackFile(filePath: string, trace = false) {
   const errorListener: CustomErrorListener = new CustomErrorListener();
@@ -21,7 +33,7 @@ export function parseJackText(
   src: string,
   errorListener?: CustomErrorListener,
   trace = false,
-  throwOnErrors = true,
+  throwOnErrors = true
 ): ProgramContext {
   if (errorListener === undefined) {
     errorListener = new CustomErrorListener();
@@ -55,7 +67,7 @@ export function getTestResourcePath(relativePath: string) {
 
 export function listenToTheTree<T extends ParseTreeListener>(
   tree: ProgramContext,
-  listener: T,
+  listener: T
 ) {
   ParseTreeWalker.DEFAULT.walk(listener, tree);
   return listener;

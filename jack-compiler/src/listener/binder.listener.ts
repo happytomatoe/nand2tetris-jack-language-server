@@ -38,7 +38,7 @@ export class BinderListener extends JackParserListener {
         ctx.className()!.start.line,
         ctx.className()!.start.start,
         ctx.className()!.stop!.stop + 1,
-        className,
+        className
       );
       this.errors.push(e);
       return;
@@ -68,18 +68,21 @@ export class BinderListener extends JackParserListener {
           nameCtx.IDENTIFIER().symbol.line,
           nameCtx.start.start,
           nameCtx.start.stop,
-          subroutineName,
-        ),
+          subroutineName
+        )
       );
       this.stopProcessingSubroutines = true;
     } else {
       this.subroutineId = id;
-      const paramsCount = subroutineWithoutTypeCtx
+      const params = subroutineWithoutTypeCtx
         .parameterList()
-        .parameter_list().length;
+        .parameter_list()
+        .map((parameter) => {
+          return parameter.parameterName().IDENTIFIER().getText();
+        });
       this.subRoutineInfo = {
         type: subroutineType,
-        paramsCount: paramsCount,
+        paramNames: params,
       };
       this.subroutineVarsCount = 0;
       this.stopProcessingSubroutines = false;

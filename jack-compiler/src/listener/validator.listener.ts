@@ -408,14 +408,14 @@ export class ValidatorListener extends JackParserListener {
       } else {
         //check parameter count
         const l = ctx.expressionList().expression_list().length;
-        if (symbol.subroutineInfo!.paramsCount != l) {
+        if (symbol.subroutineInfo!.paramNames.length != l) {
           this.#addError(
             new IncorrectParamsNumberInSubroutineCallError(
               ctx.start.line,
               ctx.start.start,
               ctx.start.stop,
               subroutineId.getText(),
-              symbol.subroutineInfo!.paramsCount,
+              symbol.subroutineInfo!.paramNames.length,
               l,
             ),
           );

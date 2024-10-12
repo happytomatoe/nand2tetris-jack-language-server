@@ -20,12 +20,9 @@ import {
 } from "../src/error";
 import { CustomErrorListener } from "../src/listener/error.listener";
 import { ValidatorListener } from "../src/listener/validator.listener";
+import { GenericSymbol, SubroutineType } from "../src/symbol";
 import {
   createSubroutineSymbol,
-  GenericSymbol,
-  SubroutineType,
-} from "../src/symbol";
-import {
   getTestResourcePath,
   listenToTheTree,
   parseJackFile,
@@ -49,10 +46,10 @@ describe("Jack validator listener", () => {
 
   function genericSymbol(
     type?: SubroutineType,
-    paramsCount?: number,
+    params?: string[]
   ): GenericSymbol {
-    if (type != undefined && paramsCount != undefined) {
-      return createSubroutineSymbol(paramsCount, type);
+    if (type != undefined && params != undefined) {
+      return createSubroutineSymbol(type, params);
     } else {
       return {} as GenericSymbol;
     }
@@ -87,9 +84,9 @@ describe("Jack validator listener", () => {
             class Main {
               ${classBody}
             }`,
-        DuplicatedVariableError,
+        DuplicatedVariableError
       );
-    },
+    }
   );
 
   /**
@@ -104,7 +101,7 @@ describe("Jack validator listener", () => {
                 return;
             }
             }`,
-      UndeclaredVariableError,
+      UndeclaredVariableError
     );
   });
 
@@ -122,9 +119,9 @@ describe("Jack validator listener", () => {
       UndeclaredVariableError,
       {
         Main: genericSymbol(),
-        "Main.b": genericSymbol(SubroutineType.Function, 1),
-        "Main.a": genericSymbol(SubroutineType.Function, 1),
-      },
+        "Main.b": genericSymbol(SubroutineType.Function, ["a"]),
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
 
@@ -139,7 +136,7 @@ describe("Jack validator listener", () => {
                 }
             }
             }`,
-      UndeclaredVariableError,
+      UndeclaredVariableError
     );
   });
 
@@ -155,7 +152,7 @@ describe("Jack validator listener", () => {
                 return;
             }
             }`,
-      UnknownClassError,
+      UnknownClassError
     );
   });
 
@@ -170,8 +167,8 @@ describe("Jack validator listener", () => {
       undefined,
       {
         D: genericSymbol(),
-        "D.new": genericSymbol(SubroutineType.Constructor, 0),
-      },
+        "D.new": genericSymbol(SubroutineType.Constructor, []),
+      }
     );
   });
   test("Arg Unknown class  ", () => {
@@ -182,7 +179,7 @@ describe("Jack validator listener", () => {
                     return;
             }
             }`,
-      UnknownClassError,
+      UnknownClassError
     );
   });
 
@@ -196,7 +193,7 @@ describe("Jack validator listener", () => {
                 }
             }`,
       undefined,
-      { D: genericSymbol() },
+      { D: genericSymbol() }
     );
   });
   test("var Unknown class", () => {
@@ -208,7 +205,7 @@ describe("Jack validator listener", () => {
                     return;
                 }
             }`,
-      UnknownClassError,
+      UnknownClassError
     );
   });
   test("var known type", () => {
@@ -221,7 +218,7 @@ describe("Jack validator listener", () => {
                 }
             }`,
       undefined,
-      { D: genericSymbol() },
+      { D: genericSymbol() }
     );
   });
   test("field Unknown class", () => {
@@ -230,7 +227,7 @@ describe("Jack validator listener", () => {
             class Main {
                 field T t;
             }`,
-      UnknownClassError,
+      UnknownClassError
     );
   });
   test("field known type", () => {
@@ -240,7 +237,7 @@ describe("Jack validator listener", () => {
                 field T t;
             }`,
       undefined,
-      { T: genericSymbol() },
+      { T: genericSymbol() }
     );
   });
   test("static field Unknown class", () => {
@@ -249,7 +246,7 @@ describe("Jack validator listener", () => {
             class Main {
                 static T t;
             }`,
-      UnknownClassError,
+      UnknownClassError
     );
   });
   test("static field known type", () => {
@@ -259,7 +256,7 @@ describe("Jack validator listener", () => {
                 static T t;
             }`,
       undefined,
-      { T: genericSymbol() },
+      { T: genericSymbol() }
     );
   });
 
@@ -275,7 +272,7 @@ describe("Jack validator listener", () => {
                     return;
                 }
             }`,
-      NonVoidFunctionNoReturnError,
+      NonVoidFunctionNoReturnError
     );
   });
 
@@ -287,7 +284,7 @@ describe("Jack validator listener", () => {
                     return 1;
                 }
             }`,
-      VoidSubroutineReturnsValueError,
+      VoidSubroutineReturnsValueError
     );
   });
   /**
@@ -308,7 +305,7 @@ describe("Jack validator listener", () => {
                     }
                 }
             }`,
-      SubroutineNotAllPathsReturnError,
+      SubroutineNotAllPathsReturnError
     );
   });
   test("else missing return ", () => {
@@ -325,7 +322,7 @@ describe("Jack validator listener", () => {
                     }
                 }
             }`,
-      SubroutineNotAllPathsReturnError,
+      SubroutineNotAllPathsReturnError
     );
   });
 
@@ -341,7 +338,7 @@ describe("Jack validator listener", () => {
                     }
                 }
             }`,
-      SubroutineNotAllPathsReturnError,
+      SubroutineNotAllPathsReturnError
     );
   });
 
@@ -357,7 +354,7 @@ describe("Jack validator listener", () => {
                     }
                 }
             }`,
-      SubroutineNotAllPathsReturnError,
+      SubroutineNotAllPathsReturnError
     );
   });
 
@@ -379,7 +376,7 @@ describe("Jack validator listener", () => {
                     }
                 }
             }`,
-      SubroutineNotAllPathsReturnError,
+      SubroutineNotAllPathsReturnError
     );
   });
   test("nested if missing return 2", () => {
@@ -400,7 +397,7 @@ describe("Jack validator listener", () => {
                     }
                 }
             }`,
-      SubroutineNotAllPathsReturnError,
+      SubroutineNotAllPathsReturnError
     );
   });
 
@@ -422,7 +419,7 @@ describe("Jack validator listener", () => {
                     }
                 }
             }`,
-      SubroutineNotAllPathsReturnError,
+      SubroutineNotAllPathsReturnError
     );
   });
   test("should be valid", () => {
@@ -452,7 +449,7 @@ describe("Jack validator listener", () => {
                     return;
                 }
             }`,
-      UnknownSubroutineCallError,
+      UnknownSubroutineCallError
     );
   });
 
@@ -471,9 +468,9 @@ describe("Jack validator listener", () => {
       IncorrectParamsNumberInSubroutineCallError,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 2),
-        "Main.b": genericSymbol(SubroutineType.Function, 2),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, ["a","b"]),
+        "Main.b": genericSymbol(SubroutineType.Function, ["a","b"]),  
+      }
     );
   });
 
@@ -497,10 +494,10 @@ describe("Jack validator listener", () => {
       undefined,
       {
         Main: genericSymbol(),
-        "Main.new": genericSymbol(SubroutineType.Constructor, 0),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-        "Main.b": genericSymbol(SubroutineType.Method, 0),
-      },
+        "Main.new": genericSymbol(SubroutineType.Constructor, []),
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+        "Main.b": genericSymbol(SubroutineType.Method, []),
+      }
     );
   });
   test("call local method ", () => {
@@ -518,9 +515,9 @@ describe("Jack validator listener", () => {
       undefined,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Method, 0),
-        "Main.b": genericSymbol(SubroutineType.Method, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Method, []),
+        "Main.b": genericSymbol(SubroutineType.Method, []),
+      }
     );
   });
 
@@ -542,9 +539,9 @@ describe("Jack validator listener", () => {
       MethodCalledAsFunctionError,
       {
         Main: genericSymbol(),
-        "Main.b": genericSymbol(SubroutineType.Function, 0),
-        "Main.c": genericSymbol(SubroutineType.Method, 0),
-      },
+        "Main.b": genericSymbol(SubroutineType.Function, []),
+        "Main.c": genericSymbol(SubroutineType.Method, []),
+      }
     );
   });
   test("function/ctor called as a method", () => {
@@ -562,9 +559,9 @@ describe("Jack validator listener", () => {
       FunctionCalledAsMethodError,
       {
         Main: genericSymbol(),
-        "Main.b": genericSymbol(SubroutineType.Function, 0),
-        "Main.c": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.b": genericSymbol(SubroutineType.Function, []),
+        "Main.c": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
   test("incorrect return type in constructor", () => {
@@ -579,7 +576,7 @@ describe("Jack validator listener", () => {
       {
         Main: genericSymbol(),
         D: genericSymbol(),
-      },
+      }
     );
   });
   test("unreachable code", () => {
@@ -596,8 +593,8 @@ describe("Jack validator listener", () => {
       UnreachableCodeError,
       {
         Main: genericSymbol(),
-        "Main.new": genericSymbol(SubroutineType.Constructor, 0),
-      },
+        "Main.new": genericSymbol(SubroutineType.Constructor, []),
+      }
     );
   });
   test("A constructor must return 'this'", () => {
@@ -611,8 +608,8 @@ describe("Jack validator listener", () => {
       ConstructorMushReturnThis,
       {
         Main: genericSymbol(),
-        "Main.new": genericSymbol(SubroutineType.Constructor, 0),
-      },
+        "Main.new": genericSymbol(SubroutineType.Constructor, []),
+      }
     );
   });
   test("Let statement - expected string literal ", () => {
@@ -628,9 +625,9 @@ describe("Jack validator listener", () => {
       WrongLiteralTypeError,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
+        "Main.a": genericSymbol(SubroutineType.Function, []),
         String: genericSymbol(),
-      },
+      }
     );
   });
   test("Let statement - expected boolean literal ", () => {
@@ -646,8 +643,8 @@ describe("Jack validator listener", () => {
       WrongLiteralTypeError,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
 
@@ -664,8 +661,8 @@ describe("Jack validator listener", () => {
       WrongLiteralTypeError,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
   test("integer constant value is too big", () => {
@@ -681,8 +678,8 @@ describe("Jack validator listener", () => {
       IntLiteralOverflow,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
   test("integer constant value is too small", () => {
@@ -698,8 +695,8 @@ describe("Jack validator listener", () => {
       IntLiteralOverflow,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
   test("A field can not be referenced in a function", () => {
@@ -715,8 +712,8 @@ describe("Jack validator listener", () => {
       FieldCantBeReferencedInFunction,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
   test("A static field can be referenced in a function", () => {
@@ -732,8 +729,8 @@ describe("Jack validator listener", () => {
       undefined,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
   test("this can't be referenced in a function", () => {
@@ -749,8 +746,8 @@ describe("Jack validator listener", () => {
       ThisCantBeReferencedInFunction,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, 0),
-      },
+        "Main.a": genericSymbol(SubroutineType.Function, []),
+      }
     );
   });
   test("class name  doesn't match filename", () => {
@@ -760,7 +757,7 @@ describe("Jack validator listener", () => {
       {
         A: genericSymbol(),
       },
-      "B",
+      "B"
     );
   });
 
@@ -787,7 +784,7 @@ function testJackDir(testFolder: string): void {
     const tree = trees[filepath];
     const validatorListener = listenToTheTree(
       tree,
-      new ValidatorListener(globalSymbolsListener.globalSymbolTable),
+      new ValidatorListener(globalSymbolsListener.globalSymbolTable)
     );
     expect(validatorListener.errors).toEqual([]);
   }
@@ -797,7 +794,7 @@ function testValidator<T extends { name: string }>(
   src: string,
   expectedError?: T,
   globalSymbolTable: Record<string, GenericSymbol> = {},
-  filename?: string,
+  filename?: string
 ) {
   const errorListener = new CustomErrorListener();
   const tree = parseJackText(src, errorListener);
@@ -817,13 +814,13 @@ function testValidator<T extends { name: string }>(
       throw new Error(
         `Expected error ${expectedError.name} but got '` +
           validator.errors.join(",") +
-          "'",
+          "'"
       );
     }
   } else {
     if (validator.errors.length != 0)
       throw new Error(
-        "Didn't expect any errors but got " + validator.errors.join("\n"),
+        "Didn't expect any errors but got " + validator.errors.join("\n")
       );
   }
 }

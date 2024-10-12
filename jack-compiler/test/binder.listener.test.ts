@@ -2,9 +2,10 @@ import fs from "fs";
 import path from "path";
 import { DuplicatedClassError, DuplicatedSubroutineError } from "../src/error";
 import { BinderListener } from "../src/listener/binder.listener";
-import { createSubroutineSymbol, SubroutineType } from "../src/symbol";
+import { SubroutineType } from "../src/symbol";
 import { builtInSymbols } from "../src/builtins";
 import {
+  createSubroutineSymbol,
   getTestResourcePath,
   listenToTheTree,
   parseJackFile,
@@ -53,24 +54,36 @@ describe("Jack binder", () => {
     const expected = {
       ...builtInSymbols,
       Fraction: {},
-      "Fraction.new": createSubroutineSymbol(2, SubroutineType.Constructor, 0),
-      "Fraction.reduce": createSubroutineSymbol(0, SubroutineType.Method, 1),
+      "Fraction.new": createSubroutineSymbol(
+        SubroutineType.Constructor,
+        ["x", "y"],
+        0
+      ),
+      "Fraction.reduce": createSubroutineSymbol(SubroutineType.Method, [], 1),
       "Fraction.getNumerator": createSubroutineSymbol(
-        0,
         SubroutineType.Method,
-        0,
+        [],
+        0
       ),
       "Fraction.getDenominator": createSubroutineSymbol(
-        0,
         SubroutineType.Method,
-        0,
+        [],
+        0
       ),
-      "Fraction.plus": createSubroutineSymbol(1, SubroutineType.Method, 1),
-      "Fraction.dispose": createSubroutineSymbol(0, SubroutineType.Method, 0),
-      "Fraction.print": createSubroutineSymbol(0, SubroutineType.Method, 0),
-      "Fraction.gcd": createSubroutineSymbol(2, SubroutineType.Function, 1),
+      "Fraction.plus": createSubroutineSymbol(
+        SubroutineType.Method,
+        ["other"],
+        1
+      ),
+      "Fraction.dispose": createSubroutineSymbol(SubroutineType.Method, [], 0),
+      "Fraction.print": createSubroutineSymbol(SubroutineType.Method, [], 0),
+      "Fraction.gcd": createSubroutineSymbol(
+        SubroutineType.Function,
+        ["a", "b"],
+        1
+      ),
       Main: {},
-      "Main.main": createSubroutineSymbol(0, SubroutineType.Function, 3),
+      "Main.main": createSubroutineSymbol(SubroutineType.Function, [], 3),
     };
     let globalSymbolsListener = new BinderListener();
 
@@ -89,7 +102,7 @@ describe("Jack binder", () => {
 function testBinder<T extends { name: string }>(
   input: string,
   expectedError?: T,
-  binder = new BinderListener(),
+  binder = new BinderListener()
 ) {
   const tree = parseJackText(input);
   listenToTheTree(tree, binder);
@@ -105,7 +118,7 @@ function testBinder<T extends { name: string }>(
       throw new Error(
         `Expected error ${expectedError.name} but got '` +
           errors.join(",") +
-          "'",
+          "'"
       );
     }
   } else {

@@ -15,6 +15,12 @@ import {
   Position,
   Range,
   TextEdit,
+  CompletionItem,
+  CompletionItemKind,
+  TextDocumentPositionParams,
+  CompletionList,
+  InsertReplaceEdit,
+  InsertTextFormat,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Compiler, JackCompilerError } from "jack-compiler/out/index";
@@ -23,6 +29,7 @@ import { JackPlugin } from "prettier-plugin-jack/out/index";
 import * as path from "path";
 import * as fs from "fs";
 import { URI } from "vscode-uri";
+import { assert } from "console";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -55,6 +62,10 @@ connection.onInitialize((params: InitializeParams) => {
         workspaceDiagnostics: false,
       },
       documentFormattingProvider: true,
+      completionProvider: {
+        resolveProvider: true,
+        triggerCharacters: ["."],
+      },
     },
   };
   if (hasWorkspaceFolderCapability) {
@@ -99,13 +110,11 @@ connection.languages.diagnostics.on(async (params) => {
   }
 });
 
-// The content of a text document has changed. This event is emitted
-// when the text document first opened or when its content has changed.
+// Validate text on change
 documents.onDidChangeContent((change) => {
   connection.console.log("Server on change...");
   validateTextDocument(change.document);
 });
-
 async function validateTextDocument(
   textDocument: TextDocument
 ): Promise<Diagnostic[]> {
@@ -162,11 +171,6 @@ function toDiagnostics(textDocument: TextDocument, e: JackCompilerError) {
   };
 }
 
-connection.onDidChangeWatchedFiles((_change) => {
-  // Monitored files have change in VSCode
-  connection.console.log("We received a file change event");
-});
-
 connection.onDocumentFormatting(
   async (formatParams: DocumentFormattingParams): Promise<TextEdit[]> => {
     const document = documents.get(formatParams.textDocument.uri);
@@ -201,6 +205,54 @@ connection.onDocumentFormatting(
     }
   }
 );
+// This handler provides the initial list of the completion items.
+connection.onCompletion(
+  (_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+    const textDocument = documents.get(_textDocumentPosition.textDocument.uri);
+    if (textDocument == null) {
+      return [];
+    }
+    // const symbolTable = createGlobalSymbolTable(textDocument.uri);
+    // const doc = fs.readFileSync(textDocument.uri);
+    const pos = _textDocumentPosition.position;
+    const line = textDocument
+      .getText()
+      .substring(
+        textDocument.offsetAt({ line: pos.line, character: 0 }),
+        textDocument.offsetAt(pos)
+      );
+    const matches = line.matchAll(/([A-Z]([A-Za-z0-9_])*\.)$/g);
+    const idStart = matches.next();
+    if (idStart.value == null || idStart.value.length == 0) {
+      return [];
+    }
+    const symbols = createGlobalSymbolTable(textDocument.uri);
+    const matchedSubroutines = Object.entries(symbols).filter(([k, v]) =>
+      k.startsWith(idStart.value[0])
+    );
+    return matchedSubroutines.map(([k, v], i) => {
+      const label = k.substring(k.indexOf(".") + 1);
+      const params = v.subroutineInfo?.paramNames
+        .map((v, i) => {
+          return "${" + i + ":" + v + "}";
+        })
+        .join(",");
+      return {
+        label: label,
+        kind: CompletionItemKind.Function,
+        data: k,
+        insertText: label + "(" + params + ")",
+        insertTextFormat: InsertTextFormat.Snippet,
+        // textEdit: TextEdit.insert(_textDocumentPosition.position, label + `()`),
+      } as CompletionItem;
+    });
+  }
+);
+// This handler resolves additional information for the item selected in
+// the completion list.
+connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
+  return item;
+});
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events
@@ -208,3 +260,31 @@ documents.listen(connection);
 
 // Listen on the connection
 connection.listen();
+
+//Utils
+
+function createGlobalSymbolTable(textDocumentUri: string) {
+  const compiler = new Compiler();
+  const selectedFilePath = URI.parse(textDocumentUri).fsPath;
+  const dir = path.dirname(selectedFilePath);
+  //TODO: resolve this
+  const files = fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith(".jack"))
+    .map((file) => path.join(dir, file));
+  for (const filePath of files) {
+    const content = fs.readFileSync(filePath, {
+      encoding: "utf8",
+      flag: "r",
+    });
+    const treeOrErrors = compiler.parse(content);
+    if (!Array.isArray(treeOrErrors)) {
+      compiler.bind(treeOrErrors);
+    }
+  }
+  assert(
+    Object.keys(compiler.globalSymbolTable).length,
+    "Global symbol table shouldn't be empty"
+  );
+  return compiler.globalSymbolTable;
+}

@@ -7,8 +7,8 @@ export enum SubroutineType {
   Method,
 }
 export interface SubroutineInfo {
-  paramsCount: number;
   type: SubroutineType;
+  paramNames: string[];
   localVarsCount?: number;
 }
 export type GlobalSymbolTable = Record<string, GenericSymbol>;
@@ -17,17 +17,6 @@ export type GlobalSymbolTable = Record<string, GenericSymbol>;
  */
 export interface GenericSymbol {
   subroutineInfo?: SubroutineInfo;
-}
-export function createSubroutineSymbol(
-  paramsCount: number,
-  type: SubroutineType,
-  localVarsCount?: number,
-): GenericSymbol {
-  const s = { paramsCount, type } as SubroutineInfo;
-  if (localVarsCount != undefined) {
-    s.localVarsCount = localVarsCount;
-  }
-  return { subroutineInfo: s } as GenericSymbol;
 }
 
 type VariableType = string;
@@ -101,7 +90,7 @@ export class LocalSymbolTable {
   define(scope: ScopeType, varName: string, type: VariableType) {
     if (scope == ScopeType.Argument) {
       throw new Error(
-        "Please use defineArgument method to define function arguments",
+        "Please use defineArgument method to define function arguments"
       );
     }
     this.scopes[scope].push({
