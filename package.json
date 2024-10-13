@@ -26,9 +26,9 @@
         ],
         "configuration": "./language-configuration.json",
         "icon": {
-           "light": "./icons/jack.svg",
-           "dark": "./icons/jack.svg"
-         }
+          "light": "./icons/jack.svg",
+          "dark": "./icons/jack.svg"
+        }
       }
     ],
     "grammars": [
@@ -46,6 +46,7 @@
     ]
   },
   "scripts": {
+    "prepare": "husky",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
     "vscode:prepublish": "npm run compile",
     "build": "pnpm clean && tsc -b",
@@ -55,6 +56,10 @@
     "ci": "pnpm -r t",
     "format": "npx prettier --write ."
   },
+  "lint-staged": {
+    "*": "prettier --write",
+    "*.ts": "eslint --fix"
+  },
   "devDependencies": {
     "@types/mocha": "^10.0.8",
     "@types/node": "^20.16.10",
@@ -62,7 +67,9 @@
     "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^8.57.1",
     "glob": "^11.0.0",
+    "husky": "^9.1.6",
     "jest": "^29.7.0",
+    "lint-staged": "^15.2.10",
     "mocha": "^10.7.3",
     "rimraf": "^6.0.1",
     "typescript": "^5.6.2"
