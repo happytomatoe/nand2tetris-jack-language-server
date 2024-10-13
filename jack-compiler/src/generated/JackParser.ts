@@ -1,3 +1,4 @@
+/*  eslint-disable @typescript-eslint/no-non-null-assertion  */
 // Generated from JackParser.g4 by ANTLR 4.13.1
 
 import * as antlr from "antlr4ng";
@@ -7,7 +8,7 @@ import { JackParserListener } from "./JackParserListener.js";
 import { JackParserVisitor } from "./JackParserVisitor.js";
 
 // for running tests with parameters, TODO: discuss strategy for typed parameters in CI
-// eslint-disable-next-line no-unused-vars
+ 
 type int = number;
 
 
