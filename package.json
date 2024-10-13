@@ -62,7 +62,7 @@
   "publisher": "rlukash",
   "repository": "happytomatoe/nand2tetris-jack-lsp",
   "scripts": {
-    "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src ",
+    "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
     "build": "pnpm clean && tsc -b",
     "ci": "pnpm run lint && pnpm run test ",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",

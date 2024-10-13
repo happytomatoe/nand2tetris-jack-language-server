@@ -106,9 +106,9 @@ importers:
 
   prettier-plugin-jack:
     dependencies:
-      antlr4:
-        specifier: ^4.13.2
-        version: 4.13.2
+      antlr4ng:
+        specifier: ^3.0.7
+        version: 3.0.7(antlr4ng-cli@2.0.0)
       jack-compiler:
         specifier: workspace:*
         version: link:../jack-compiler
@@ -1164,10 +1164,6 @@ packages:
   ansi-styles@6.2.1:
     resolution: {integrity: sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==}
     engines: {node: '>=12'}
-
-  antlr4@4.13.2:
-    resolution: {integrity: sha512-QiVbZhyy4xAZ17UPEuG3YTOt8ZaoeOR1CvEAqrEsDBsOqINslaB147i9xqljZqoyf5S+EUlGStaj+t22LT9MOg==}
-    engines: {node: '>=16'}
 
   antlr4ng-cli@2.0.0:
     resolution: {integrity: sha512-oAt5OSSYhRQn1PgahtpAP4Vp3BApCoCqlzX7Q8ZUWWls4hX59ryYuu0t7Hwrnfk796OxP/vgIJaqxdltd/oEvQ==}
@@ -4471,8 +4467,6 @@ snapshots:
   ansi-styles@5.2.0: {}
 
   ansi-styles@6.2.1: {}
-
-  antlr4@4.13.2: {}
 
   antlr4ng-cli@2.0.0: {}
 

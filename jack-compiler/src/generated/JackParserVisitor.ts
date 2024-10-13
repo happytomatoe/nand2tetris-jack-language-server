@@ -1,11 +1,6 @@
 // Generated from JackParser.g4 by ANTLR 4.13.1
 
 import { AbstractParseTreeVisitor } from "antlr4ng";
-
-
-import { SubroutineScope, LocalSymbolTable } from "../symbol";
-
-
 import { ProgramContext } from "./JackParser";
 import { ClassDeclarationContext } from "./JackParser";
 import { ClassNameContext } from "./JackParser";

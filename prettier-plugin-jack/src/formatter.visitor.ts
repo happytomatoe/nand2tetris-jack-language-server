@@ -1,6 +1,6 @@
-import  {
+import { CommonTokenStream, TerminalNode, Token } from "antlr4ng";
+import {
   ArrayAccessContext,
-
   BinaryOperatorContext,
   BooleanLiteralContext,
   ClassDeclarationContext,
@@ -16,6 +16,7 @@ import  {
   IfElseStatementContext,
   IfExpressionContext,
   IfStatementContext,
+  JackParser,
   LetStatementContext,
   ParameterContext,
   ParameterListContext,
@@ -40,7 +41,7 @@ import  {
 import { JackParserVisitor } from "jack-compiler/out/generated/JackParserVisitor";
 import { Doc, doc } from "prettier";
 import { builders } from "prettier/doc";
-import { RBraceContext } from 'jack-compiler/out/generated/JackParser';
+import { assertExists } from "jack-compiler";
 const { join, hardline, indent, group } = doc.builders;
 export class JackVisitor extends JackParserVisitor<Doc> {
   private indentationLevel = 0;
@@ -65,10 +66,10 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       ]),
       [
         ctx
-          .classVarDec_list()
+          .classVarDec()
           .map((v) => this.addHardLine(this.visitClassVarDec(v))),
         ctx
-          .subroutineDeclaration_list()
+          .subroutineDeclaration()
           .map((v) => this.addHardLine(this.visitSubroutineDeclaration(v))),
         this.visitRBrace(ctx.rBrace()),
       ],
@@ -79,9 +80,9 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   visitClassVarDec = (ctx: ClassVarDecContext): builders.Doc => {
     let staticOrField: Doc | undefined;
     if (ctx.STATIC() != null) {
-      staticOrField = this.visitTerminal(ctx.STATIC());
+      staticOrField = this.visitTerminal(assertExists(ctx.STATIC()));
     } else if (ctx.FIELD() != null) {
-      staticOrField = this.visitTerminal(ctx.FIELD());
+      staticOrField = this.visitTerminal(assertExists(ctx.FIELD()));
     } else {
       throw new Error("Invalid qualifier for class variable " + ctx.getText());
     }
@@ -95,7 +96,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   // fieldList: varType fieldName ( COMMA fieldName)*;
   visitFieldList = (ctx: FieldListContext): doc.builders.Doc => {
     const varNames = joinWithCommas(
-      ctx.fieldName_list().map((v) => [this.visitFieldName(v)])
+      ctx.fieldName().map((v) => [this.visitFieldName(v)])
     );
     return [this.visitVarType(ctx.varType()), " ", varNames];
   };
@@ -128,7 +129,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       ]),
       // subroutineBody: LBRACE varDeclaration* statements rBrace;
       bodyContext
-        .varDeclaration_list()
+        .varDeclaration()
         .map((v) => this.addHardLine(this.visitVarDeclaration(v))),
       this.visitStatements(bodyContext.statements()),
     ];
@@ -138,18 +139,16 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 
   visitSubroutineType = (ctx: SubroutineTypeContext): builders.Doc => {
     if (ctx.CONSTRUCTOR() != null) {
-      return this.visitTerminal(ctx.CONSTRUCTOR());
+      return this.visitTerminal(assertExists(ctx.CONSTRUCTOR()));
     } else if (ctx.FUNCTION() != null) {
-      return this.visitTerminal(ctx.FUNCTION());
+      return this.visitTerminal(assertExists(ctx.FUNCTION()));
     } else if (ctx.METHOD() != null) {
-      return this.visitTerminal(ctx.METHOD());
+      return this.visitTerminal(assertExists(ctx.METHOD()));
     }
     throw new Error("Invalid subroutine type " + ctx.getText());
   };
   visitParameterList = (ctx: ParameterListContext): builders.Doc => {
-    return joinWithCommas(
-      ctx.parameter_list().map((v) => this.visitParameter(v))
-    );
+    return joinWithCommas(ctx.parameter().map((v) => this.visitParameter(v)));
   };
 
   //varType parameterName
@@ -175,7 +174,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
       this.visitVarType(ctx.varType()),
       " ",
       joinWithCommas(
-        ctx.varNameInDeclaration_list().map((v) => this.visitVarName(v))
+        ctx.varNameInDeclaration().map((v) => this.visitVarName(v))
       ),
       this.visitTerminal(ctx.SEMICOLON()),
     ]);
@@ -184,9 +183,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     return this.visitTerminal(ctx.IDENTIFIER());
   };
   visitStatements = (ctx: StatementsContext): builders.Doc[] => {
-    return ctx
-      .statement_list()
-      .map((v) => this.addHardLine(this.visitStatement(v)));
+    return ctx.statement().map((v) => this.addHardLine(this.visitStatement(v)));
   };
   //
   visitStatement = (ctx: StatementContext): builders.Doc => {
@@ -197,18 +194,17 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 			| whileStatement
 			| doStatement
 			| returnStatement;
-
 		 */
     if (ctx.letStatement() != null) {
-      return this.visitLetStatement(ctx.letStatement());
+      return this.visitLetStatement(assertExists(ctx.letStatement()));
     } else if (ctx.ifElseStatement() != null) {
-      return this.visitIfElseStatement(ctx.ifElseStatement());
+      return this.visitIfElseStatement(assertExists(ctx.ifElseStatement()));
     } else if (ctx.whileStatement() != null) {
-      return this.visitWhileStatement(ctx.whileStatement());
+      return this.visitWhileStatement(assertExists(ctx.whileStatement()));
     } else if (ctx.doStatement() != null) {
-      return this.visitDoStatement(ctx.doStatement());
+      return this.visitDoStatement(assertExists(ctx.doStatement()));
     } else if (ctx.returnStatement() != null) {
-      return this.visitReturnStatement(ctx.returnStatement());
+      return this.visitReturnStatement(assertExists(ctx.returnStatement()));
     } else {
       throw new Error("Unknown statement type: " + ctx.getText());
     }
@@ -216,10 +212,10 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   // LET (varName | arrayAccess) equals expression SEMICOLON;
   visitLetStatement = (ctx: LetStatementContext): builders.Doc => {
     let leftSide: Doc = "";
-    if (ctx.varName() != null) {
-      leftSide = this.visitVarName(ctx.varName());
+    if (ctx.varName() != null && ctx.varName() != undefined) {
+      leftSide = this.visitVarName(assertExists(ctx.varName()));
     } else if (ctx.arrayAccess() != null) {
-      leftSide = this.visitArrayAccess(ctx.arrayAccess());
+      leftSide = this.visitArrayAccess(assertExists(ctx.arrayAccess()));
     } else {
       throw new Error("Unknown left side in let " + ctx.getText());
     }
@@ -239,7 +235,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     return [
       this.visitIfStatement(ctx.ifStatement()),
       ctx.elseStatement() != null
-        ? this.visitElseStatement(ctx.elseStatement())
+        ? this.visitElseStatement(assertExists(ctx.elseStatement()))
         : "",
     ];
   };
@@ -312,13 +308,15 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   visitSubroutineId = (ctx: SubroutineIdContext): builders.Doc => {
     let classNameOrThis: Doc | undefined = undefined;
     if (ctx.className() != null) {
-      classNameOrThis = this.visitTerminal(ctx.className().IDENTIFIER());
+      classNameOrThis = this.visitTerminal(
+        assertExists(ctx.className()).IDENTIFIER()
+      );
     } else if (ctx.THIS_LITERAL() != null) {
-      classNameOrThis = this.visitTerminal(ctx.THIS_LITERAL());
+      classNameOrThis = this.visitTerminal(assertExists(ctx.THIS_LITERAL()));
     }
     return [
       classNameOrThis != null
-        ? [classNameOrThis, this.visitTerminal(ctx.DOT())]
+        ? [classNameOrThis, this.visitTerminal(assertExists(ctx.DOT()))]
         : "",
       this.visitTerminal(ctx.subroutineName().IDENTIFIER()),
     ];
@@ -328,7 +326,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     return [
       this.visitTerminal(ctx.RETURN()),
       ctx.expression() != null
-        ? [" ", this.visitExpression(ctx.expression())]
+        ? [" ", this.visitExpression(assertExists(ctx.expression()))]
         : "",
       this.visitTerminal(ctx.SEMICOLON()),
     ];
@@ -336,9 +334,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
 
   // expressionList: (expression (COMMA expression)*)?;
   visitExpressionList = (ctx: ExpressionListContext): builders.Doc => {
-    return joinWithCommas(
-      ctx.expression_list().map((v) => this.visitExpression(v))
-    );
+    return joinWithCommas(ctx.expression().map((v) => this.visitExpression(v)));
   };
 
   visitExpression = (ctx: ExpressionContext): builders.Doc => {
@@ -351,23 +347,27 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     // | expression binaryOperator expression
     // | groupedExpression;
     if (ctx.constant() != null) {
-      return this.visitConstant(ctx.constant());
+      return this.visitConstant(assertExists(ctx.constant()));
     } else if (ctx.varName() != null) {
-      return this.visitTerminal(ctx.varName().IDENTIFIER());
+      return this.visitTerminal(assertExists(ctx.varName()).IDENTIFIER());
     } else if (ctx.subroutineCall() != null) {
-      return this.visitSubroutineCall(ctx.subroutineCall());
+      return this.visitSubroutineCall(assertExists(ctx.subroutineCall()));
     } else if (ctx.arrayAccess() != null) {
-      return this.visitArrayAccess(ctx.arrayAccess());
+      return this.visitArrayAccess(assertExists(ctx.arrayAccess()));
     } else if (ctx.unaryOperation() != null) {
-      return this.visitUnaryOperation(ctx.unaryOperation());
+      return this.visitUnaryOperation(assertExists(ctx.unaryOperation()));
     } else if (ctx.binaryOperator() != null) {
-      const op1 = this.visitExpression(ctx.expression(0));
-      const binaryOp = this.visitBinaryOperator(ctx.binaryOperator());
-      const t = ctx.expression(1);
+      const op1 = this.visitExpression(
+        assertExists(ctx.expression(0), "Left operand cannot be null")
+      );
+      const binaryOp = this.visitBinaryOperator(
+        assertExists(ctx.binaryOperator(), "Binary operator cannot be null")
+      );
+      const t = assertExists(ctx.expression(1), "Right operand cannot be null");
       const op2 = this.visitExpression(t);
       return join(" ", [op1, binaryOp, op2]);
     } else if (ctx.groupedExpression() != null) {
-      return this.visitGroupedExpression(ctx.groupedExpression());
+      return this.visitGroupedExpression(assertExists(ctx.groupedExpression()));
     }
     throw new Error("Unknown expression " + ctx.getText());
   };
@@ -387,7 +387,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   };
   visitTerminalOrThrow(
     errorMsg: () => string,
-    ...args: TerminalNode[]
+    ...args: (TerminalNode | null)[]
   ): doc.builders.Doc {
     const elem = args.find((el) => el !== null);
     if (elem) {
@@ -403,7 +403,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   // | THIS_LITERAL;
   visitConstant = (ctx: ConstantContext): builders.Doc => {
     if (ctx.booleanLiteral() != null) {
-      return this.visitBooleanLiteral(ctx.booleanLiteral());
+      return this.visitBooleanLiteral(assertExists(ctx.booleanLiteral()));
     }
     return this.visitTerminalOrThrow(
       () => "Invalid constant `" + ctx.getText() + "`",
@@ -415,9 +415,9 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   };
   visitBooleanLiteral = (ctx: BooleanLiteralContext): doc.builders.Doc => {
     if (ctx.TRUE() != null) {
-      return this.visitTerminal(ctx.TRUE());
+      return this.visitTerminal(assertExists(ctx.TRUE()));
     } else if (ctx.FALSE() != null) {
-      return this.visitTerminal(ctx.FALSE());
+      return this.visitTerminal(assertExists(ctx.FALSE()));
     }
     throw new Error(`Invalid boolean  literal \`${ctx.getText()}\``);
   };
@@ -461,7 +461,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
   };
   transformLineComment(t: Token[]) {
     return t.map((v) => {
-      let s: Doc = v.text;
+      let s: Doc = v.text ?? "";
       if (s.indexOf("\n") !== -1) {
         s = Array<Doc>((s.match(/\n/g) || []).length).fill(this.getHardLine());
       }
@@ -476,14 +476,15 @@ export class JackVisitor extends JackParserVisitor<Doc> {
     if (this.onStartOfTheFile) {
       let a: Doc[] = [];
       const leadingComment = this.tokenStream.getHiddenTokensToLeft(
-        node.symbol.tokenIndex
+        node.symbol.tokenIndex,
+        -1
       );
       if (leadingComment != null) {
         if (
           leadingComment.find((v) => v.type == JackParser.BLOCK_COMMENT) !=
           undefined
         ) {
-          a = leadingComment.map((v) => v.text);
+          a = leadingComment.map((v) => v.text ?? "");
         } else if (
           leadingComment != null &&
           leadingComment.find((v) => v.type == JackParser.LINE_COMMENT) !=
@@ -493,12 +494,13 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         }
       }
       this.onStartOfTheFile = false;
-      return [a, node.symbol.text];
+      return [a, node.symbol.text ?? ""];
     }
 
-    const res: Doc[] = [node.symbol.text];
+    const res: Doc[] = [node.symbol.text ?? ""];
     const trailingComment = this.tokenStream.getHiddenTokensToRight(
-      node.symbol.tokenIndex
+      node.symbol.tokenIndex,
+      -1
     );
 
     if (trailingComment != null) {
@@ -506,11 +508,13 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         trailingComment[trailingComment.length - 1].type ==
         JackParser.WHITESPACE
       ) {
-        const last = trailingComment[trailingComment.length - 1];
-        if ((last.text.match(/\n/g) || []).length > 1) {
-          const c = last.text.lastIndexOf("\n");
-          last.text = last.text.substring(0, c);
-          trailingComment[trailingComment.length - 1] = last;
+        const lastTokenText =
+          trailingComment[trailingComment.length - 1]?.text ?? "";
+        //remove last new line
+        if ((lastTokenText.match(/\n/g) || []).length > 1) {
+          const c = lastTokenText.lastIndexOf("\n");
+          assertExists(trailingComment[trailingComment.length - 1]).text =
+            lastTokenText.substring(0, c);
         } else {
           trailingComment.pop();
         }
@@ -519,7 +523,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         trailingComment.find((v) => v.type == JackParser.BLOCK_COMMENT) &&
         trailingComment.find((v) => v.type == JackParser.LINE_COMMENT)
       ) {
-        res.push(trailingComment.map((v) => v.text));
+        res.push(trailingComment.map((v) => v.text ?? ""));
       } else if (
         trailingComment.find((v) => v.type == JackParser.BLOCK_COMMENT) !=
         undefined
@@ -529,7 +533,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         );
         //indent newlines before comment
         const b = trailingComment.map((v, i) => {
-          let res: Doc = v.text;
+          let res: Doc = v.text ?? "";
           if (
             i < commentIndex &&
             v.type == JackParser.WHITESPACE &&
@@ -553,7 +557,7 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         const b = this.transformLineComment(trailingComment);
         res.push(b);
       } else {
-        res.push(trailingComment.map((v) => v.text));
+        res.push(trailingComment.map((v) => v.text ?? ""));
       }
     }
     return res;

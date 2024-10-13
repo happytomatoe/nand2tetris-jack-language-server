@@ -44,9 +44,12 @@ export function getCallType(
   }
 }
 
-export function assertExists<T>(val: T | undefined | null, message: string): T {
+export function assertExists<T>(
+  val: T | undefined | null,
+  message?: string
+): T {
   if (val == null) {
-    throw new Error(message);
+    throw new Error(message ?? "Cannot be null or undefined");
   }
   return val;
 }

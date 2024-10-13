@@ -31,16 +31,14 @@ export function createSubroutineSymbol(
   return { subroutineInfo: s, filename, start, end } as GenericSymbol;
 }
 
-export function parseJackFile(filePath: string, trace = false) {
+export function parseJackFile(filePath: string) {
   const f = fs.readFileSync(filePath, "utf8");
-  return parseJackText(f, undefined, trace);
+  return parseJackText(f, undefined);
 }
 
 export function parseJackText(
   src: string,
-  errorListener?: CustomErrorListener,
-  trace = false,
-  throwOnErrors = true
+  errorListener?: CustomErrorListener
 ): ProgramContext {
   if (errorListener === undefined) {
     errorListener = new CustomErrorListener();
