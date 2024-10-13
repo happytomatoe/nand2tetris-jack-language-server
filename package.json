@@ -33,12 +33,14 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9.12.0",
     "@types/mocha": "^10.0.8",
     "@types/node": "^20.16.10",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.12.0",
     "glob": "^11.0.0",
+    "globals": "^15.11.0",
     "husky": "^9.1.6",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.10",
@@ -46,7 +48,8 @@
     "remark": "^15.0.1",
     "remark-cli": "^12.0.1",
     "rimraf": "^6.0.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.1"
   },
   "engines": {
     "vscode": "^1.75.0"
@@ -70,7 +73,7 @@
     "ci": "pnpm run lint && pnpm -r t&& pnpm run test ",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
     "format": "npx prettier --write .",
-    "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --ext .ts,.tsx",
+    "lint": "eslint ",
     "prepare": "husky",
     "remark": "remark",
     "remark:fix": "pnpm remark --output --",
