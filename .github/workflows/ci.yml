@@ -29,8 +29,3 @@ jobs:
         run: pnpm run ci
       - name: Run tests
         run: xvfb-run -a pnpm run e2e-test
-        if: runner.os == 'Linux'
-
-      - name: Run E2E tests
-        run: pnpm run test
-        if: runner.os != 'Linux'
