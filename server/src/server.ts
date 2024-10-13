@@ -1,41 +1,37 @@
 import {
-  createConnection,
-  TextDocuments,
-  Diagnostic,
-  // DiagnosticSeverity,
-  ProposedFeatures,
-  InitializeParams,
-  DidChangeConfigurationNotification,
-  TextDocumentSyncKind,
-  InitializeResult,
-  DocumentDiagnosticReportKind,
-  type DocumentDiagnosticReport,
-  DiagnosticSeverity,
-  DocumentFormattingParams,
-  Position,
-  Range,
-  TextEdit,
   CompletionItem,
   CompletionItemKind,
-  TextDocumentPositionParams,
-  CompletionList,
-  InsertReplaceEdit,
+  createConnection,
+  Diagnostic,
+  DiagnosticSeverity,
+  DidChangeConfigurationNotification,
+  DocumentDiagnosticReportKind,
+  DocumentFormattingParams,
+  InitializeParams,
+  InitializeResult,
   InsertTextFormat,
-  Definition,
-  LocationLink,
   Location,
+  Position,
+  // DiagnosticSeverity,
+  ProposedFeatures,
+  Range,
+  TextDocumentPositionParams,
+  TextDocuments,
+  TextDocumentSyncKind,
+  TextEdit,
+  type DocumentDiagnosticReport
 } from "vscode-languageserver/node";
 
 
-import { TextDocument } from "vscode-languageserver-textdocument";
+import { assert } from "console";
+import * as fs from "fs";
 import { Compiler, JackCompilerError } from "jack-compiler/out/index";
+import { GlobalSymbolTable } from "jack-compiler/out/symbol";
+import * as path from "path";
 import * as prettier from "prettier";
 import { JackPlugin } from "prettier-plugin-jack/out/index";
-import * as path from "path";
-import * as fs from "fs";
+import { TextDocument } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
-import { assert } from "console";
-import { GlobalSymbolTable } from "jack-compiler/out/symbol";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
