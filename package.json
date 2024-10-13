@@ -1,22 +1,9 @@
 {
   "name": "nand2tetris-jack-lsp",
   "description": "A language server for nand2tetris jack language",
-  "author": "Roman Lukash",
-  "license": "MIT",
   "version": "0.0.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
-  },
-  "publisher": "rlukash",
+  "author": "Roman Lukash",
   "categories": [],
-  "keywords": [
-    "multi-root ready"
-  ],
-  "engines": {
-    "vscode": "^1.75.0"
-  },
-  "main": "./client/out/extension",
   "contributes": {
     "languages": [
       {
@@ -45,21 +32,6 @@
       }
     ]
   },
-  "scripts": {
-    "prepare": "husky",
-    "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
-    "vscode:prepublish": "npm run compile",
-    "build": "pnpm clean && tsc -b",
-    "watch": "tsc -b -w",
-    "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --ext .ts,.tsx",
-    "test": "sh ./scripts/e2e.sh",
-    "ci": "pnpm -r t",
-    "format": "npx prettier --write ."
-  },
-  "lint-staged": {
-    "*": "prettier --write",
-    "*.ts": "eslint --fix"
-  },
   "devDependencies": {
     "@types/mocha": "^10.0.8",
     "@types/node": "^20.16.10",
@@ -71,7 +43,40 @@
     "jest": "^29.7.0",
     "lint-staged": "^15.2.10",
     "mocha": "^10.7.3",
+    "remark": "^15.0.1",
+    "remark-cli": "^12.0.1",
     "rimraf": "^6.0.1",
+    "syncpack": "^13.0.0",
     "typescript": "^5.6.2"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "keywords": [
+    "multi-root ready"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "!(*.ts)": "prettier --write",
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "main": "./client/out/extension",
+  "publisher": "rlukash",
+  "repository": "happytomatoe/nand2tetris-jack-lsp",
+  "scripts": {
+    "build": "pnpm clean && tsc -b",
+    "ci": "pnpm run lint && pnpm -r t&& pnpm run test ",
+    "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
+    "format": "npx prettier --write .",
+    "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --ext .ts,.tsx",
+    "prepare": "husky",
+    "remark": "remark",
+    "remark:fix": "pnpm remark --output --",
+    "test": "sh ./scripts/e2e.sh",
+    "vscode:prepublish": "npm run compile",
+    "watch": "tsc -b -w"
   }
 }

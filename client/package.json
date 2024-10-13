@@ -1,17 +1,8 @@
 {
   "name": "jack-lsp-client",
   "description": "VSCode part of a language server",
-  "author": "Roman Lukash",
-  "license": "MIT",
   "version": "0.0.1",
-  "publisher": "rlukash",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
-  },
-  "engines": {
-    "vscode": "^1.75.0"
-  },
+  "author": "Roman Lukash",
   "dependencies": {
     "vscode-languageclient": "^9.0.1"
   },
@@ -19,5 +10,11 @@
     "@types/vscode": "^1.75.1",
     "@vscode/test-electron": "^2.4.1",
     "glob": "^11.0.0"
-  }
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "license": "MIT",
+  "publisher": "rlukash",
+  "repository": "happytomatoe/nand2tetris-jack-lsp"
 }

@@ -1,6 +1,5 @@
 import {
   ClassDeclarationContext,
-  SubroutineBodyContext,
   SubroutineDeclarationContext,
   VarNameInDeclarationContext,
 } from "../generated/JackParser";
