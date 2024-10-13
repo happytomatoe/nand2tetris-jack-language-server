@@ -10,8 +10,8 @@ import {
   SubroutineInfo,
   SubroutineType,
 } from "../symbol";
-import JackParserListener from "../generated/JackParserListener";
 import { builtInSymbols } from "../builtins";
+import { JackParserListener } from "../generated/JackParserListener";
 
 /**
  * Creates global symbol table that contains built-in functions and found classes and subroutines
@@ -33,6 +33,9 @@ export class BinderListener extends JackParserListener {
     if (this.globalSymbolTable[className] != undefined) {
       if (classNameCtx.stop == null || classNameCtx.stop?.stop == null)
         throw new Error("Stop token should not be null");
+      if (classNameCtx.start == null) {
+        throw new Error("Start token should not be null");
+      }
       const e = new DuplicatedClassError(
         classNameCtx.start.line,
         classNameCtx.start.start,
@@ -69,6 +72,9 @@ export class BinderListener extends JackParserListener {
     const subroutineName = nameCtx.IDENTIFIER().getText();
     const id = this.className + "." + subroutineName;
     if (this.globalSymbolTable[id] != undefined) {
+      if (nameCtx.start == null) {
+        throw new Error("Start token should not be null");
+      }
       this.errors.push(
         new DuplicatedSubroutineError(
           nameCtx.IDENTIFIER().symbol.line,
@@ -82,7 +88,7 @@ export class BinderListener extends JackParserListener {
       this.subroutineId = id;
       const params = subroutineWithoutTypeCtx
         .parameterList()
-        .parameter_list()
+        .parameter()
         .map((parameter) => {
           return parameter.parameterName().IDENTIFIER().getText();
         });

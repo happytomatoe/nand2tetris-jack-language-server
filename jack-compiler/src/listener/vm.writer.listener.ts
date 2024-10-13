@@ -1,3 +1,4 @@
+import { JackParserListener } from "../generated/JackParserListener";
 import {
   ArrayAccessContext,
   ClassDeclarationContext,
@@ -13,14 +14,13 @@ import {
   WhileExpressionContext,
   WhileStatementContext,
 } from "../generated/JackParser";
-import JackParserListener from "../generated/JackParserListener";
 import {
   GenericSymbol,
   LocalSymbolTable,
   scopeTypeToString,
   VariableSymbol,
 } from "../symbol";
-import { CallType, getCallType } from "./common";
+import { assertExists, CallType, getCallType } from "./common";
 
 const binaryOperationToVmCmd: Record<string, string> = {
   "+": "add",
@@ -111,7 +111,7 @@ export class VMWriter extends JackParserListener {
     }
     this.pushSymbolOntoStack(symbol);
     this.result += `    add\n`;
-    if (this.afterEquals || ctx.parentCtx instanceof ExpressionContext) {
+    if (this.afterEquals || ctx.parent instanceof ExpressionContext) {
       this.result += `    pop pointer 1\n`;
       this.result += `    push that 0\n`;
     }
@@ -137,11 +137,12 @@ export class VMWriter extends JackParserListener {
     } else if (ctx.THIS_LITERAL() != null) {
       this.result += `    push pointer 0\n`;
     } else if (ctx.STRING_LITERAL() != null) {
-      const str = ctx
+      const maybeStr = ctx
         .STRING_LITERAL()
-        .getText()
+        ?.getText()
         //cutoff ""
         .slice(1, -1);
+      const str = assertExists(maybeStr, "String literal cannot be null");
       this.result += `    push constant ${str.length}\n`;
       this.result += `    call String.new 1\n`;
       for (const char of str) {
@@ -156,7 +157,11 @@ export class VMWriter extends JackParserListener {
   };
   override exitExpression = (ctx: ExpressionContext) => {
     if (ctx.varName() != null) {
-      const varName = ctx.varName()?.IDENTIFIER().getText();
+      const varNameCtx = assertExists(
+        ctx.varName(),
+        "Variable name cannot be null"
+      );
+      const varName = varNameCtx.IDENTIFIER().getText();
       const symbol = this.localSymbolTable.lookup(varName);
       if (symbol == undefined) {
         throw new Error(
@@ -165,13 +170,19 @@ export class VMWriter extends JackParserListener {
       }
       this.pushSymbolOntoStack(symbol);
     } else if (ctx.binaryOperator() != null) {
-      const binaryOp = ctx.binaryOperator()?.getText();
+      const binaryOp = assertExists(
+        ctx.binaryOperator(),
+        "Binary operator cannot be null"
+      ).getText();
       if (binaryOperationToVmCmd[binaryOp] == undefined) {
         throw new Error(`Unknown binary operator ${binaryOp}`);
       }
       this.result += "\t" + binaryOperationToVmCmd[binaryOp] + "\n";
     } else if (ctx.unaryOperation() != null) {
-      const unaryOp = ctx.unaryOperation()?.unaryOperator().getText();
+      const unaryOp = assertExists(
+        ctx.unaryOperation()?.unaryOperator(),
+        "Unary operation cannot be null"
+      ).getText();
       if (unaryOperationToVmCmd[unaryOp] == null) {
         throw new Error(`Unknown unary operator ${unaryOp}`);
       }
@@ -183,8 +194,9 @@ export class VMWriter extends JackParserListener {
   }
   override exitLetStatement = (ctx: LetStatementContext) => {
     if (ctx.varName() != null) {
+      const varNameCtx = assertExists(ctx.varName(), "Var name cannot be null");
       const symbol = this.localSymbolTable.lookup(
-        ctx.varName()?.IDENTIFIER().getText()
+        varNameCtx.IDENTIFIER().getText()
       );
       if (symbol == undefined) {
         throw new Error(
@@ -206,7 +218,7 @@ export class VMWriter extends JackParserListener {
     ctx.endLabel = this.createLabel();
   };
   override exitIfStatement = (ctx: IfStatementContext) => {
-    const parent = ctx.parentCtx as IfElseStatementContext;
+    const parent = ctx.parent as IfElseStatementContext;
     if (parent.elseStatement() != null) {
       parent.endLabel = this.createLabel();
       this.result += `    goto ${parent.endLabel}\n`;
@@ -214,7 +226,7 @@ export class VMWriter extends JackParserListener {
     this.result += `    label ${ctx.endLabel}\n`;
   };
   override exitIfExpression = (ctx: IfExpressionContext) => {
-    const parent = ctx.parentCtx as IfStatementContext;
+    const parent = ctx.parent as IfStatementContext;
     this.ifNotGoto(parent.endLabel);
   };
   override exitIfElseStatement = (ctx: IfElseStatementContext) => {
@@ -229,7 +241,7 @@ export class VMWriter extends JackParserListener {
     this.result += `    label ${ctx.startLabel} \n`;
   };
   override exitWhileExpression = (ctx: WhileExpressionContext) => {
-    const parent = ctx.parentCtx as WhileStatementContext;
+    const parent = ctx.parent as WhileStatementContext;
     this.ifNotGoto(parent.endLabel);
   };
 
@@ -245,7 +257,8 @@ export class VMWriter extends JackParserListener {
       this.localSymbolTable
     );
     if (callType === CallType.VarMethod) {
-      if (symbol == null) throw new Error("Symbol not found when calling a method");
+      if (symbol == null)
+        throw new Error("Symbol not found when calling a method");
       this.pushSymbolOntoStack(symbol);
     } else if (callType === CallType.LocalMethod) {
       this.result += `    push pointer 0\n`;
@@ -261,13 +274,13 @@ export class VMWriter extends JackParserListener {
     );
     switch (callType) {
       case CallType.ClassFunctionOrConstructor: {
-        const argsCount = ctx.expressionList().expression_list().length;
+        const argsCount = ctx.expressionList().expression().length;
         this.result += `    call ${ctx.subroutineId().getText()} ${argsCount}\n`;
         break;
       }
       case CallType.LocalMethod:
       case CallType.VarMethod: {
-        const expressionsCount = ctx.expressionList().expression_list().length;
+        const expressionsCount = ctx.expressionList().expression().length;
         this.result += `    call ${subroutineIdText} ${expressionsCount + 1}\n`;
         break;
       }

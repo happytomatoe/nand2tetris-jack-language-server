@@ -1,6 +1,6 @@
-import { CommonTokenStream, TerminalNode, Token } from "antlr4";
-import JackParser, {
+import  {
   ArrayAccessContext,
+
   BinaryOperatorContext,
   BooleanLiteralContext,
   ClassDeclarationContext,
@@ -37,9 +37,10 @@ import JackParser, {
   WhileExpressionContext,
   WhileStatementContext,
 } from "jack-compiler/out/generated/JackParser";
-import JackParserVisitor from "jack-compiler/out/generated/JackParserVisitor";
+import { JackParserVisitor } from "jack-compiler/out/generated/JackParserVisitor";
 import { Doc, doc } from "prettier";
 import { builders } from "prettier/doc";
+import { RBraceContext } from 'jack-compiler/out/generated/JackParser';
 const { join, hardline, indent, group } = doc.builders;
 export class JackVisitor extends JackParserVisitor<Doc> {
   private indentationLevel = 0;

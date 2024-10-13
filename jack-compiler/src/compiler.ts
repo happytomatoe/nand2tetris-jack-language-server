@@ -1,12 +1,12 @@
 import { BinderListener as GlobalSymbolTableListener } from "./listener/global.symbol.listener";
-import { LexerErrorListener, ParserErrorListener } from "./listener/error.listener";
+import { CustomErrorListener } from "./listener/error.listener";
 import { ValidatorListener } from "./listener/validator.listener";
 import { JackCompilerError } from "./error";
 import { VMWriter } from "./listener/vm.writer.listener";
-import JackParser, { ProgramContext } from "./generated/JackParser";
-import { CharStreams, CommonTokenStream, ParseTreeWalker } from "antlr4";
-import JackLexer from "./generated/JackLexer";
 import { GlobalSymbolTable } from "./symbol";
+import { JackParser, ProgramContext } from './generated/JackParser';
+import { JackLexer } from './generated/JackLexer';
+import { CharStream, CommonTokenStream, ParseTreeWalker } from 'antlr4ng';
 
 export class Compiler {
   private globalSymbolTableListener = new GlobalSymbolTableListener();
@@ -18,19 +18,18 @@ export class Compiler {
    *            An array of JackCompilerError objects if errors were encountered during parsing or lexing.
    */
   parse(src: string): ProgramContext | JackCompilerError[] {
-    const lexerErrorListener = new LexerErrorListener();
-    const parserErrorListener = new ParserErrorListener();
-    const lexer = new JackLexer(CharStreams.fromString(src));
+    const errorListener = new CustomErrorListener();
+    const lexer = new JackLexer(CharStream.fromString(src));
     lexer.removeErrorListeners();
-    lexer.addErrorListener(lexerErrorListener);
+    lexer.addErrorListener(errorListener);
     const tokenStream = new CommonTokenStream(lexer);
     const parser = new JackParser(tokenStream);
     parser.removeErrorListeners();
-    parser.addErrorListener(parserErrorListener);
+    parser.addErrorListener(errorListener);
     const tree = parser.program();
-    if (lexerErrorListener.errors.length > 0) {
+    if (errorListener.errors.length > 0) {
       console.log("Errors when parsing or lexing");
-      return lexerErrorListener.errors;
+      return errorListener.errors;
     }
     return tree;
   }

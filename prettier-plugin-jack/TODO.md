@@ -1,6 +1,6 @@
 TODO:
 
 - [x] add class var support
-- [ ] add comments
-- [ ] add empty lines
+- [x] add comments
+- [x] add empty lines
 - [ ] add softline/breaks?

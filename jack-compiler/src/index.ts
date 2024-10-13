@@ -3,4 +3,4 @@ export { JackCompilerError } from "./error";
 export { ProgramContext } from "./generated/JackParser";
 export * as JackParserListener from "./generated/JackParserListener";
 export * as JackParserVisitor from "./generated/JackParserVisitor";
-export { ParseTreeWalker } from "antlr4";
+export { ParseTreeWalker } from "antlr4ng";

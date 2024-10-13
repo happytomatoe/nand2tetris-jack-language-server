@@ -22,6 +22,7 @@ import {
 } from "../src/error";
 import { ProgramContext } from "../src/generated/JackParser";
 import {
+  CustomErrorListener,
   LexerErrorListener,
   ParserErrorListener
 } from "../src/listener/error.listener";
@@ -799,9 +800,8 @@ function testValidator<T extends { name: string }>(
   globalSymbolTable: Record<string, GenericSymbol> = {},
   filename?: string
 ) {
-  const lexerErrorListener = new LexerErrorListener();
-  const parserErrorListener = new ParserErrorListener();
-  const tree = parseJackText(src, lexerErrorListener, parserErrorListener);
+  const errorListener = new CustomErrorListener();
+  const tree = parseJackText(src, errorListener);
   const listener =
     filename != null
       ? new ValidatorListener(globalSymbolTable, filename)

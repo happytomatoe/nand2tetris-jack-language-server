@@ -43,3 +43,10 @@ export function getCallType(
     }
   }
 }
+
+export function assertExists<T>(val: T | undefined | null, message: string): T {
+  if (val == null) {
+    throw new Error(message);
+  }
+  return val;
+}
