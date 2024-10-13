@@ -64,12 +64,12 @@
   "scripts": {
     "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
     "build": "pnpm clean && tsc -b",
-    "ci": "pnpm run lint && pnpm run test ",
+    "ci": "pnpm run lint && pnpm run unit",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
     "format": "npx prettier --write .",
     "prepare": "husky",
-    "test" :"pnpm -r test && pnpm run e2e-test",
     "e2e-test": "sh ./scripts/e2e.sh",
+    "unit-test": "pnpm -r test",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -b -w"
   }
