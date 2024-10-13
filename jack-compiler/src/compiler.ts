@@ -1,12 +1,12 @@
-import { BinderListener as GlobalSymbolTableListener } from "./listener/global.symbol.listener";
+import { GlobalSymbolTableListener as GlobalSymbolTableListener } from "./listener/global.symbol.listener";
 import { CustomErrorListener } from "./listener/error.listener";
 import { ValidatorListener } from "./listener/validator.listener";
 import { JackCompilerError } from "./error";
 import { VMWriter } from "./listener/vm.writer.listener";
 import { GlobalSymbolTable } from "./symbol";
-import { JackParser, ProgramContext } from './generated/JackParser';
-import { JackLexer } from './generated/JackLexer';
-import { CharStream, CommonTokenStream, ParseTreeWalker } from 'antlr4ng';
+import { JackParser, ProgramContext } from "./generated/JackParser";
+import { JackLexer } from "./generated/JackLexer";
+import { CharStream, CommonTokenStream, ParseTreeWalker } from "antlr4ng";
 
 export class Compiler {
   private globalSymbolTableListener = new GlobalSymbolTableListener();
@@ -38,6 +38,7 @@ export class Compiler {
     tree: ProgramContext,
     fileName?: string
   ): ProgramContext | JackCompilerError[] {
+    this.globalSymbolTableListener.errors = [];
     this.globalSymbolTableListener.filename = fileName ?? "";
     ParseTreeWalker.DEFAULT.walk(this.globalSymbolTableListener, tree);
     if (this.globalSymbolTableListener.errors.length > 0) {
@@ -50,7 +51,9 @@ export class Compiler {
     tree: ProgramContext,
     filename?: string
   ): ProgramContext | JackCompilerError[] {
-    if (Object.keys(this.globalSymbolTableListener.globalSymbolTable).length == 0) {
+    if (
+      Object.keys(this.globalSymbolTableListener.globalSymbolTable).length == 0
+    ) {
       throw new Error(
         "Please populate global symbol table using parserAndBind method"
       );
@@ -74,7 +77,9 @@ export class Compiler {
       return errors;
     }
     const validateTree = treeOrErrors as ProgramContext;
-    const vmWriter = new VMWriter(this.globalSymbolTableListener.globalSymbolTable);
+    const vmWriter = new VMWriter(
+      this.globalSymbolTableListener.globalSymbolTable
+    );
     ParseTreeWalker.DEFAULT.walk(vmWriter, validateTree);
     return vmWriter.result;
   }

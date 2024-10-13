@@ -21,12 +21,7 @@ import {
   WrongLiteralTypeError,
 } from "../src/error";
 import { ProgramContext } from "../src/generated/JackParser";
-import {
-  CustomErrorListener,
-  LexerErrorListener,
-  ParserErrorListener
-} from "../src/listener/error.listener";
-import { BinderListener } from "../src/listener/global.symbol.listener";
+import { CustomErrorListener } from "../src/listener/error.listener";
 import { ValidatorListener } from "../src/listener/validator.listener";
 import { GenericSymbol, SubroutineType } from "../src/symbol";
 import {
@@ -37,6 +32,7 @@ import {
   parseJackText,
   testResourceDirs,
 } from "./test.helper";
+import { GlobalSymbolTableListener } from "../src/listener/global.symbol.listener";
 
 describe("Jack validator listener", () => {
   const jestConsole = console;
@@ -777,7 +773,7 @@ function testJackDir(testFolder: string): void {
     .filter((file) => file.endsWith(".jack"))
     .map((file) => path.join(testFolder, file));
   const trees: Record<string, ProgramContext> = {};
-  const globalSymbolsListener: BinderListener = new BinderListener();
+  const globalSymbolsListener = new GlobalSymbolTableListener();
   for (const filePath of files) {
     const tree = parseJackFile(filePath);
     trees[filePath] = tree;

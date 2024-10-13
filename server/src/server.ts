@@ -5,6 +5,8 @@ import {
   Diagnostic,
   DiagnosticSeverity,
   DidChangeConfigurationNotification,
+  DidChangeWatchedFilesParams,
+  DidOpenTextDocumentParams,
   DocumentDiagnosticReportKind,
   DocumentFormattingParams,
   InitializeParams,
@@ -114,7 +116,7 @@ connection.languages.diagnostics.on(async (params) => {
 
 // Validate text on change
 documents.onDidChangeContent((change) => {
-  connection.console.log("Server on change...");
+  connection.console.log("onDidChangeContent: " + change.document.uri);
   validateTextDocument(change.document);
 });
 async function validateTextDocument(
@@ -307,7 +309,12 @@ connection.onDefinition((params) => {
   });
   return [res];
 });
-
+connection.onDidOpenTextDocument((params: DidOpenTextDocumentParams) => {
+  connection.console.log("DidOpenTextDocument " + JSON.stringify(params));
+  const document = documents.get(params.textDocument.uri);
+  if (document == null) return;
+  validateTextDocument(document);
+});
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);

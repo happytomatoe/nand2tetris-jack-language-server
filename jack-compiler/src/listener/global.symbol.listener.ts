@@ -16,7 +16,7 @@ import { JackParserListener } from "../generated/JackParserListener";
 /**
  * Creates global symbol table that contains built-in functions and found classes and subroutines
  */
-export class BinderListener extends JackParserListener {
+export class GlobalSymbolTableListener extends JackParserListener {
   // key can be class or <class>.<subroutine_name>
   public globalSymbolTable: GlobalSymbolTable = structuredClone(builtInSymbols);
   public className = "";

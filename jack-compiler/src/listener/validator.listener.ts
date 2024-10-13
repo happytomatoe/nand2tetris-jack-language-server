@@ -383,7 +383,7 @@ export class ValidatorListener extends JackParserListener {
 
     const symbol = this.globalSymbolTable[subroutineIdText];
     if (symbol == undefined) {
-      const start = assertExists(ctx.start, "Start token should not be null");
+      const start = assertExists(ctx.subroutineId()?.subroutineName()?.start, "Start token should not be null");
 
       this.#addError(
         new UnknownSubroutineCallError(

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { DuplicatedClassError, DuplicatedSubroutineError } from "../src/error";
-import { BinderListener } from "../src/listener/global.symbol.listener";
+import { GlobalSymbolTableListener } from "../src/listener/global.symbol.listener";
 import {
   GenericSymbol,
   GlobalSymbolTable,
@@ -44,9 +44,9 @@ describe("Jack binder", () => {
     const input = `
       class A {
       }`;
-    const binder = new BinderListener();
-    testBinder(input, undefined, binder);
-    testBinder(input, DuplicatedClassError, binder);
+    const globalSymbolTableListener = new GlobalSymbolTableListener();
+    testBinder(input, undefined, globalSymbolTableListener);
+    testBinder(input, DuplicatedClassError, globalSymbolTableListener);
   });
   test("duplicated built in class", () => {
     const input = `
@@ -142,7 +142,7 @@ describe("Jack binder", () => {
         { line: 8, character: 21 }
       ),
     };
-    let globalSymbolsListener = new BinderListener();
+    let globalSymbolsListener = new GlobalSymbolTableListener();
 
     const testFolder = getTestResourcePath("Fraction");
     const files = fs
@@ -159,11 +159,11 @@ describe("Jack binder", () => {
 function testBinder<T extends { name: string }>(
   input: string,
   expectedError?: T,
-  binder = new BinderListener()
+  globalSymbolTableListener = new GlobalSymbolTableListener()
 ) {
   const tree = parseJackText(input);
-  listenToTheTree(tree, binder);
-  const errors = binder.errors;
+  listenToTheTree(tree, globalSymbolTableListener);
+  const errors = globalSymbolTableListener.errors;
   if (expectedError) {
     if (errors.length > 1) {
       console.error("Errors", errors);

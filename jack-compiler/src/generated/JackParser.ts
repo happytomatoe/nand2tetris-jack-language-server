@@ -1,10 +1,15 @@
-/*  eslint-disable @typescript-eslint/no-non-null-assertion  */
 // Generated from JackParser.g4 by ANTLR 4.13.1
-// disable lint for generated file
-import * as antlr from "antlr4ng";
 
-import { JackParserListener } from "./JackParserListener";
-import { JackParserVisitor } from "./JackParserVisitor";
+import * as antlr from "antlr4ng";
+import { Token } from "antlr4ng";
+
+import { JackParserListener } from "./JackParserListener.js";
+import { JackParserVisitor } from "./JackParserVisitor.js";
+
+// for running tests with parameters, TODO: discuss strategy for typed parameters in CI
+// eslint-disable-next-line no-unused-vars
+type int = number;
+
 
 import { SubroutineScope, LocalSymbolTable } from "../symbol";
 
@@ -56,7 +61,6 @@ export class JackParser extends antlr.Parser {
     public static readonly THIS_LITERAL = 44;
     public static readonly IDENTIFIER = 45;
     public static readonly STRING_LITERAL = 46;
-    public static readonly UnterminatedStringLiteral = 47;
     public static readonly RULE_program = 0;
     public static readonly RULE_classDeclaration = 1;
     public static readonly RULE_className = 2;
@@ -117,8 +121,7 @@ export class JackParser extends antlr.Parser {
         "RBRACKET", "DOT", "COMMA", "SEMICOLON", "EQUALS", "PLUS", "MINUS", 
         "MUL", "DIV", "AND", "OR", "TILDE", "LESS_THAN", "GREATER_THAN", 
         "WHITESPACE", "BLOCK_COMMENT", "LINE_COMMENT", "INTEGER_LITERAL", 
-        "TRUE", "FALSE", "NULL_LITERAL", "THIS_LITERAL", "IDENTIFIER", "STRING_LITERAL", 
-        "UnterminatedStringLiteral"
+        "TRUE", "FALSE", "NULL_LITERAL", "THIS_LITERAL", "IDENTIFIER", "STRING_LITERAL"
     ];
     public static readonly ruleNames = [
         "program", "classDeclaration", "className", "classVarDec", "fieldList", 
@@ -148,7 +151,7 @@ export class JackParser extends antlr.Parser {
         this.interpreter = new antlr.ParserATNSimulator(this, JackParser._ATN, JackParser.decisionsToDFA, new antlr.PredictionContextCache());
     }
     public program(): ProgramContext {
-        const localContext = new ProgramContext(this.context, this.state);
+        let localContext = new ProgramContext(this.context, this.state);
         this.enterRule(localContext, 0, JackParser.RULE_program);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -173,7 +176,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public classDeclaration(): ClassDeclarationContext {
-        const localContext = new ClassDeclarationContext(this.context, this.state);
+        let localContext = new ClassDeclarationContext(this.context, this.state);
         this.enterRule(localContext, 2, JackParser.RULE_classDeclaration);
         let _la: number;
         try {
@@ -231,7 +234,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public className(): ClassNameContext {
-        const localContext = new ClassNameContext(this.context, this.state);
+        let localContext = new ClassNameContext(this.context, this.state);
         this.enterRule(localContext, 4, JackParser.RULE_className);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -254,7 +257,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public classVarDec(): ClassVarDecContext {
-        const localContext = new ClassVarDecContext(this.context, this.state);
+        let localContext = new ClassVarDecContext(this.context, this.state);
         this.enterRule(localContext, 6, JackParser.RULE_classVarDec);
         let _la: number;
         try {
@@ -289,7 +292,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public fieldList(): FieldListContext {
-        const localContext = new FieldListContext(this.context, this.state);
+        let localContext = new FieldListContext(this.context, this.state);
         this.enterRule(localContext, 8, JackParser.RULE_fieldList);
         let _la: number;
         try {
@@ -331,7 +334,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public fieldName(): FieldNameContext {
-        const localContext = new FieldNameContext(this.context, this.state);
+        let localContext = new FieldNameContext(this.context, this.state);
         this.enterRule(localContext, 10, JackParser.RULE_fieldName);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -354,7 +357,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineDeclaration(): SubroutineDeclarationContext {
-        const localContext = new SubroutineDeclarationContext(this.context, this.state);
+        let localContext = new SubroutineDeclarationContext(this.context, this.state);
         this.enterRule(localContext, 12, JackParser.RULE_subroutineDeclaration);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -379,7 +382,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineType(): SubroutineTypeContext {
-        const localContext = new SubroutineTypeContext(this.context, this.state);
+        let localContext = new SubroutineTypeContext(this.context, this.state);
         this.enterRule(localContext, 14, JackParser.RULE_subroutineType);
         let _la: number;
         try {
@@ -410,7 +413,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineDecWithoutType(): SubroutineDecWithoutTypeContext {
-        const localContext = new SubroutineDecWithoutTypeContext(this.context, this.state);
+        let localContext = new SubroutineDecWithoutTypeContext(this.context, this.state);
         this.enterRule(localContext, 16, JackParser.RULE_subroutineDecWithoutType);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -443,7 +446,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineName(): SubroutineNameContext {
-        const localContext = new SubroutineNameContext(this.context, this.state);
+        let localContext = new SubroutineNameContext(this.context, this.state);
         this.enterRule(localContext, 18, JackParser.RULE_subroutineName);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -466,7 +469,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineReturnType(): SubroutineReturnTypeContext {
-        const localContext = new SubroutineReturnTypeContext(this.context, this.state);
+        let localContext = new SubroutineReturnTypeContext(this.context, this.state);
         this.enterRule(localContext, 20, JackParser.RULE_subroutineReturnType);
         try {
             this.state = 139;
@@ -507,7 +510,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public varType(): VarTypeContext {
-        const localContext = new VarTypeContext(this.context, this.state);
+        let localContext = new VarTypeContext(this.context, this.state);
         this.enterRule(localContext, 22, JackParser.RULE_varType);
         let _la: number;
         try {
@@ -538,7 +541,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public parameterList(): ParameterListContext {
-        const localContext = new ParameterListContext(this.context, this.state);
+        let localContext = new ParameterListContext(this.context, this.state);
         this.enterRule(localContext, 24, JackParser.RULE_parameterList);
         let _la: number;
         try {
@@ -586,7 +589,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public parameter(): ParameterContext {
-        const localContext = new ParameterContext(this.context, this.state);
+        let localContext = new ParameterContext(this.context, this.state);
         this.enterRule(localContext, 26, JackParser.RULE_parameter);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -611,7 +614,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public parameterName(): ParameterNameContext {
-        const localContext = new ParameterNameContext(this.context, this.state);
+        let localContext = new ParameterNameContext(this.context, this.state);
         this.enterRule(localContext, 28, JackParser.RULE_parameterName);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -634,7 +637,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineBody(): SubroutineBodyContext {
-        const localContext = new SubroutineBodyContext(this.context, this.state);
+        let localContext = new SubroutineBodyContext(this.context, this.state);
         this.enterRule(localContext, 30, JackParser.RULE_subroutineBody);
         let _la: number;
         try {
@@ -676,7 +679,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public rBrace(): RBraceContext {
-        const localContext = new RBraceContext(this.context, this.state);
+        let localContext = new RBraceContext(this.context, this.state);
         this.enterRule(localContext, 32, JackParser.RULE_rBrace);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -699,7 +702,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public varDeclaration(): VarDeclarationContext {
-        const localContext = new VarDeclarationContext(this.context, this.state);
+        let localContext = new VarDeclarationContext(this.context, this.state);
         this.enterRule(localContext, 34, JackParser.RULE_varDeclaration);
         let _la: number;
         try {
@@ -745,7 +748,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public varNameInDeclaration(): VarNameInDeclarationContext {
-        const localContext = new VarNameInDeclarationContext(this.context, this.state);
+        let localContext = new VarNameInDeclarationContext(this.context, this.state);
         this.enterRule(localContext, 36, JackParser.RULE_varNameInDeclaration);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -768,7 +771,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public statements(): StatementsContext {
-        const localContext = new StatementsContext(this.context, this.state);
+        let localContext = new StatementsContext(this.context, this.state);
         this.enterRule(localContext, 38, JackParser.RULE_statements);
         let _la: number;
         try {
@@ -804,7 +807,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public statement(): StatementContext {
-        const localContext = new StatementContext(this.context, this.state);
+        let localContext = new StatementContext(this.context, this.state);
         this.enterRule(localContext, 40, JackParser.RULE_statement);
         try {
             this.state = 195;
@@ -863,7 +866,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public letStatement(): LetStatementContext {
-        const localContext = new LetStatementContext(this.context, this.state);
+        let localContext = new LetStatementContext(this.context, this.state);
         this.enterRule(localContext, 42, JackParser.RULE_letStatement);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -908,7 +911,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public equals(): EqualsContext {
-        const localContext = new EqualsContext(this.context, this.state);
+        let localContext = new EqualsContext(this.context, this.state);
         this.enterRule(localContext, 44, JackParser.RULE_equals);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -931,7 +934,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public ifElseStatement(): IfElseStatementContext {
-        const localContext = new IfElseStatementContext(this.context, this.state);
+        let localContext = new IfElseStatementContext(this.context, this.state);
         this.enterRule(localContext, 46, JackParser.RULE_ifElseStatement);
         let _la: number;
         try {
@@ -965,7 +968,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public ifStatement(): IfStatementContext {
-        const localContext = new IfStatementContext(this.context, this.state);
+        let localContext = new IfStatementContext(this.context, this.state);
         this.enterRule(localContext, 48, JackParser.RULE_ifStatement);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1000,7 +1003,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public ifExpression(): IfExpressionContext {
-        const localContext = new IfExpressionContext(this.context, this.state);
+        let localContext = new IfExpressionContext(this.context, this.state);
         this.enterRule(localContext, 50, JackParser.RULE_ifExpression);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1023,7 +1026,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public elseStatement(): ElseStatementContext {
-        const localContext = new ElseStatementContext(this.context, this.state);
+        let localContext = new ElseStatementContext(this.context, this.state);
         this.enterRule(localContext, 52, JackParser.RULE_elseStatement);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1052,7 +1055,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public whileStatement(): WhileStatementContext {
-        const localContext = new WhileStatementContext(this.context, this.state);
+        let localContext = new WhileStatementContext(this.context, this.state);
         this.enterRule(localContext, 54, JackParser.RULE_whileStatement);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1087,7 +1090,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public whileExpression(): WhileExpressionContext {
-        const localContext = new WhileExpressionContext(this.context, this.state);
+        let localContext = new WhileExpressionContext(this.context, this.state);
         this.enterRule(localContext, 56, JackParser.RULE_whileExpression);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1110,7 +1113,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public doStatement(): DoStatementContext {
-        const localContext = new DoStatementContext(this.context, this.state);
+        let localContext = new DoStatementContext(this.context, this.state);
         this.enterRule(localContext, 58, JackParser.RULE_doStatement);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1137,7 +1140,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineCall(): SubroutineCallContext {
-        const localContext = new SubroutineCallContext(this.context, this.state);
+        let localContext = new SubroutineCallContext(this.context, this.state);
         this.enterRule(localContext, 60, JackParser.RULE_subroutineCall);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1166,7 +1169,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public subroutineId(): SubroutineIdContext {
-        const localContext = new SubroutineIdContext(this.context, this.state);
+        let localContext = new SubroutineIdContext(this.context, this.state);
         this.enterRule(localContext, 62, JackParser.RULE_subroutineId);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1217,7 +1220,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public returnStatement(): ReturnStatementContext {
-        const localContext = new ReturnStatementContext(this.context, this.state);
+        let localContext = new ReturnStatementContext(this.context, this.state);
         this.enterRule(localContext, 64, JackParser.RULE_returnStatement);
         let _la: number;
         try {
@@ -1253,7 +1256,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public expressionList(): ExpressionListContext {
-        const localContext = new ExpressionListContext(this.context, this.state);
+        let localContext = new ExpressionListContext(this.context, this.state);
         this.enterRule(localContext, 66, JackParser.RULE_expressionList);
         let _la: number;
         try {
@@ -1302,18 +1305,17 @@ export class JackParser extends antlr.Parser {
     }
 
     public expression(): ExpressionContext;
-    //eslint-disable-next-line  @typescript-eslint/unified-signatures
     public expression(_p: number): ExpressionContext;
     public expression(_p?: number): ExpressionContext {
         if (_p === undefined) {
             _p = 0;
         }
 
-        const parentContext = this.context;
-        const parentState = this.state;
+        let parentContext = this.context;
+        let parentState = this.state;
         let localContext = new ExpressionContext(this.context, parentState);
         let previousContext = localContext;
-        const _startState = 68;
+        let _startState = 68;
         this.enterRecursionRule(localContext, 68, JackParser.RULE_expression, _p);
         try {
             let alternative: number;
@@ -1404,7 +1406,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public constant(): ConstantContext {
-        const localContext = new ConstantContext(this.context, this.state);
+        let localContext = new ConstantContext(this.context, this.state);
         this.enterRule(localContext, 70, JackParser.RULE_constant);
         try {
             this.state = 294;
@@ -1464,7 +1466,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public varName(): VarNameContext {
-        const localContext = new VarNameContext(this.context, this.state);
+        let localContext = new VarNameContext(this.context, this.state);
         this.enterRule(localContext, 72, JackParser.RULE_varName);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1487,7 +1489,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public arrayAccess(): ArrayAccessContext {
-        const localContext = new ArrayAccessContext(this.context, this.state);
+        let localContext = new ArrayAccessContext(this.context, this.state);
         this.enterRule(localContext, 74, JackParser.RULE_arrayAccess);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1516,7 +1518,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public unaryOperation(): UnaryOperationContext {
-        const localContext = new UnaryOperationContext(this.context, this.state);
+        let localContext = new UnaryOperationContext(this.context, this.state);
         this.enterRule(localContext, 76, JackParser.RULE_unaryOperation);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1541,7 +1543,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public groupedExpression(): GroupedExpressionContext {
-        const localContext = new GroupedExpressionContext(this.context, this.state);
+        let localContext = new GroupedExpressionContext(this.context, this.state);
         this.enterRule(localContext, 78, JackParser.RULE_groupedExpression);
         try {
             this.enterOuterAlt(localContext, 1);
@@ -1568,7 +1570,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public booleanLiteral(): BooleanLiteralContext {
-        const localContext = new BooleanLiteralContext(this.context, this.state);
+        let localContext = new BooleanLiteralContext(this.context, this.state);
         this.enterRule(localContext, 80, JackParser.RULE_booleanLiteral);
         let _la: number;
         try {
@@ -1599,7 +1601,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public unaryOperator(): UnaryOperatorContext {
-        const localContext = new UnaryOperatorContext(this.context, this.state);
+        let localContext = new UnaryOperatorContext(this.context, this.state);
         this.enterRule(localContext, 82, JackParser.RULE_unaryOperator);
         let _la: number;
         try {
@@ -1630,7 +1632,7 @@ export class JackParser extends antlr.Parser {
         return localContext;
     }
     public binaryOperator(): BinaryOperatorContext {
-        const localContext = new BinaryOperatorContext(this.context, this.state);
+        let localContext = new BinaryOperatorContext(this.context, this.state);
         this.enterRule(localContext, 84, JackParser.RULE_binaryOperator);
         let _la: number;
         try {
@@ -1677,7 +1679,7 @@ export class JackParser extends antlr.Parser {
     }
 
     public static readonly _serializedATN: number[] = [
-        4,1,47,317,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,46,317,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
         2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
         7,20,2,21,7,21,2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,26,

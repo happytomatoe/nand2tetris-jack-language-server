@@ -1,0 +1,6 @@
+class PrintAllSymbols{
+	function void init(){
+		do Output.printString("!#$%&'()*+,-./:;<=>?@[\]^_`{|}~");
+		return;
+	}
+}
