@@ -11,3 +11,4 @@ jack-compiler/grammar/.antlr
 **/.vscode/numbered-bookmarks.json
 **/.antlr
 .idea
+*.iml

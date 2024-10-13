@@ -46,7 +46,6 @@
     "remark": "^15.0.1",
     "remark-cli": "^12.0.1",
     "rimraf": "^6.0.1",
-    "syncpack": "^13.0.0",
     "typescript": "^5.6.2"
   },
   "engines": {
