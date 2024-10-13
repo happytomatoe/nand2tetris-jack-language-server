@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import {
   ConstructorMushReturnThis,
   DuplicatedVariableException as DuplicatedVariableError,
@@ -18,11 +20,12 @@ import {
   VoidSubroutineReturnsValueError,
   WrongLiteralTypeError,
 } from "../src/error";
+import { ProgramContext } from "../src/generated/JackParser";
 import {
-  CustomErrorListener,
   LexerErrorListener,
-  ParserErrorListener,
+  ParserErrorListener
 } from "../src/listener/error.listener";
+import { BinderListener } from "../src/listener/global.symbol.listener";
 import { ValidatorListener } from "../src/listener/validator.listener";
 import { GenericSymbol, SubroutineType } from "../src/symbol";
 import {
@@ -33,10 +36,6 @@ import {
   parseJackText,
   testResourceDirs,
 } from "./test.helper";
-import fs from "fs";
-import { BinderListener } from "../src/listener/global.symbol.listener";
-import path from "path";
-import { ProgramContext } from "../src/generated/JackParser";
 
 describe("Jack validator listener", () => {
   const jestConsole = console;
