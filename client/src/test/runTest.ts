@@ -23,7 +23,7 @@ async function main() {
       extensionTestsPath,
       launchArgs: [testFolderPath],
     });
-  } catch (err) {
+  } catch (_error) {
     console.error("Failed to run tests");
     process.exit(1);
   }

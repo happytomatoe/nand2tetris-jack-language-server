@@ -19,9 +19,8 @@ import {
   TextDocuments,
   TextDocumentSyncKind,
   TextEdit,
-  type DocumentDiagnosticReport
+  type DocumentDiagnosticReport,
 } from "vscode-languageserver/node";
-
 
 import { assert } from "console";
 import * as fs from "fs";
@@ -90,7 +89,7 @@ connection.onInitialized(() => {
     );
   }
   if (hasWorkspaceFolderCapability) {
-    connection.workspace.onDidChangeWorkspaceFolders((_event) => {
+    connection.workspace.onDidChangeWorkspaceFolders(() => {
       connection.console.log("Workspace folder change event received.");
     });
   }
@@ -228,10 +227,10 @@ connection.onCompletion(
       return [];
     }
     const symbols = createGlobalSymbolTable(textDocument.uri);
-    const matchedSubroutines = Object.entries(symbols).filter(([k, v]) =>
+    const matchedSubroutines = Object.entries(symbols).filter(([k, _]) =>
       k.startsWith(idStart.value[0])
     );
-    return matchedSubroutines.map(([k, v], i) => {
+    return matchedSubroutines.map(([k, v]) => {
       const label = k.substring(k.indexOf(".") + 1);
       const params = v.subroutineInfo?.paramNames
         .map((v, i) => {
@@ -281,10 +280,16 @@ connection.onDefinition((params) => {
   const afterMatches = lineAfter.match(/^[\w]+/g) ?? [];
   // connection.console.log("Before matches: " + beforeMatches);
   // connection.console.log("After matches: " + afterMatches);
-  if (beforeMatches.length == 0 || afterMatches.length == 0) {
+  if (
+    beforeMatches.length == 0 ||
+    afterMatches.length == 0 ||
+    beforeMatches[0] == null ||
+    afterMatches[0] == null
+  ) {
     return [];
   }
-  const classNameFunctionName = beforeMatches[0]! + afterMatches[0]!;
+  const classNameFunctionName = beforeMatches[0] + afterMatches[0];
+
   const symbol = symbolTable[classNameFunctionName];
   // connection.console.log("Symbol " + JSON.stringify(symbol));
   if (
@@ -295,9 +300,9 @@ connection.onDefinition((params) => {
   ) {
     return [];
   }
-  const start = symbol.start!;
-  const end = symbol.end!;
-  const res = Location.create(symbol.filename!, {
+  const start = symbol.start;
+  const end = symbol.end;
+  const res = Location.create(symbol.filename, {
     start: { line: start.line - 1, character: start.character },
     end: { line: end.line - 1, character: end.character },
   });

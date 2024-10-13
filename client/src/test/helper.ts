@@ -5,6 +5,7 @@
 
 import * as vscode from "vscode";
 import * as path from "path";
+import * as assert from "assert";
 
 export let doc: vscode.TextDocument;
 export let editor: vscode.TextEditor;
@@ -16,7 +17,8 @@ export let platformEol: string;
  */
 export async function activate(docUri: vscode.Uri) {
   // The extensionId is `publisher.name` from package.json
-  const ext = vscode.extensions.getExtension("rlukash.nand2tetris-jack-lsp")!;
+  const ext = vscode.extensions.getExtension("rlukash.nand2tetris-jack-lsp");
+  assert(ext != null);
   await ext.activate();
   try {
     doc = await vscode.workspace.openTextDocument(docUri);
@@ -41,7 +43,7 @@ export const getDocUri = (p: string) => {
 export async function setTestContent(content: string): Promise<boolean> {
   const all = new vscode.Range(
     doc.positionAt(0),
-    doc.positionAt(doc.getText().length),
+    doc.positionAt(doc.getText().length)
   );
   return editor.edit((eb) => eb.replace(all, content));
 }

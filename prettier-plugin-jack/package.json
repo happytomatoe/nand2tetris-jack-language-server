@@ -29,6 +29,7 @@
   "scripts": {
     "build": "tsc -b",
     "test": " mocha ",
-    "test-w": " mocha -w"
+    "test-w": " mocha -w",
+    "lint": "eslint "
   }
 }

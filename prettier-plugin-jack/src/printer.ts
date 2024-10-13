@@ -5,9 +5,9 @@ import { CommonTokenStream } from "antlr4";
 
 export function print<T>(
   path: AstPath<T>,
-  options: ParserOptions<T>,
-  print: (path: AstPath<T>) => Doc,
-  args?: unknown,
+  _options: ParserOptions<T>,
+  _print: (path: AstPath<T>) => Doc,
+  _args?: unknown,
 ): Doc {
   // console.log("Inside printer");
   const [tree, tokenStream] = path.node as [ProgramContext, CommonTokenStream];

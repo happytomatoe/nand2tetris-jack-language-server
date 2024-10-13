@@ -1,5 +1,5 @@
 import { BinderListener as GlobalSymbolTableListener } from "./listener/global.symbol.listener";
-import { CustomErrorListener } from "./listener/error.listener";
+import { CustomLexerErrorListener, CustomParserErrorListener } from "./listener/error.listener";
 import { ValidatorListener } from "./listener/validator.listener";
 import { JackCompilerError } from "./error";
 import { VMWriter } from "./listener/vm.writer.listener";
@@ -18,18 +18,19 @@ export class Compiler {
    *            An array of JackCompilerError objects if errors were encountered during parsing or lexing.
    */
   parse(src: string): ProgramContext | JackCompilerError[] {
-    const errorListener = new CustomErrorListener();
+    const lexerErrorListener = new CustomLexerErrorListener();
+    const parserErrorListener = new CustomParserErrorListener();
     const lexer = new JackLexer(CharStreams.fromString(src));
     lexer.removeErrorListeners();
-    lexer.addErrorListener(errorListener);
+    lexer.addErrorListener(lexerErrorListener);
     const tokenStream = new CommonTokenStream(lexer);
     const parser = new JackParser(tokenStream);
     parser.removeErrorListeners();
-    parser.addErrorListener(errorListener);
+    parser.addErrorListener(parserErrorListener);
     const tree = parser.program();
-    if (errorListener.errors.length > 0) {
+    if (lexerErrorListener.errors.length > 0) {
       console.log("Errors when parsing or lexing");
-      return errorListener.errors;
+      return lexerErrorListener.errors;
     }
     return tree;
   }

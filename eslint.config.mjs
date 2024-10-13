@@ -3,17 +3,16 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 
 export default [
-  { files: ["**/*.{js,mjs,cjs,ts}"] },
+  { files: ["./client/src/", ""] },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs.strict,
   {
-    ignores: [
-      "coverage",
-      "public",
-      "dist",
-      "pnpm-lock.yaml",
-      "pnpm-workspace.yaml",
-    ],
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+    },
   },
 ];

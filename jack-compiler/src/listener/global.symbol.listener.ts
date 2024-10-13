@@ -4,7 +4,6 @@ import {
   VarNameInDeclarationContext,
 } from "../generated/JackParser";
 import { DuplicatedClassError, DuplicatedSubroutineError } from "../error";
-import { builtInSymbols, builtInTypes } from "../builtins";
 import {
   GenericSymbol,
   GlobalSymbolTable,
@@ -12,9 +11,8 @@ import {
   SubroutineType,
 } from "../symbol";
 import JackParserListener from "../generated/JackParserListener";
+import { builtInSymbols } from 'src/builtins';
 
-const primitives = new Set(builtInTypes);
-export type Primitive = typeof primitives extends Set<infer S> ? S : never;
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 /**
  * Creates global symbol table that contains built-in functions and found classes and subroutines
@@ -95,7 +93,7 @@ export class BinderListener extends JackParserListener {
       this.stopProcessingSubroutines = false;
     }
   };
-  override enterVarNameInDeclaration = (ctx: VarNameInDeclarationContext) => {
+  override enterVarNameInDeclaration = (_ctx: VarNameInDeclarationContext) => {
     if (this.stopProcessingSubroutines) return;
     this.subroutineVarsCount++;
   };

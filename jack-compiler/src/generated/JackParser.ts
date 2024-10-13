@@ -7,30 +7,23 @@ import {
   DecisionState,
   DFA,
   FailedPredicateException,
-  RecognitionException,
   NoViableAltException,
-  BailErrorStrategy,
   Parser,
   ParserATNSimulator,
-  RuleContext,
   ParserRuleContext,
-  PredictionMode,
   PredictionContextCache,
+  RecognitionException,
+  RuleContext,
   TerminalNode,
-  RuleNode,
   Token,
   TokenStream,
-  Interval,
-  IntervalSet,
 } from "antlr4";
 import JackParserListener from "./JackParserListener.js";
 import JackParserVisitor from "./JackParserVisitor.js";
 
 // for running tests with parameters, TODO: discuss strategy for typed parameters in CI
-// eslint-disable-next-line no-unused-vars
-type int = number;
 
-import { SubroutineScope, LocalSymbolTable } from "../symbol";
+import { LocalSymbolTable, SubroutineScope } from "../symbol";
 
 export default class JackParser extends Parser {
   public static readonly CLASS = 1;
@@ -285,7 +278,7 @@ export default class JackParser extends Parser {
 
   protected createFailedPredicateException(
     predicate?: string,
-    message?: string,
+    message?: string
   ): FailedPredicateException {
     return new FailedPredicateException(this, predicate, message);
   }
@@ -296,15 +289,15 @@ export default class JackParser extends Parser {
       this,
       JackParser._ATN,
       JackParser.DecisionsToDFA,
-      new PredictionContextCache(),
+      new PredictionContextCache()
     );
   }
   // @RuleVersion(0)
   public program(): ProgramContext {
-    let localctx: ProgramContext = new ProgramContext(
+    const localctx: ProgramContext = new ProgramContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 0, JackParser.RULE_program);
     try {
@@ -330,10 +323,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public classDeclaration(): ClassDeclarationContext {
-    let localctx: ClassDeclarationContext = new ClassDeclarationContext(
+    const localctx: ClassDeclarationContext = new ClassDeclarationContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 2, JackParser.RULE_classDeclaration);
     let _la: number;
@@ -392,10 +385,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public className(): ClassNameContext {
-    let localctx: ClassNameContext = new ClassNameContext(
+    const localctx: ClassNameContext = new ClassNameContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 4, JackParser.RULE_className);
     try {
@@ -419,10 +412,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public classVarDec(): ClassVarDecContext {
-    let localctx: ClassVarDecContext = new ClassVarDecContext(
+    const localctx: ClassVarDecContext = new ClassVarDecContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 6, JackParser.RULE_classVarDec);
     let _la: number;
@@ -457,10 +450,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public fieldList(): FieldListContext {
-    let localctx: FieldListContext = new FieldListContext(
+    const localctx: FieldListContext = new FieldListContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 8, JackParser.RULE_fieldList);
     let _la: number;
@@ -503,10 +496,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public fieldName(): FieldNameContext {
-    let localctx: FieldNameContext = new FieldNameContext(
+    const localctx: FieldNameContext = new FieldNameContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 10, JackParser.RULE_fieldName);
     try {
@@ -530,7 +523,7 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineDeclaration(): SubroutineDeclarationContext {
-    let localctx: SubroutineDeclarationContext =
+    const localctx: SubroutineDeclarationContext =
       new SubroutineDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 12, JackParser.RULE_subroutineDeclaration);
     try {
@@ -556,10 +549,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineType(): SubroutineTypeContext {
-    let localctx: SubroutineTypeContext = new SubroutineTypeContext(
+    const localctx: SubroutineTypeContext = new SubroutineTypeContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 14, JackParser.RULE_subroutineType);
     let _la: number;
@@ -590,7 +583,7 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineDecWithoutType(): SubroutineDecWithoutTypeContext {
-    let localctx: SubroutineDecWithoutTypeContext =
+    const localctx: SubroutineDecWithoutTypeContext =
       new SubroutineDecWithoutTypeContext(this, this._ctx, this.state);
     this.enterRule(localctx, 16, JackParser.RULE_subroutineDecWithoutType);
     try {
@@ -624,10 +617,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineName(): SubroutineNameContext {
-    let localctx: SubroutineNameContext = new SubroutineNameContext(
+    const localctx: SubroutineNameContext = new SubroutineNameContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 18, JackParser.RULE_subroutineName);
     try {
@@ -651,11 +644,8 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineReturnType(): SubroutineReturnTypeContext {
-    let localctx: SubroutineReturnTypeContext = new SubroutineReturnTypeContext(
-      this,
-      this._ctx,
-      this.state,
-    );
+    const localctx: SubroutineReturnTypeContext =
+      new SubroutineReturnTypeContext(this, this._ctx, this.state);
     this.enterRule(localctx, 20, JackParser.RULE_subroutineReturnType);
     try {
       this.state = 139;
@@ -696,10 +686,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public varType(): VarTypeContext {
-    let localctx: VarTypeContext = new VarTypeContext(
+    const localctx: VarTypeContext = new VarTypeContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 22, JackParser.RULE_varType);
     let _la: number;
@@ -732,10 +722,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public parameterList(): ParameterListContext {
-    let localctx: ParameterListContext = new ParameterListContext(
+    const localctx: ParameterListContext = new ParameterListContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 24, JackParser.RULE_parameterList);
     let _la: number;
@@ -783,10 +773,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public parameter(): ParameterContext {
-    let localctx: ParameterContext = new ParameterContext(
+    const localctx: ParameterContext = new ParameterContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 26, JackParser.RULE_parameter);
     try {
@@ -812,10 +802,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public parameterName(): ParameterNameContext {
-    let localctx: ParameterNameContext = new ParameterNameContext(
+    const localctx: ParameterNameContext = new ParameterNameContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 28, JackParser.RULE_parameterName);
     try {
@@ -839,10 +829,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineBody(): SubroutineBodyContext {
-    let localctx: SubroutineBodyContext = new SubroutineBodyContext(
+    const localctx: SubroutineBodyContext = new SubroutineBodyContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 30, JackParser.RULE_subroutineBody);
     let _la: number;
@@ -885,10 +875,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public rBrace(): RBraceContext {
-    let localctx: RBraceContext = new RBraceContext(
+    const localctx: RBraceContext = new RBraceContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 32, JackParser.RULE_rBrace);
     try {
@@ -912,10 +902,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public varDeclaration(): VarDeclarationContext {
-    let localctx: VarDeclarationContext = new VarDeclarationContext(
+    const localctx: VarDeclarationContext = new VarDeclarationContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 34, JackParser.RULE_varDeclaration);
     let _la: number;
@@ -962,11 +952,8 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public varNameInDeclaration(): VarNameInDeclarationContext {
-    let localctx: VarNameInDeclarationContext = new VarNameInDeclarationContext(
-      this,
-      this._ctx,
-      this.state,
-    );
+    const localctx: VarNameInDeclarationContext =
+      new VarNameInDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 36, JackParser.RULE_varNameInDeclaration);
     try {
       this.enterOuterAlt(localctx, 1);
@@ -989,10 +976,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public statements(): StatementsContext {
-    let localctx: StatementsContext = new StatementsContext(
+    const localctx: StatementsContext = new StatementsContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 38, JackParser.RULE_statements);
     let _la: number;
@@ -1029,10 +1016,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public statement(): StatementContext {
-    let localctx: StatementContext = new StatementContext(
+    const localctx: StatementContext = new StatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 40, JackParser.RULE_statement);
     try {
@@ -1092,10 +1079,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public letStatement(): LetStatementContext {
-    let localctx: LetStatementContext = new LetStatementContext(
+    const localctx: LetStatementContext = new LetStatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 42, JackParser.RULE_letStatement);
     try {
@@ -1141,10 +1128,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public equals(): EqualsContext {
-    let localctx: EqualsContext = new EqualsContext(
+    const localctx: EqualsContext = new EqualsContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 44, JackParser.RULE_equals);
     try {
@@ -1168,10 +1155,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public ifElseStatement(): IfElseStatementContext {
-    let localctx: IfElseStatementContext = new IfElseStatementContext(
+    const localctx: IfElseStatementContext = new IfElseStatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 46, JackParser.RULE_ifElseStatement);
     let _la: number;
@@ -1205,10 +1192,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public ifStatement(): IfStatementContext {
-    let localctx: IfStatementContext = new IfStatementContext(
+    const localctx: IfStatementContext = new IfStatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 48, JackParser.RULE_ifStatement);
     try {
@@ -1244,10 +1231,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public ifExpression(): IfExpressionContext {
-    let localctx: IfExpressionContext = new IfExpressionContext(
+    const localctx: IfExpressionContext = new IfExpressionContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 50, JackParser.RULE_ifExpression);
     try {
@@ -1271,10 +1258,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public elseStatement(): ElseStatementContext {
-    let localctx: ElseStatementContext = new ElseStatementContext(
+    const localctx: ElseStatementContext = new ElseStatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 52, JackParser.RULE_elseStatement);
     try {
@@ -1304,10 +1291,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public whileStatement(): WhileStatementContext {
-    let localctx: WhileStatementContext = new WhileStatementContext(
+    const localctx: WhileStatementContext = new WhileStatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 54, JackParser.RULE_whileStatement);
     try {
@@ -1343,10 +1330,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public whileExpression(): WhileExpressionContext {
-    let localctx: WhileExpressionContext = new WhileExpressionContext(
+    const localctx: WhileExpressionContext = new WhileExpressionContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 56, JackParser.RULE_whileExpression);
     try {
@@ -1370,10 +1357,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public doStatement(): DoStatementContext {
-    let localctx: DoStatementContext = new DoStatementContext(
+    const localctx: DoStatementContext = new DoStatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 58, JackParser.RULE_doStatement);
     try {
@@ -1401,10 +1388,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineCall(): SubroutineCallContext {
-    let localctx: SubroutineCallContext = new SubroutineCallContext(
+    const localctx: SubroutineCallContext = new SubroutineCallContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 60, JackParser.RULE_subroutineCall);
     try {
@@ -1434,10 +1421,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public subroutineId(): SubroutineIdContext {
-    let localctx: SubroutineIdContext = new SubroutineIdContext(
+    const localctx: SubroutineIdContext = new SubroutineIdContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 62, JackParser.RULE_subroutineId);
     try {
@@ -1489,10 +1476,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public returnStatement(): ReturnStatementContext {
-    let localctx: ReturnStatementContext = new ReturnStatementContext(
+    const localctx: ReturnStatementContext = new ReturnStatementContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 64, JackParser.RULE_returnStatement);
     let _la: number;
@@ -1532,10 +1519,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public expressionList(): ExpressionListContext {
-    let localctx: ExpressionListContext = new ExpressionListContext(
+    const localctx: ExpressionListContext = new ExpressionListContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 66, JackParser.RULE_expressionList);
     let _la: number;
@@ -1585,7 +1572,9 @@ export default class JackParser extends Parser {
     return localctx;
   }
 
+  
   public expression(): ExpressionContext;
+  // eslint-disable-next-line  @typescript-eslint/unified-signatures
   public expression(_p: number): ExpressionContext;
   // @RuleVersion(0)
   public expression(_p?: number): ExpressionContext {
@@ -1593,15 +1582,15 @@ export default class JackParser extends Parser {
       _p = 0;
     }
 
-    let _parentctx: ParserRuleContext = this._ctx;
-    let _parentState: number = this.state;
+    const _parentctx: ParserRuleContext = this._ctx;
+    const _parentState: number = this.state;
     let localctx: ExpressionContext = new ExpressionContext(
       this,
       this._ctx,
-      _parentState,
+      _parentState
     );
     let _prevctx: ExpressionContext = localctx;
-    let _startState: number = 68;
+    const _startState: number = 68;
     this.enterRecursionRule(localctx, 68, JackParser.RULE_expression, _p);
     try {
       let _alt: number;
@@ -1662,17 +1651,17 @@ export default class JackParser extends Parser {
                 localctx = new ExpressionContext(
                   this,
                   _parentctx,
-                  _parentState,
+                  _parentState
                 );
                 this.pushNewRecursionContext(
                   localctx,
                   _startState,
-                  JackParser.RULE_expression,
+                  JackParser.RULE_expression
                 );
                 this.state = 280;
                 if (!this.precpred(this._ctx, 2)) {
                   throw this.createFailedPredicateException(
-                    "this.precpred(this._ctx, 2)",
+                    "this.precpred(this._ctx, 2)"
                   );
                 }
                 this.state = 281;
@@ -1702,10 +1691,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public constant(): ConstantContext {
-    let localctx: ConstantContext = new ConstantContext(
+    const localctx: ConstantContext = new ConstantContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 70, JackParser.RULE_constant);
     try {
@@ -1766,10 +1755,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public varName(): VarNameContext {
-    let localctx: VarNameContext = new VarNameContext(
+    const localctx: VarNameContext = new VarNameContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 72, JackParser.RULE_varName);
     try {
@@ -1793,10 +1782,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public arrayAccess(): ArrayAccessContext {
-    let localctx: ArrayAccessContext = new ArrayAccessContext(
+    const localctx: ArrayAccessContext = new ArrayAccessContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 74, JackParser.RULE_arrayAccess);
     try {
@@ -1826,10 +1815,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public unaryOperation(): UnaryOperationContext {
-    let localctx: UnaryOperationContext = new UnaryOperationContext(
+    const localctx: UnaryOperationContext = new UnaryOperationContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 76, JackParser.RULE_unaryOperation);
     try {
@@ -1855,10 +1844,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public groupedExpression(): GroupedExpressionContext {
-    let localctx: GroupedExpressionContext = new GroupedExpressionContext(
+    const localctx: GroupedExpressionContext = new GroupedExpressionContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 78, JackParser.RULE_groupedExpression);
     try {
@@ -1886,10 +1875,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public booleanLiteral(): BooleanLiteralContext {
-    let localctx: BooleanLiteralContext = new BooleanLiteralContext(
+    const localctx: BooleanLiteralContext = new BooleanLiteralContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 80, JackParser.RULE_booleanLiteral);
     let _la: number;
@@ -1920,10 +1909,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public unaryOperator(): UnaryOperatorContext {
-    let localctx: UnaryOperatorContext = new UnaryOperatorContext(
+    const localctx: UnaryOperatorContext = new UnaryOperatorContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 82, JackParser.RULE_unaryOperator);
     let _la: number;
@@ -1954,10 +1943,10 @@ export default class JackParser extends Parser {
   }
   // @RuleVersion(0)
   public binaryOperator(): BinaryOperatorContext {
-    let localctx: BinaryOperatorContext = new BinaryOperatorContext(
+    const localctx: BinaryOperatorContext = new BinaryOperatorContext(
       this,
       this._ctx,
-      this.state,
+      this.state
     );
     this.enterRule(localctx, 84, JackParser.RULE_binaryOperator);
     let _la: number;
@@ -1990,20 +1979,20 @@ export default class JackParser extends Parser {
   public sempred(
     localctx: RuleContext,
     ruleIndex: number,
-    predIndex: number,
+    predIndex: number
   ): boolean {
     switch (ruleIndex) {
       case 34:
         return this.expression_sempred(
           localctx as ExpressionContext,
-          predIndex,
+          predIndex
         );
     }
     return true;
   }
   private expression_sempred(
     localctx: ExpressionContext,
-    predIndex: number,
+    predIndex: number
   ): boolean {
     switch (predIndex) {
       case 0:
@@ -2144,7 +2133,7 @@ export default class JackParser extends Parser {
   public static get _ATN(): ATN {
     if (!JackParser.__ATN) {
       JackParser.__ATN = new ATNDeserializer().deserialize(
-        JackParser._serializedATN,
+        JackParser._serializedATN
       );
     }
 
@@ -2152,7 +2141,7 @@ export default class JackParser extends Parser {
   }
 
   static DecisionsToDFA = JackParser._ATN.decisionToState.map(
-    (ds: DecisionState, index: number) => new DFA(ds, index),
+    (ds: DecisionState, index: number) => new DFA(ds, index)
   );
 }
 
@@ -2160,7 +2149,7 @@ export class ProgramContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2168,7 +2157,7 @@ export class ProgramContext extends ParserRuleContext {
   public classDeclaration(): ClassDeclarationContext {
     return this.getTypedRuleContext(
       ClassDeclarationContext,
-      0,
+      0
     ) as ClassDeclarationContext;
   }
   public EOF(): TerminalNode {
@@ -2202,7 +2191,7 @@ export class ClassDeclarationContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2221,24 +2210,24 @@ export class ClassDeclarationContext extends ParserRuleContext {
   }
   public classVarDec_list(): ClassVarDecContext[] {
     return this.getTypedRuleContexts(
-      ClassVarDecContext,
+      ClassVarDecContext
     ) as ClassVarDecContext[];
   }
   public classVarDec(i: number): ClassVarDecContext {
     return this.getTypedRuleContext(
       ClassVarDecContext,
-      i,
+      i
     ) as ClassVarDecContext;
   }
   public subroutineDeclaration_list(): SubroutineDeclarationContext[] {
     return this.getTypedRuleContexts(
-      SubroutineDeclarationContext,
+      SubroutineDeclarationContext
     ) as SubroutineDeclarationContext[];
   }
   public subroutineDeclaration(i: number): SubroutineDeclarationContext {
     return this.getTypedRuleContext(
       SubroutineDeclarationContext,
-      i,
+      i
     ) as SubroutineDeclarationContext;
   }
   public get ruleIndex(): number {
@@ -2268,7 +2257,7 @@ export class ClassNameContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2303,7 +2292,7 @@ export class ClassVarDecContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2347,7 +2336,7 @@ export class FieldListContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2394,7 +2383,7 @@ export class FieldNameContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2430,7 +2419,7 @@ export class SubroutineDeclarationContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2438,13 +2427,13 @@ export class SubroutineDeclarationContext extends ParserRuleContext {
   public subroutineType(): SubroutineTypeContext {
     return this.getTypedRuleContext(
       SubroutineTypeContext,
-      0,
+      0
     ) as SubroutineTypeContext;
   }
   public subroutineDecWithoutType(): SubroutineDecWithoutTypeContext {
     return this.getTypedRuleContext(
       SubroutineDecWithoutTypeContext,
-      0,
+      0
     ) as SubroutineDecWithoutTypeContext;
   }
   public get ruleIndex(): number {
@@ -2474,7 +2463,7 @@ export class SubroutineTypeContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2515,7 +2504,7 @@ export class SubroutineDecWithoutTypeContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2523,13 +2512,13 @@ export class SubroutineDecWithoutTypeContext extends ParserRuleContext {
   public subroutineReturnType(): SubroutineReturnTypeContext {
     return this.getTypedRuleContext(
       SubroutineReturnTypeContext,
-      0,
+      0
     ) as SubroutineReturnTypeContext;
   }
   public subroutineName(): SubroutineNameContext {
     return this.getTypedRuleContext(
       SubroutineNameContext,
-      0,
+      0
     ) as SubroutineNameContext;
   }
   public LPAREN(): TerminalNode {
@@ -2538,7 +2527,7 @@ export class SubroutineDecWithoutTypeContext extends ParserRuleContext {
   public parameterList(): ParameterListContext {
     return this.getTypedRuleContext(
       ParameterListContext,
-      0,
+      0
     ) as ParameterListContext;
   }
   public RPAREN(): TerminalNode {
@@ -2547,7 +2536,7 @@ export class SubroutineDecWithoutTypeContext extends ParserRuleContext {
   public subroutineBody(): SubroutineBodyContext {
     return this.getTypedRuleContext(
       SubroutineBodyContext,
-      0,
+      0
     ) as SubroutineBodyContext;
   }
   public get ruleIndex(): number {
@@ -2577,7 +2566,7 @@ export class SubroutineNameContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2612,7 +2601,7 @@ export class SubroutineReturnTypeContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2650,7 +2639,7 @@ export class VarTypeContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2694,7 +2683,7 @@ export class ParameterListContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2738,7 +2727,7 @@ export class ParameterContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2749,7 +2738,7 @@ export class ParameterContext extends ParserRuleContext {
   public parameterName(): ParameterNameContext {
     return this.getTypedRuleContext(
       ParameterNameContext,
-      0,
+      0
     ) as ParameterNameContext;
   }
   public get ruleIndex(): number {
@@ -2779,7 +2768,7 @@ export class ParameterNameContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2814,7 +2803,7 @@ export class SubroutineBodyContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2830,13 +2819,13 @@ export class SubroutineBodyContext extends ParserRuleContext {
   }
   public varDeclaration_list(): VarDeclarationContext[] {
     return this.getTypedRuleContexts(
-      VarDeclarationContext,
+      VarDeclarationContext
     ) as VarDeclarationContext[];
   }
   public varDeclaration(i: number): VarDeclarationContext {
     return this.getTypedRuleContext(
       VarDeclarationContext,
-      i,
+      i
     ) as VarDeclarationContext;
   }
   public get ruleIndex(): number {
@@ -2866,7 +2855,7 @@ export class RBraceContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2901,7 +2890,7 @@ export class VarDeclarationContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2914,13 +2903,13 @@ export class VarDeclarationContext extends ParserRuleContext {
   }
   public varNameInDeclaration_list(): VarNameInDeclarationContext[] {
     return this.getTypedRuleContexts(
-      VarNameInDeclarationContext,
+      VarNameInDeclarationContext
     ) as VarNameInDeclarationContext[];
   }
   public varNameInDeclaration(i: number): VarNameInDeclarationContext {
     return this.getTypedRuleContext(
       VarNameInDeclarationContext,
-      i,
+      i
     ) as VarNameInDeclarationContext;
   }
   public SEMICOLON(): TerminalNode {
@@ -2959,7 +2948,7 @@ export class VarNameInDeclarationContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -2994,7 +2983,7 @@ export class StatementsContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3032,7 +3021,7 @@ export class StatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3040,31 +3029,31 @@ export class StatementContext extends ParserRuleContext {
   public letStatement(): LetStatementContext {
     return this.getTypedRuleContext(
       LetStatementContext,
-      0,
+      0
     ) as LetStatementContext;
   }
   public ifElseStatement(): IfElseStatementContext {
     return this.getTypedRuleContext(
       IfElseStatementContext,
-      0,
+      0
     ) as IfElseStatementContext;
   }
   public whileStatement(): WhileStatementContext {
     return this.getTypedRuleContext(
       WhileStatementContext,
-      0,
+      0
     ) as WhileStatementContext;
   }
   public doStatement(): DoStatementContext {
     return this.getTypedRuleContext(
       DoStatementContext,
-      0,
+      0
     ) as DoStatementContext;
   }
   public returnStatement(): ReturnStatementContext {
     return this.getTypedRuleContext(
       ReturnStatementContext,
-      0,
+      0
     ) as ReturnStatementContext;
   }
   public get ruleIndex(): number {
@@ -3094,7 +3083,7 @@ export class LetStatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3117,7 +3106,7 @@ export class LetStatementContext extends ParserRuleContext {
   public arrayAccess(): ArrayAccessContext {
     return this.getTypedRuleContext(
       ArrayAccessContext,
-      0,
+      0
     ) as ArrayAccessContext;
   }
   public get ruleIndex(): number {
@@ -3147,7 +3136,7 @@ export class EqualsContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3183,7 +3172,7 @@ export class IfElseStatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3191,13 +3180,13 @@ export class IfElseStatementContext extends ParserRuleContext {
   public ifStatement(): IfStatementContext {
     return this.getTypedRuleContext(
       IfStatementContext,
-      0,
+      0
     ) as IfStatementContext;
   }
   public elseStatement(): ElseStatementContext {
     return this.getTypedRuleContext(
       ElseStatementContext,
-      0,
+      0
     ) as ElseStatementContext;
   }
   public get ruleIndex(): number {
@@ -3228,7 +3217,7 @@ export class IfStatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3242,7 +3231,7 @@ export class IfStatementContext extends ParserRuleContext {
   public ifExpression(): IfExpressionContext {
     return this.getTypedRuleContext(
       IfExpressionContext,
-      0,
+      0
     ) as IfExpressionContext;
   }
   public RPAREN(): TerminalNode {
@@ -3284,7 +3273,7 @@ export class IfExpressionContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3319,7 +3308,7 @@ export class ElseStatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3365,7 +3354,7 @@ export class WhileStatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3379,7 +3368,7 @@ export class WhileStatementContext extends ParserRuleContext {
   public whileExpression(): WhileExpressionContext {
     return this.getTypedRuleContext(
       WhileExpressionContext,
-      0,
+      0
     ) as WhileExpressionContext;
   }
   public RPAREN(): TerminalNode {
@@ -3421,7 +3410,7 @@ export class WhileExpressionContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3456,7 +3445,7 @@ export class DoStatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3467,7 +3456,7 @@ export class DoStatementContext extends ParserRuleContext {
   public subroutineCall(): SubroutineCallContext {
     return this.getTypedRuleContext(
       SubroutineCallContext,
-      0,
+      0
     ) as SubroutineCallContext;
   }
   public SEMICOLON(): TerminalNode {
@@ -3500,7 +3489,7 @@ export class SubroutineCallContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3508,7 +3497,7 @@ export class SubroutineCallContext extends ParserRuleContext {
   public subroutineId(): SubroutineIdContext {
     return this.getTypedRuleContext(
       SubroutineIdContext,
-      0,
+      0
     ) as SubroutineIdContext;
   }
   public LPAREN(): TerminalNode {
@@ -3517,7 +3506,7 @@ export class SubroutineCallContext extends ParserRuleContext {
   public expressionList(): ExpressionListContext {
     return this.getTypedRuleContext(
       ExpressionListContext,
-      0,
+      0
     ) as ExpressionListContext;
   }
   public RPAREN(): TerminalNode {
@@ -3550,7 +3539,7 @@ export class SubroutineIdContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3558,7 +3547,7 @@ export class SubroutineIdContext extends ParserRuleContext {
   public subroutineName(): SubroutineNameContext {
     return this.getTypedRuleContext(
       SubroutineNameContext,
-      0,
+      0
     ) as SubroutineNameContext;
   }
   public DOT(): TerminalNode {
@@ -3597,7 +3586,7 @@ export class ReturnStatementContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3638,7 +3627,7 @@ export class ExpressionListContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3682,7 +3671,7 @@ export class ExpressionContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3696,25 +3685,25 @@ export class ExpressionContext extends ParserRuleContext {
   public subroutineCall(): SubroutineCallContext {
     return this.getTypedRuleContext(
       SubroutineCallContext,
-      0,
+      0
     ) as SubroutineCallContext;
   }
   public arrayAccess(): ArrayAccessContext {
     return this.getTypedRuleContext(
       ArrayAccessContext,
-      0,
+      0
     ) as ArrayAccessContext;
   }
   public unaryOperation(): UnaryOperationContext {
     return this.getTypedRuleContext(
       UnaryOperationContext,
-      0,
+      0
     ) as UnaryOperationContext;
   }
   public groupedExpression(): GroupedExpressionContext {
     return this.getTypedRuleContext(
       GroupedExpressionContext,
-      0,
+      0
     ) as GroupedExpressionContext;
   }
   public expression_list(): ExpressionContext[] {
@@ -3726,7 +3715,7 @@ export class ExpressionContext extends ParserRuleContext {
   public binaryOperator(): BinaryOperatorContext {
     return this.getTypedRuleContext(
       BinaryOperatorContext,
-      0,
+      0
     ) as BinaryOperatorContext;
   }
   public get ruleIndex(): number {
@@ -3756,7 +3745,7 @@ export class ConstantContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3770,7 +3759,7 @@ export class ConstantContext extends ParserRuleContext {
   public booleanLiteral(): BooleanLiteralContext {
     return this.getTypedRuleContext(
       BooleanLiteralContext,
-      0,
+      0
     ) as BooleanLiteralContext;
   }
   public NULL_LITERAL(): TerminalNode {
@@ -3806,7 +3795,7 @@ export class VarNameContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3841,7 +3830,7 @@ export class ArrayAccessContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3885,7 +3874,7 @@ export class UnaryOperationContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3893,7 +3882,7 @@ export class UnaryOperationContext extends ParserRuleContext {
   public unaryOperator(): UnaryOperatorContext {
     return this.getTypedRuleContext(
       UnaryOperatorContext,
-      0,
+      0
     ) as UnaryOperatorContext;
   }
   public expression(): ExpressionContext {
@@ -3926,7 +3915,7 @@ export class GroupedExpressionContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -3967,7 +3956,7 @@ export class BooleanLiteralContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -4005,7 +3994,7 @@ export class UnaryOperatorContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
@@ -4043,7 +4032,7 @@ export class BinaryOperatorContext extends ParserRuleContext {
   constructor(
     parser?: JackParser,
     parent?: ParserRuleContext,
-    invokingState?: number,
+    invokingState?: number
   ) {
     super(parent, invokingState);
     this.parser = parser;
