@@ -11,9 +11,8 @@ import {
   SubroutineType,
 } from "../symbol";
 import JackParserListener from "../generated/JackParserListener";
-import { builtInSymbols } from '../builtins';
+import { builtInSymbols } from "../builtins";
 
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 /**
  * Creates global symbol table that contains built-in functions and found classes and subroutines
  */
@@ -32,10 +31,12 @@ export class BinderListener extends JackParserListener {
     const id = classNameCtx.IDENTIFIER();
     const className = id.getText();
     if (this.globalSymbolTable[className] != undefined) {
+      if (classNameCtx.stop == null || classNameCtx.stop?.stop == null)
+        throw new Error("Stop token should not be null");
       const e = new DuplicatedClassError(
         classNameCtx.start.line,
         classNameCtx.start.start,
-        classNameCtx.stop!.stop + 1,
+        classNameCtx.stop.stop + 1,
         className
       );
       this.errors.push(e);
@@ -99,7 +100,7 @@ export class BinderListener extends JackParserListener {
   };
   override exitSubroutineDeclaration = (ctx: SubroutineDeclarationContext) => {
     if (this.stopProcessingSubroutines) return;
-    const name = ctx.subroutineDecWithoutType().subroutineName().IDENTIFIER();
+    const name = ctx.subroutineDecWithoutType()?.subroutineName().IDENTIFIER();
     this.subRoutineInfo.localVarsCount = this.subroutineVarsCount;
     this.globalSymbolTable[this.subroutineId] = {
       filename: this.filename,

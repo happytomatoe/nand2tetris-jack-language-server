@@ -2,8 +2,7 @@ out
 node_modules
 client/server
 .vscode-test
-**/tsconfig.tsbuildinfo
-tsconfig.tsbuildinfo
+**/*.tsbuildinfo
 **/dist
 dist
 .vscode/numbered-bookmarks.json
@@ -11,4 +10,4 @@ jack-compiler/grammar/.antlr
 **/.vscode/numbered-bookmarks.json
 **/.antlr
 .idea
-*.iml
+**/*.iml

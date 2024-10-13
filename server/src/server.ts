@@ -190,7 +190,6 @@ connection.onDocumentFormatting(
         singleQuote: false,
         useTabs: !formatParams.options.insertSpaces,
       });
-      connection.console.log("Formatting document: " + formatted);
       return [
         TextEdit.replace(
           Range.create(Position.create(0, 0), document.positionAt(text.length)),

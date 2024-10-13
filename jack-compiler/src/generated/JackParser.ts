@@ -214,6 +214,8 @@ export default class JackParser extends Parser {
     "STRING_LITERAL",
     "UnterminatedStringLiteral",
   ];
+
+  // third party implementation
   // tslint:disable:no-trailing-whitespace
   public static readonly ruleNames: string[] = [
     "program",
@@ -1574,6 +1576,7 @@ export default class JackParser extends Parser {
 
   
   public expression(): ExpressionContext;
+  // third party implementation
   // eslint-disable-next-line  @typescript-eslint/unified-signatures
   public expression(_p: number): ExpressionContext;
   // @RuleVersion(0)

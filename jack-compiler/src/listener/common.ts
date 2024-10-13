@@ -15,14 +15,14 @@ export enum CallType {
 export function getCallType(
   subroutineId: SubroutineIdContext,
   className: string,
-  localSymbolTable: LocalSymbolTable,
+  localSymbolTable: LocalSymbolTable
 ): CallTypeResult {
   if (subroutineId.DOT() == undefined) {
     //local method
     return {
       callType: CallType.LocalMethod,
       subroutineIdText:
-        className + "." + subroutineId.subroutineName().getText(),
+        className + "." + (subroutineId.subroutineName()?.getText() ?? ""),
     } as CallTypeResult;
   } else {
     // var method

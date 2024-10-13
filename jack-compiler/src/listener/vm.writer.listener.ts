@@ -38,7 +38,6 @@ const unaryOperationToVmCmd: Record<string, string> = {
   "-": "neg",
   "~": "not",
 };
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 /**
  * Transforms parse tree into VM code
  */
@@ -46,7 +45,7 @@ export class VMWriter extends JackParserListener {
   public result = "";
   private className = "";
   private currentLabelInd = 0;
-  private localSymbolTable: LocalSymbolTable | undefined;
+  private _localSymbolTable: LocalSymbolTable | undefined;
   private afterEquals = false;
   constructor(private globalSymbolTable: Record<string, GenericSymbol>) {
     super();
@@ -59,9 +58,17 @@ export class VMWriter extends JackParserListener {
     if (ctx.localSymbolTable == undefined) {
       throw new Error("Local symbol table not found in parse tree");
     }
-    this.className = ctx.className()!.getText();
-    this.localSymbolTable = ctx.localSymbolTable;
+    if (ctx.className() == null) {
+      throw new Error("Class name not found in parse tree");
+    }
+    this.className = ctx.className().getText();
+    this._localSymbolTable = ctx.localSymbolTable;
   };
+  get localSymbolTable() {
+    if (this._localSymbolTable == null)
+      throw new Error("Local symbol table is not initialized");
+    return this._localSymbolTable;
+  }
 
   override enterSubroutineDeclaration = (ctx: SubroutineDeclarationContext) => {
     const name = ctx
@@ -72,13 +79,18 @@ export class VMWriter extends JackParserListener {
     const symbol = this.globalSymbolTable[this.className + "." + name];
     if (symbol == undefined) {
       throw new Error(
-        `Can't find subroutine ${name} in class ${this.className} in symbol table`,
+        `Can't find subroutine ${name} in class ${this.className} in symbol table`
       );
     }
-    this.result += `function ${this.className}.${name} ${symbol.subroutineInfo!.localVarsCount}\n`;
+    if (symbol.subroutineInfo == null) {
+      throw new Error(
+        `Subroutine info not found for subroutine ${name} in class ${this.className}`
+      );
+    }
+    this.result += `function ${this.className}.${name} ${symbol.subroutineInfo.localVarsCount}\n`;
 
     if (ctx.subroutineType().CONSTRUCTOR() != null) {
-      this.result += `    push constant ${this.localSymbolTable!.fieldsCount()}\n`;
+      this.result += `    push constant ${this.localSymbolTable.fieldsCount()}\n`;
       this.result += "    call Memory.alloc 1\n";
       this.result += "    pop pointer 0\n";
     } else if (ctx.subroutineType().METHOD() != null) {
@@ -89,11 +101,11 @@ export class VMWriter extends JackParserListener {
     if (ctx.symbols == null) {
       throw new Error("Subroutine symbols not found in parse tree");
     }
-    this.localSymbolTable!.setSubroutineScope(ctx.symbols);
+    this.localSymbolTable.setSubroutineScope(ctx.symbols);
   };
   override exitArrayAccess = (ctx: ArrayAccessContext) => {
     const varName = ctx.varName().IDENTIFIER().getText();
-    const symbol = this.localSymbolTable!.lookup(varName);
+    const symbol = this.localSymbolTable.lookup(varName);
     if (symbol == undefined) {
       throw new Error(`Can't find variable ${varName} in local symbol table`);
     }
@@ -112,11 +124,11 @@ export class VMWriter extends JackParserListener {
   };
   override enterConstant = (ctx: ConstantContext) => {
     if (ctx.INTEGER_LITERAL() != null) {
-      this.result += `    push constant ${ctx.INTEGER_LITERAL()!.getText()}\n`;
+      this.result += `    push constant ${ctx.INTEGER_LITERAL()?.getText()}\n`;
     } else if (ctx.booleanLiteral() != null) {
-      if (ctx.booleanLiteral()!.FALSE() != null) {
+      if (ctx.booleanLiteral()?.FALSE() != null) {
         this.result += `    push constant 0\n`;
-      } else if (ctx.booleanLiteral()!.TRUE()) {
+      } else if (ctx.booleanLiteral()?.TRUE()) {
         this.result += `    push constant 1\n`;
         this.result += `    neg\n`;
       } else {
@@ -126,7 +138,7 @@ export class VMWriter extends JackParserListener {
       this.result += `    push pointer 0\n`;
     } else if (ctx.STRING_LITERAL() != null) {
       const str = ctx
-        .STRING_LITERAL()!
+        .STRING_LITERAL()
         .getText()
         //cutoff ""
         .slice(1, -1);
@@ -144,22 +156,22 @@ export class VMWriter extends JackParserListener {
   };
   override exitExpression = (ctx: ExpressionContext) => {
     if (ctx.varName() != null) {
-      const varName = ctx.varName()!.IDENTIFIER().getText();
-      const symbol = this.localSymbolTable!.lookup(varName);
+      const varName = ctx.varName()?.IDENTIFIER().getText();
+      const symbol = this.localSymbolTable.lookup(varName);
       if (symbol == undefined) {
         throw new Error(
-          `Cannot find variable ${varName} in arguments or local variables`,
+          `Cannot find variable ${varName} in arguments or local variables`
         );
       }
       this.pushSymbolOntoStack(symbol);
     } else if (ctx.binaryOperator() != null) {
-      const binaryOp = ctx.binaryOperator()!.getText();
+      const binaryOp = ctx.binaryOperator()?.getText();
       if (binaryOperationToVmCmd[binaryOp] == undefined) {
         throw new Error(`Unknown binary operator ${binaryOp}`);
       }
       this.result += "\t" + binaryOperationToVmCmd[binaryOp] + "\n";
     } else if (ctx.unaryOperation() != null) {
-      const unaryOp = ctx.unaryOperation()!.unaryOperator().getText();
+      const unaryOp = ctx.unaryOperation()?.unaryOperator().getText();
       if (unaryOperationToVmCmd[unaryOp] == null) {
         throw new Error(`Unknown unary operator ${unaryOp}`);
       }
@@ -171,12 +183,12 @@ export class VMWriter extends JackParserListener {
   }
   override exitLetStatement = (ctx: LetStatementContext) => {
     if (ctx.varName() != null) {
-      const symbol = this.localSymbolTable!.lookup(
-        ctx.varName()!.IDENTIFIER().getText(),
+      const symbol = this.localSymbolTable.lookup(
+        ctx.varName()?.IDENTIFIER().getText()
       );
       if (symbol == undefined) {
         throw new Error(
-          `Can't find variable ${ctx.varName()!.IDENTIFIER().getText()} in local symbol table`,
+          `Can't find variable ${ctx.varName()?.IDENTIFIER().getText()} in local symbol table`
         );
       }
       this.result += `    pop ${scopeTypeToString(symbol.scope)} ${symbol.index}\n`;
@@ -230,10 +242,11 @@ export class VMWriter extends JackParserListener {
     const { callType, symbol } = getCallType(
       ctx.subroutineId(),
       this.className,
-      this.localSymbolTable!,
+      this.localSymbolTable
     );
     if (callType === CallType.VarMethod) {
-      this.pushSymbolOntoStack(symbol!);
+      if (symbol == null) throw new Error("Symbol not found when calling a method");
+      this.pushSymbolOntoStack(symbol);
     } else if (callType === CallType.LocalMethod) {
       this.result += `    push pointer 0\n`;
     }
@@ -244,7 +257,7 @@ export class VMWriter extends JackParserListener {
     const { callType, subroutineIdText } = getCallType(
       ctx.subroutineId(),
       this.className,
-      this.localSymbolTable!,
+      this.localSymbolTable
     );
     switch (callType) {
       case CallType.ClassFunctionOrConstructor: {
