@@ -11,7 +11,7 @@ import {
   SubroutineType,
 } from "../symbol";
 import JackParserListener from "../generated/JackParserListener";
-import { builtInSymbols } from 'src/builtins';
+import { builtInSymbols } from '../builtins';
 
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 /**

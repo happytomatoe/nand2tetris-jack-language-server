@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import { JackCompilerError } from "../src/error";
-import { CustomErrorListener } from "../src/listener/error.listener";
 import {
   CharStreams,
   CommonTokenStream,
@@ -16,6 +15,10 @@ import {
   SubroutineInfo,
   SubroutineType,
 } from "../src/symbol";
+import {
+  LexerErrorListener,
+  ParserErrorListener,
+} from "../src/listener/error.listener";
 export function createSubroutineSymbol(
   type: SubroutineType,
   params: string[],
@@ -32,39 +35,48 @@ export function createSubroutineSymbol(
 }
 
 export function parseJackFile(filePath: string, trace = false) {
-  const errorListener: CustomErrorListener = new CustomErrorListener();
+  const lexerErrorListener = new LexerErrorListener();
+  const parserErrorListener = new ParserErrorListener();
   const f = fs.readFileSync(filePath, "utf8");
-  return parseJackText(f, errorListener, trace);
+  return parseJackText(f, lexerErrorListener, parserErrorListener, trace);
 }
 
 export function parseJackText(
   src: string,
-  errorListener?: CustomErrorListener,
+  lexerErrorListener?: LexerErrorListener,
+  parserErrorListener?: ParserErrorListener,
   trace = false,
   throwOnErrors = true
 ): ProgramContext {
-  if (errorListener === undefined) {
-    errorListener = new CustomErrorListener();
+  if (lexerErrorListener === undefined) {
+    lexerErrorListener = new LexerErrorListener();
+  }
+  if (parserErrorListener === undefined) {
+    parserErrorListener = new ParserErrorListener();
   }
   const inputStream = CharStreams.fromString(src);
   const lexer = new JackLexer(inputStream);
-  if (errorListener) {
+  if (lexerErrorListener) {
     lexer.removeErrorListeners();
-    lexer.addErrorListener(errorListener);
+    lexer.addErrorListener(lexerErrorListener);
   }
 
   const tokenStream = new CommonTokenStream(lexer);
   const parser = new JackParser(tokenStream);
-  if (errorListener != undefined) {
+  if (parserErrorListener != undefined) {
     parser.removeErrorListeners();
-    parser.addErrorListener(errorListener);
+    parser.addErrorListener(parserErrorListener);
   }
   const tree = parser.program();
 
   expect(tokenStream.tokens.length).toBeGreaterThan(0);
-  if (errorListener.errors.length > 0) {
-    console.error("Parser or lexer errors found");
-    handleErrors(src, errorListener.errors);
+  if (lexerErrorListener.errors.length > 0) {
+    console.error("Lexer errors found");
+    handleErrors(src, lexerErrorListener.errors);
+  }
+  if (parserErrorListener.errors.length > 0) {
+    console.error("Lexer errors found");
+    handleErrors(src, parserErrorListener.errors);
   }
   return tree;
 }

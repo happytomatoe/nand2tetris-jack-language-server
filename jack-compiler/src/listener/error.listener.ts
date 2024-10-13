@@ -9,7 +9,7 @@ import { JackCompilerError, LexerOrParserError } from "../error";
 interface LexerNoViableAltException {
   startIndex: number;
 }
-export class CustomLexerErrorListener extends ErrorListener<number> {
+export class LexerErrorListener extends ErrorListener<number> {
   public errors: JackCompilerError[] = [];
   syntaxError(
     _recognizer: Recognizer<number>,
@@ -32,7 +32,7 @@ export class CustomLexerErrorListener extends ErrorListener<number> {
   }
 }
 
-export class CustomParserErrorListener extends ErrorListener<Token> {
+export class ParserErrorListener extends ErrorListener<Token> {
   public errors: JackCompilerError[] = [];
 
   override syntaxError = (

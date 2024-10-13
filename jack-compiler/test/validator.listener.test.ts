@@ -18,7 +18,11 @@ import {
   VoidSubroutineReturnsValueError,
   WrongLiteralTypeError,
 } from "../src/error";
-import { CustomErrorListener } from "../src/listener/error.listener";
+import {
+  CustomErrorListener,
+  LexerErrorListener,
+  ParserErrorListener,
+} from "../src/listener/error.listener";
 import { ValidatorListener } from "../src/listener/validator.listener";
 import { GenericSymbol, SubroutineType } from "../src/symbol";
 import {
@@ -468,8 +472,8 @@ describe("Jack validator listener", () => {
       IncorrectParamsNumberInSubroutineCallError,
       {
         Main: genericSymbol(),
-        "Main.a": genericSymbol(SubroutineType.Function, ["a","b"]),
-        "Main.b": genericSymbol(SubroutineType.Function, ["a","b"]),  
+        "Main.a": genericSymbol(SubroutineType.Function, ["a", "b"]),
+        "Main.b": genericSymbol(SubroutineType.Function, ["a", "b"]),
       }
     );
   });
@@ -796,8 +800,9 @@ function testValidator<T extends { name: string }>(
   globalSymbolTable: Record<string, GenericSymbol> = {},
   filename?: string
 ) {
-  const errorListener = new CustomErrorListener();
-  const tree = parseJackText(src, errorListener);
+  const lexerErrorListener = new LexerErrorListener();
+  const parserErrorListener = new ParserErrorListener();
+  const tree = parseJackText(src, lexerErrorListener, parserErrorListener);
   const listener =
     filename != null
       ? new ValidatorListener(globalSymbolTable, filename)
