@@ -551,9 +551,6 @@ export class JackVisitor extends JackParserVisitor<Doc> {
         trailingComment.find((v) => v.type == JackParser.LINE_COMMENT) !=
         undefined
       ) {
-        if (node.symbol.type == JackParser.SEMICOLON) {
-          res.push(" ");
-        }
         const b = this.transformLineComment(trailingComment);
         res.push(b);
       } else {
