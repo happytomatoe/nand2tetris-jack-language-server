@@ -26,6 +26,7 @@ import {
   ClassVarDecContext,
   ConstantContext,
   ElseStatementContext,
+  FieldNameContext,
   IfStatementContext,
   LetStatementContext,
   ParameterContext,
@@ -38,6 +39,7 @@ import {
   SubroutineDecWithoutTypeContext,
   VarDeclarationContext,
   VarNameContext,
+  VarNameInDeclarationContext,
   VarTypeContext,
   WhileStatementContext,
 } from "../generated/JackParser";
@@ -48,7 +50,7 @@ import {
   SubroutineType,
 } from "../symbol";
 import { assertExists, CallType, getCallType } from "./common";
-import { ParserRuleContext } from "antlr4ng";
+import { ParserRuleContext, TerminalNode } from "antlr4ng";
 /**
  * Validates Jack file
  */
@@ -105,8 +107,13 @@ export class ValidatorListener extends JackParserListener {
     ctx
       .fieldList()
       .fieldName()
-      .forEach((field) => {
-        this.#localSymbolTableAdd(ctx, scope, field.getText(), type);
+      .forEach((field: FieldNameContext) => {
+        this.localSymbolTableAdd(
+          field.IDENTIFIER(),
+          scope,
+          field.getText(),
+          type
+        );
       });
   };
   override enterSubroutineDeclaration = (ctx: SubroutineDeclarationContext) => {
@@ -117,7 +124,7 @@ export class ValidatorListener extends JackParserListener {
         this.className
       ) {
         const start = assertExists(ctx.start, "Start token should not be null");
-        this.#addError(
+        this.addError(
           new IncorrectConstructorReturnType(
             start.line,
             start.start,
@@ -143,12 +150,28 @@ export class ValidatorListener extends JackParserListener {
   };
 
   override enterParameter = (ctx: ParameterContext) => {
-    this.#defineArgument(
-      ctx,
-      ctx.parameterName().getText(),
-      ctx.varType().getText(),
-      this.subroutineType == SubroutineType.Method
-    );
+    const name = ctx.parameterName().getText();
+    if (this.localSymbolTable.lookup(name)) {
+      const start = assertExists(
+        ctx.parameterName().start,
+        "Start token should not be null"
+      );
+
+      this.addError(
+        new DuplicatedVariableException(
+          start.line,
+          start.start,
+          start.stop,
+          name
+        )
+      );
+    } else {
+      this.localSymbolTable.defineArgument(
+        name,
+        ctx.varType().getText(),
+        this.subroutineType == SubroutineType.Method
+      );
+    }
   };
   //Var
   override enterVarType = (ctx: VarTypeContext) => {
@@ -156,7 +179,7 @@ export class ValidatorListener extends JackParserListener {
       const type = ctx.IDENTIFIER()?.getText() ?? "";
       if (this.globalSymbolTable[type] == null) {
         const start = assertExists(ctx.start, "Start token should not be null");
-        this.#addError(
+        this.addError(
           new UnknownClassError(start.line, start.start, start.stop, type)
         );
       }
@@ -165,9 +188,16 @@ export class ValidatorListener extends JackParserListener {
 
   override enterVarDeclaration = (ctx: VarDeclarationContext) => {
     const type = ctx.varType().getText();
-    ctx.varNameInDeclaration().forEach((name) => {
-      this.#localSymbolTableAdd(ctx, ScopeType.Local, name.getText(), type);
-    });
+    ctx
+      .varNameInDeclaration()
+      .forEach((nameCtx: VarNameInDeclarationContext) => {
+        this.localSymbolTableAdd(
+          nameCtx.IDENTIFIER(),
+          ScopeType.Local,
+          nameCtx.getText(),
+          type
+        );
+      });
   };
 
   /**
@@ -178,7 +208,7 @@ export class ValidatorListener extends JackParserListener {
     if (symbol == undefined) {
       const start = assertExists(ctx.start, "Start token should not be null");
 
-      this.#addError(
+      this.addError(
         new UndeclaredVariableError(
           start.line,
           start.start,
@@ -191,7 +221,7 @@ export class ValidatorListener extends JackParserListener {
       symbol.scope == ScopeType.This
     ) {
       const start = assertExists(ctx.start, "Start token should not be null");
-      this.#addError(
+      this.addError(
         new FieldCantBeReferencedInFunction(start.line, start.start, start.stop)
       );
     }
@@ -204,7 +234,7 @@ export class ValidatorListener extends JackParserListener {
     ) {
       const start = assertExists(ctx.start, "Start token should not be null");
 
-      this.#addError(
+      this.addError(
         new ThisCantBeReferencedInFunction(start.line, start.start, start.stop)
       );
     }
@@ -213,7 +243,7 @@ export class ValidatorListener extends JackParserListener {
   override enterStatement = (ctx: StatementContext) => {
     if (this.controlFlowGraphNode.returns == true) {
       const start = assertExists(ctx.start, "Start token should not be null");
-      this.#addError(
+      this.addError(
         new UnreachableCodeError(
           start.line,
           start.start,
@@ -279,7 +309,7 @@ export class ValidatorListener extends JackParserListener {
                 ctx.start,
                 "Start token should not be null"
               );
-              this.#addError(
+              this.addError(
                 new WrongLiteralTypeError(
                   start.line,
                   start.start,
@@ -294,7 +324,7 @@ export class ValidatorListener extends JackParserListener {
                   ctx.start,
                   "Start token should not be null"
                 );
-                this.#addError(
+                this.addError(
                   new IntLiteralIsOutOfRange(
                     start.line,
                     start.start,
@@ -313,7 +343,7 @@ export class ValidatorListener extends JackParserListener {
                 ctx.start,
                 "Start token should not be null"
               );
-              this.#addError(
+              this.addError(
                 new WrongLiteralTypeError(
                   start.line,
                   start.start,
@@ -329,7 +359,7 @@ export class ValidatorListener extends JackParserListener {
                 ctx.start,
                 "Start token should not be null"
               );
-              this.#addError(
+              this.addError(
                 new WrongLiteralTypeError(
                   start.line,
                   start.start,
@@ -358,7 +388,7 @@ export class ValidatorListener extends JackParserListener {
       );
       if (-value < intRange.min) {
         const start = assertExists(ctx.start, "Start token should not be null");
-        this.#addError(
+        this.addError(
           new IntLiteralIsOutOfRange(
             start.line,
             start.start,
@@ -383,9 +413,12 @@ export class ValidatorListener extends JackParserListener {
 
     const symbol = this.globalSymbolTable[subroutineIdText];
     if (symbol == undefined) {
-      const start = assertExists(ctx.subroutineId()?.subroutineName()?.start, "Start token should not be null");
+      const start = assertExists(
+        ctx.subroutineId()?.subroutineName()?.start,
+        "Start token should not be null"
+      );
 
-      this.#addError(
+      this.addError(
         new UnknownSubroutineCallError(
           start.line,
           start.start,
@@ -402,7 +435,7 @@ export class ValidatorListener extends JackParserListener {
       ) {
         const start = assertExists(ctx.start, "Start token should not be null");
 
-        this.#addError(
+        this.addError(
           new MethodCalledAsFunctionError(
             start.line,
             start.start,
@@ -418,7 +451,7 @@ export class ValidatorListener extends JackParserListener {
       ) {
         const start = assertExists(ctx.start, "Start token should not be null");
 
-        this.#addError(
+        this.addError(
           new FunctionCalledAsMethodError(
             start.line,
             start.start,
@@ -442,7 +475,7 @@ export class ValidatorListener extends JackParserListener {
               "Start token should not be null"
             );
 
-            this.#addError(
+            this.addError(
               new IncorrectParamsNumberInSubroutineCallError(
                 start.line,
                 start.start,
@@ -458,7 +491,7 @@ export class ValidatorListener extends JackParserListener {
               "Start token should not be null"
             );
 
-            this.#addError(
+            this.addError(
               new IncorrectParamsNumberInSubroutineCallError(
                 start.line,
                 start.start,
@@ -477,13 +510,13 @@ export class ValidatorListener extends JackParserListener {
     const returnsVoid = ctx.expression() == null;
     if (returnsVoid && !this.subroutineShouldReturnVoidType) {
       const stop = getStopToken(ctx);
-      this.#addError(
+      this.addError(
         new NonVoidFunctionNoReturnError(stop.line, stop.start, stop.stop)
       );
     }
     if (!returnsVoid && this.subroutineShouldReturnVoidType) {
       const stop = getStopToken(ctx);
-      this.#addError(
+      this.addError(
         new VoidSubroutineReturnsValueError(stop.line, stop.start, stop.stop)
       );
     }
@@ -496,7 +529,7 @@ export class ValidatorListener extends JackParserListener {
         ctx.expression()?.constant()?.THIS_LITERAL() == null
       ) {
         const stop = getStopToken(ctx);
-        this.#addError(
+        this.addError(
           new ConstructorMushReturnThis(stop.line, stop.start, stop.stop)
         );
       }
@@ -506,7 +539,7 @@ export class ValidatorListener extends JackParserListener {
   override exitSubroutineBody = (ctx: SubroutineBodyContext) => {
     if (!this.controlFlowGraphNode.returns) {
       const stop = getStopToken(ctx);
-      this.#addError(
+      this.addError(
         new SubroutineNotAllPathsReturnError(
           stop.line,
           stop.start,
@@ -528,41 +561,20 @@ export class ValidatorListener extends JackParserListener {
   };
 
   //Utils
-  #defineArgument(
-    ctx: ParserRuleContext,
-    name: string,
-    type: string,
-    inMethod: boolean
-  ) {
-    if (this.localSymbolTable.lookup(name)) {
-      const start = assertExists(ctx.start, "Start token should not be null");
 
-      this.#addError(
-        new DuplicatedVariableException(
-          start.line,
-          start.start,
-          start.stop,
-          name
-        )
-      );
-    } else {
-      this.localSymbolTable.defineArgument(name, type, inMethod);
-    }
-  }
-  #localSymbolTableAdd(
-    ctx: ParserRuleContext,
+  localSymbolTableAdd(
+    identifierCtx: TerminalNode,
     scope: ScopeType,
     name: string,
     type: string
   ) {
+    const symbol = identifierCtx.symbol
     if (this.localSymbolTable.lookup(name)) {
-      const start = assertExists(ctx.start, "Start token should not be null");
-
-      this.#addError(
+      this.addError(
         new DuplicatedVariableException(
-          start.line,
-          start.start,
-          start.stop,
+          symbol.line,
+          symbol.start,
+          symbol.stop,
           name
         )
       );
@@ -570,7 +582,7 @@ export class ValidatorListener extends JackParserListener {
       this.localSymbolTable.define(scope, name, type);
     }
   }
-  #addError<T extends JackCompilerError>(error: T) {
+  addError<T extends JackCompilerError>(error: T) {
     if (!this.stopProcessingErrorsInThisScope) this.errors.push(error);
   }
 }

@@ -5,7 +5,6 @@ import {
   Diagnostic,
   DiagnosticSeverity,
   DidChangeConfigurationNotification,
-  DidChangeWatchedFilesParams,
   DidOpenTextDocumentParams,
   DocumentDiagnosticReportKind,
   DocumentFormattingParams,
@@ -27,7 +26,7 @@ import {
 import { assert } from "console";
 import * as fs from "fs";
 import { Compiler, JackCompilerError } from "jack-compiler/out/index";
-import { GlobalSymbolTable } from "jack-compiler/out/symbol";
+import { GlobalSymbolTable, SubroutineScope } from "jack-compiler/out/symbol";
 import * as path from "path";
 import * as prettier from "prettier";
 import { JackPlugin } from "prettier-plugin-jack/out/index";
@@ -116,7 +115,7 @@ connection.languages.diagnostics.on(async (params) => {
 
 // Validate text on change
 documents.onDidChangeContent((change) => {
-  connection.console.log("onDidChangeContent: " + change.document.uri);
+  // connection.console.log("onDidChangeContent: " + change.document.uri);
   validateTextDocument(change.document);
 });
 async function validateTextDocument(
@@ -179,7 +178,8 @@ connection.onDocumentFormatting(
   async (formatParams: DocumentFormattingParams): Promise<TextEdit[]> => {
     const document = documents.get(formatParams.textDocument.uri);
 
-    if (!document) {
+    if (!document || (await validateTextDocument(document)).length > 0) {
+      connection.console.log("Cannot format invalid document: ");
       return [];
     }
 
@@ -222,23 +222,53 @@ connection.onCompletion(
         textDocument.offsetAt({ line: pos.line, character: 0 }),
         textDocument.offsetAt(pos)
       );
-    const matches = line.matchAll(/([A-Z]([A-Za-z0-9_])*\.)$/g);
-    const idStart = matches.next();
-    if (idStart.value == null || idStart.value.length == 0) {
+    const regex = /([A-Za-z_][A-Za-z0-9_]*\.)$/g;
+    const matches = line.match(regex);
+    if (matches == null || matches.length == 0) {
       return [];
     }
-    const symbols = createGlobalSymbolTable(textDocument.uri);
-    const matchedSubroutines = Object.entries(symbols).filter(([k, _]) =>
-      k.startsWith(idStart.value[0])
+    const className = textDocument.uri.match(/([A-Z][A-Za-z0-9_]*\.)jack$/);
+    let subroutineId = matches[0].replace(/^this./, className?.[1] ?? "this.");
+
+    const documentBeforeCurrentCharacter = textDocument.getText({
+      start: { line: 0, character: 0 },
+      end: _textDocumentPosition.position,
+    });
+    const localSubroutines = documentBeforeCurrentCharacter.match(
+      /(?:function|method|constructor)\s[A-za-z_0-9]+\s([A-za-z_0-9]+)/g
+    );
+    if (localSubroutines == null) {
+      return [];
+    }
+
+    const globalSymbols = createGlobalSymbolTable(textDocument.uri);
+
+    //find local symbol type and set it to subroutineId
+    if (localSubroutines.length > 0) {
+      const subroutineName = localSubroutines.pop()?.split(" ").pop();
+      if (subroutineName != null) {
+        const t = getLocalSymbols(textDocument, globalSymbols, subroutineName);
+        if (t != null) {
+          const identifier = subroutineId.replace(".", "");
+          const symbol =
+            t.arguments.find((a) => a.name === identifier) ??
+            t.locals.find((a) => a.name == identifier);
+          if (symbol) {
+            subroutineId = symbol.type + ".";
+          }
+        }
+      }
+    }
+    const matchedSubroutines = Object.entries(globalSymbols).filter(
+      ([globalSymbol, _]) => globalSymbol.startsWith(subroutineId)
     );
     return matchedSubroutines.map(([k, v]) => {
       const label = k.substring(k.indexOf(".") + 1);
       const params = v.subroutineInfo?.paramNames
         .map((v, i) => {
-          return "${" + i + 1 + ":" + v + "}";
+          return "${" + (i + 1) + ":" + v + "}";
         })
         .join(",");
-      connection.console.log("Parameters: " + params);
       return {
         label: label,
         kind: CompletionItemKind.Function,
@@ -249,6 +279,33 @@ connection.onCompletion(
     });
   }
 );
+function getLocalSymbols(
+  textDocument: TextDocument,
+  globalSymbolTable: GlobalSymbolTable,
+  subroutineName: string
+): SubroutineScope | undefined {
+  const compiler = new Compiler();
+  compiler.globalSymbolTable = globalSymbolTable;
+  const parsedTree = compiler.parse(textDocument.getText(), true);
+  if (Array.isArray(parsedTree)) {
+    connection.console.error("Something went wrong ");
+    return undefined;
+  }
+  const tree = compiler.validate(parsedTree, undefined, true);
+  if (Array.isArray(tree)) {
+    connection.console.error("Something went wrong. Expected tree ");
+    return undefined;
+  }
+  const s = tree
+    .classDeclaration()
+    ?.subroutineDeclaration()
+    ?.find(
+      (v) =>
+        v.subroutineDecWithoutType()?.subroutineName().getText() ==
+        subroutineName
+    );
+  return s?.symbols;
+}
 // This handler resolves additional information for the item selected in
 // the completion list.
 connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
@@ -328,7 +385,6 @@ function createGlobalSymbolTable(textDocumentUri: string): GlobalSymbolTable {
   const compiler = new Compiler();
   const selectedFilePath = URI.parse(textDocumentUri).fsPath;
   const dir = path.dirname(selectedFilePath);
-  //TODO: resolve this
   const files = fs
     .readdirSync(dir)
     .filter((file) => file.endsWith(".jack"))
@@ -338,7 +394,7 @@ function createGlobalSymbolTable(textDocumentUri: string): GlobalSymbolTable {
       encoding: "utf8",
       flag: "r",
     });
-    const treeOrErrors = compiler.parse(content);
+    const treeOrErrors = compiler.parse(content, true);
     if (!Array.isArray(treeOrErrors)) {
       compiler.bind(treeOrErrors, filePath);
     }
