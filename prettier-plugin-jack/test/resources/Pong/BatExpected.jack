@@ -14,8 +14,8 @@
  */
 class Bat {
 
-    field int x, y;           // the bat's screen location
-    field int width, height;  // the bat's width and height
+    field int x, y;          // the bat's screen location
+    field int width, height; // the bat's width and height
     field int direction;      // direction of the bat's movement
                               //  (1 = left, 2 = right)
 

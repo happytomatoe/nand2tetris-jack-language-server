@@ -9,8 +9,8 @@
  */
 class Ball {
 
-    field int x, y;               // the ball's screen location (in pixels)
-    field int lengthx, lengthy;   // distance of last destination (in pixels)
+    field int x, y;             
+    field int lengthx, lengthy;
 
     field int d, straightD, diagonalD;   // used for straight line movement computation
     field boolean invert, positivex, positivey;   // (same)

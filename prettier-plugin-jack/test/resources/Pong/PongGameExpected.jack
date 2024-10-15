@@ -7,13 +7,13 @@
  */
 class PongGame {
 
-    static PongGame instance;  // A Pong game
-    field Bat bat;             // bat
-    field Ball ball;           // ball
-    field int wall;            // current wall that the ball is bouncing off of
-    field boolean exit;        // true when the game is over
-    field int score;           // current score
-    field int lastWall;        // last wall that the ball bounced off of
+    static PongGame instance; // A Pong game
+    field Bat bat;            // bat
+    field Ball ball;          // ball
+    field int wall;           // current wall that the ball is bouncing off of
+    field boolean exit;       // true when the game is over
+    field int score;          // current score
+    field int lastWall;       // last wall that the ball bounced off of
 
     // The current width of the bat
     field int batWidth;
@@ -21,7 +21,7 @@ class PongGame {
     /** Constructs a new Pong game. */
     constructor PongGame new(){
         do Screen.clearScreen();
-        let batWidth = 50;   // initial bat size
+        let batWidth = 50;  // initial bat size
         let bat = Bat.new(230, 229, batWidth, 7);
         let ball = Ball.new(253, 222, 0, 511, 0, 229);
         do ball.setDestination(400, 0);

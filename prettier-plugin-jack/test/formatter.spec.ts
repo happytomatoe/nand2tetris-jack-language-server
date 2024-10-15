@@ -45,6 +45,7 @@ async function testDir(dirName: string) {
         insertSpaces: true,
       });
       fs.writeFileSync("temp.jack", actual);
+      console.log(actual);
       expect(actual).to.equal(expected);
     }
   }

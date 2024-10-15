@@ -9,13 +9,13 @@
  */
 class Ball {
 
-    field int x, y;                // the ball's screen location (in pixels)
-    field int lengthx, lengthy;    // distance of last destination (in pixels)
+    field int x, y;
+    field int lengthx, lengthy;
 
-    field int d, straightD, diagonalD;    // used for straight line movement computation
-    field boolean invert, positivex, positivey;    // (same)
+    field int d, straightD, diagonalD;   // used for straight line movement computation
+    field boolean invert, positivex, positivey;   // (same)
 
-    field int leftWall, rightWall, topWall, bottomWall;   // wall locations
+    field int leftWall, rightWall, topWall, bottomWall;  // wall locations
 
     field int wall;    // last wall that the ball was bounced off of
 
@@ -24,9 +24,9 @@ class Ball {
         let x = Ax;
         let y = Ay;
         let leftWall = AleftWall;
-        let rightWall = ArightWall - 6;     // -6 for ball size
+        let rightWall = ArightWall - 6;    // -6 for ball size
         let topWall = AtopWall;
-        let bottomWall = AbottomWall - 6;   // -6 for ball size
+        let bottomWall = AbottomWall - 6;  // -6 for ball size
         let wall = 0;
         do show();
         return this;
@@ -78,7 +78,7 @@ class Ball {
         let invert = (dx < dy);
 
         if (invert){
-            let temp = dx;  // swap dx, dy
+            let temp = dx; // swap dx, dy
             let dx = dy;
             let dy = temp;
             let positivex = (y < desty);
@@ -176,7 +176,7 @@ class Ball {
             let factor = 10;
         } else {
             if (((~(lengthx < 0)) & (bouncingDirection = 1)) | ((lengthx < 0) & (bouncingDirection = (-1)))){
-                let factor = 20;  // bounce direction is in ball direction
+                let factor = 20; // bounce direction is in ball direction
             } else {
                 let factor = 5;
             } // bounce direction is against ball direction
