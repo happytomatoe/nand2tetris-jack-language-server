@@ -59,14 +59,14 @@
   "repository": "happytomatoe/nand2tetris-jack-lsp",
   "scripts": {
     "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
-    "build": "pnpm clean && tsc -b",
+    "build": "pnpm clean && tsc -b && pnpm -r run build",
     "ci": "pnpm run lint && pnpm run unit-test",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
     "format": "npx prettier --write .",
     "prepare": "husky",
     "e2e-test": "sh ./scripts/e2e.sh",
     "unit-test": "pnpm -r test",
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "pnpm run build",
     "watch": "tsc -b -w"
   }
 }

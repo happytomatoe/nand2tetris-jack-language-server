@@ -29,13 +29,6 @@
         "${workspaceRoot}/client/testFixture"
       ],
       "outFiles": ["${workspaceRoot}/client/out/test/**/*.js"]
-    },
-    {
-      "name": "Attach",
-      "port": 6009,
-      "request": "attach",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "node"
     }
   ]
 }

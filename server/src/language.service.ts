@@ -134,7 +134,7 @@ export class LanguageService {
 
     const matchedSubroutines = this.findSymbol({
       position: _textDocumentPosition.position,
-      subroutineId: subroutineId,
+      symbolId: subroutineId,
       textDocument: textDocument,
       matchMode: "startsWith",
     });
@@ -177,19 +177,32 @@ export class LanguageService {
         textDocument.offsetAt({ line: pos.line, character: pos.character }),
         textDocument.offsetAt({ line: pos.line + 1, character: 0 })
       );
-    const beforeMatches =
+    //match class or subroutine
+    //check if class name
+    const classNameStart = lineBefore.match(/\b[A-Z][A-Za-z0-9_]+$/g) ?? [];
+    const classNameEnd = lineAfter.match(/^([\w]+)\b/) ?? [];
+    const isClassName =
+      classNameStart.length > 0 &&
+      classNameEnd.length > 0 &&
+      classNameStart[0] != null &&
+      classNameEnd[0] != null;
+    //subroutine
+    const subroutineIdStart =
       lineBefore.match(/([A-Za-z_][A-Za-z0-9_\\.]+)$/g) ?? [];
-    const afterMatches = lineAfter.match(/^([\w]+)(?=\()/) ?? [];
-    if (
-      beforeMatches.length == 0 ||
-      afterMatches.length == 0 ||
-      beforeMatches[0] == null ||
-      afterMatches[0] == null
-    ) {
+    const subroutineIdEnd = lineAfter.match(/^([\w]+)(?=\()/) ?? [];
+    const isSubroutine =
+      subroutineIdStart.length > 0 &&
+      subroutineIdEnd.length > 0 &&
+      subroutineIdStart[0] != null &&
+      subroutineIdEnd[0] != null;
+    if (!isSubroutine && !isClassName) {
       return undefined;
     }
-    let subroutineId = beforeMatches[0] + afterMatches[1];
-    if (!subroutineId.includes(".")) {
+    let subroutineId = isSubroutine
+      ? subroutineIdStart[0] + subroutineIdEnd[1]
+      : classNameStart[0] + classNameEnd[1];
+
+    if (isSubroutine && !subroutineId.includes(".")) {
       //local method
       const className = textDocument.uri.match(
         /([A-Z][A-Za-z0-9_]*)\.jack$/
@@ -200,13 +213,13 @@ export class LanguageService {
       subroutineId = className + "." + subroutineId;
     }
 
-    const matchedSubroutines = this.findSymbol({
+    const matchedSymbols = this.findSymbol({
       position: params.position,
-      subroutineId: subroutineId,
+      symbolId: subroutineId,
       textDocument: textDocument,
       matchMode: "equals",
     });
-    const symbolEntry = matchedSubroutines?.[0];
+    const symbolEntry = matchedSymbols?.[0];
     if (symbolEntry == null) {
       return undefined;
     }
@@ -226,11 +239,11 @@ export class LanguageService {
   private findSymbol(t: {
     textDocument: TextDocument;
     position: Position;
-    subroutineId: string;
+    symbolId: string;
     matchMode: SubroutineMatchMode;
   }) {
     const { textDocument, position } = t;
-    let subroutineId = t.subroutineId;
+    let symbolId = t.symbolId;
     const documentBeforeCurrentCharacter = textDocument.getText({
       start: { line: 0, character: 0 },
       end: position,
@@ -238,21 +251,17 @@ export class LanguageService {
     const localSubroutines = documentBeforeCurrentCharacter.match(
       /(?:function|method|constructor)\s[A-za-z_0-9]+\s([A-za-z_0-9]+)/g
     );
-    if (localSubroutines == null) {
-      return undefined;
-    }
-
     const globalSymbols = createGlobalSymbolTable(textDocument.uri);
 
     //find local symbol type and set it to subroutineId
-    if (localSubroutines.length > 0) {
+    if (localSubroutines != null && localSubroutines.length > 0) {
       const subroutineName = localSubroutines.pop()?.split(" ").pop();
       if (subroutineName != null) {
         const t = getLocalSymbols(textDocument, globalSymbols, subroutineName);
         if (t != null) {
-          const identifier = subroutineId.substring(
+          const identifier = symbolId.substring(
             0,
-            subroutineId.indexOf(".")
+            symbolId.indexOf(".")
           );
           const symbol =
             t.locals.find((a) => a.name == identifier) ??
@@ -260,8 +269,8 @@ export class LanguageService {
             t.fields.find((a) => a.name === identifier) ??
             t.staticFields.find((a) => a.name === identifier);
           if (symbol) {
-            subroutineId =
-              symbol.type + subroutineId.substring(subroutineId.indexOf("."));
+            symbolId =
+              symbol.type + symbolId.substring(symbolId.indexOf("."));
           }
         }
       }
@@ -269,9 +278,9 @@ export class LanguageService {
     return Object.entries(globalSymbols).filter(([globalSymbol, _]) => {
       switch (t.matchMode) {
         case "startsWith":
-          return globalSymbol.startsWith(subroutineId);
+          return globalSymbol.startsWith(symbolId);
         case "equals":
-          return globalSymbol === subroutineId;
+          return globalSymbol === symbolId;
         default: {
           const exhaustiveCheck: never = t.matchMode;
           throw new Error(`Unhandled mode case: ${exhaustiveCheck}`);

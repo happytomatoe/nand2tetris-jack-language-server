@@ -7,6 +7,7 @@
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.8",
     "@types/vscode": "^1.75.1",
     "@vscode/test-electron": "^2.4.1",
     "glob": "^11.0.0"
