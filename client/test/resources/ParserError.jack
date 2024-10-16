@@ -1,3 +1,0 @@
-class ParserError {
-	field field int a;
-}

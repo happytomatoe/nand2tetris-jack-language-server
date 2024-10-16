@@ -66,6 +66,12 @@ importers:
       glob:
         specifier: ^11.0.0
         version: 11.0.0
+      mocha:
+        specifier: ^10.7.3
+        version: 10.7.3
+      ts-mocha:
+        specifier: ^10.0.0
+        version: 10.0.0(mocha@10.7.3)
 
   jack-compiler:
     dependencies:

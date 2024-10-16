@@ -43,7 +43,11 @@ import { Doc, doc } from "prettier";
 import { builders } from "prettier/doc";
 import { assertExists } from "jack-compiler";
 const { join, hardline, indent, group } = doc.builders;
-export class JackVisitor extends JackParserVisitor<Doc> {
+
+/**
+ * Returns formatted jack code
+ */
+export class JackFormatterVisitor extends JackParserVisitor<Doc> {
   private indentationLevel = 0;
   private indentationLevelChange = 1;
   private onStartOfTheFile = true;

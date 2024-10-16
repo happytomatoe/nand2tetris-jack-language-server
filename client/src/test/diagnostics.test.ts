@@ -34,7 +34,7 @@ suite("Should get diagnostics", () => {
       },
     ]);
   });
-  test.only("valid", async () => {
+  test("valid", async () => {
     const docUri = getDocUri("dino/Main.jack");
     await activate(docUri);
     const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
@@ -50,13 +50,17 @@ function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
 
 async function testDiagnostics(
   docUri: vscode.Uri,
-  expectedDiagnostics: vscode.Diagnostic[],
+  expectedDiagnostics: vscode.Diagnostic[]
 ) {
   await activate(docUri);
 
   const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
-
-  assert.equal(actualDiagnostics.length, expectedDiagnostics.length);
+  try {
+    assert.equal(actualDiagnostics.length, expectedDiagnostics.length);
+  } catch (e) {
+    console.error("Diagnostics:", actualDiagnostics);
+    throw e;
+  }
 
   expectedDiagnostics.forEach((expectedDiagnostic, i) => {
     const actualDiagnostic = actualDiagnostics[i];

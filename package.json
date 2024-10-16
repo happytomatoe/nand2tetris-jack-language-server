@@ -1,7 +1,7 @@
 {
   "name": "nand2tetris-jack-lsp",
   "description": "A language server for nand2tetris jack language",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "author": "Roman Lukash",
   "categories": [],
   "contributes": {
@@ -55,7 +55,7 @@
   ],
   "license": "MIT",
   "main": "./client/out/extension",
-  "publisher": "rlukash",
+  "publisher": "roman-lukash",
   "repository": "happytomatoe/nand2tetris-jack-lsp",
   "scripts": {
     "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
@@ -64,7 +64,7 @@
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
     "format": "npx prettier --write .",
     "prepare": "husky",
-    "e2e-test": "sh ./scripts/e2e.sh",
+    "e2e-test": "pnpm -w client run e2e-test",
     "unit-test": "pnpm -r test",
     "vscode:prepublish": "pnpm run build",
     "watch": "tsc -b -w"

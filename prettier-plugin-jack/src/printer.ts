@@ -1,6 +1,6 @@
 import { ProgramContext } from "jack-compiler";
 import { AstPath, Doc, ParserOptions } from "prettier";
-import { JackVisitor } from "./formatter.visitor";
+import { JackFormatterVisitor } from "./formatter.visitor";
 import { CommonTokenStream } from "antlr4ng";
 
 export function print<T>(
@@ -11,7 +11,7 @@ export function print<T>(
 ): Doc {
   // console.log("Inside printer");
   const [tree, tokenStream] = path.node as [ProgramContext, CommonTokenStream];
-  const val = tree.accept(new JackVisitor(tokenStream));
+  const val = tree.accept(new JackFormatterVisitor(tokenStream));
   // console.log("Doc",JSON.stringify(val, null, 2));
   return val ?? "";
 }
