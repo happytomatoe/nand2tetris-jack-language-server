@@ -151,6 +151,8 @@ describe("Jack local symbol table", () => {
     expect(localSymbolTable.popStack()).toEqual({
       arguments: [symbols[1]],
       locals: [symbols[0]],
+      fields:[],
+      staticFields: [],
     } as SubroutineScope);
   });
 });

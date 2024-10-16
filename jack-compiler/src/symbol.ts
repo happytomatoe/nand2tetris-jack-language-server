@@ -56,6 +56,8 @@ export type VariableSymbol = {
 export type SubroutineScope = {
   arguments: VariableSymbol[];
   locals: VariableSymbol[];
+  fields: VariableSymbol[];
+  staticFields: VariableSymbol[];
 };
 /**
  *   Symbol table that provides lookup for variables in different scopes in a file
@@ -112,6 +114,8 @@ export class LocalSymbolTable {
     const f = {
       arguments: this.scopes[ScopeType.Argument],
       locals: this.scopes[ScopeType.Local],
+      fields: this.scopes[ScopeType.This],
+      staticFields: this.scopes[ScopeType.Static],
     } as SubroutineScope;
     this.scopes[ScopeType.Local] = [];
     this.scopes[ScopeType.Argument] = [];
