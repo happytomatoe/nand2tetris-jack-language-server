@@ -179,7 +179,7 @@ export class LanguageService {
       );
     const beforeMatches =
       lineBefore.match(/([A-Za-z_][A-Za-z0-9_\\.]+)$/g) ?? [];
-    const afterMatches = lineAfter.match(/^[\w]+/g) ?? [];
+    const afterMatches = lineAfter.match(/^([\w]+)(?=\()/) ?? [];
     if (
       beforeMatches.length == 0 ||
       afterMatches.length == 0 ||
@@ -188,11 +188,13 @@ export class LanguageService {
     ) {
       return undefined;
     }
-    let subroutineId = beforeMatches[0] + afterMatches[0];
-    if(!subroutineId.includes(".")){
+    let subroutineId = beforeMatches[0] + afterMatches[1];
+    if (!subroutineId.includes(".")) {
       //local method
-      const className = textDocument.uri.match(/([A-Z][A-Za-z0-9_]*)\.jack$/)?.[1];
-      if(className == null){
+      const className = textDocument.uri.match(
+        /([A-Z][A-Za-z0-9_]*)\.jack$/
+      )?.[1];
+      if (className == null) {
         return undefined;
       }
       subroutineId = className + "." + subroutineId;
@@ -204,13 +206,12 @@ export class LanguageService {
       textDocument: textDocument,
       matchMode: "equals",
     });
-    const symbol = matchedSubroutines?.[0][1] ?? undefined;
-    if (
-      symbol == null ||
-      symbol.filename == null ||
-      symbol.start == null ||
-      symbol.end == null
-    ) {
+    const symbolEntry = matchedSubroutines?.[0];
+    if (symbolEntry == null) {
+      return undefined;
+    }
+    const symbol = symbolEntry[1];
+    if (symbol.filename == null || symbol.start == null || symbol.end == null) {
       return undefined;
     }
     const start = symbol.start;
