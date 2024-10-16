@@ -21,7 +21,6 @@
   "publisher": "roman-lukash",
   "repository": "happytomatoe/nand2tetris-jack-lsp",
   "scripts": {
-    "e2e-test": "CODE_TESTS_PATH=\"$(pwd)/out/test\" CODE_TESTS_WORKSPACE=\"$(pwd)/testFixture\" node \"$(pwd)/out/test/runTest\"",
-    "test": "ts-mocha -p  src/test/*.test.ts"
+    "e2e-test": "CODE_TESTS_PATH=\"$(pwd)/out/test\" CODE_TESTS_WORKSPACE=\"$(pwd)/testFixture\" node \"$(pwd)/out/test/runTest\""
   }
 }
