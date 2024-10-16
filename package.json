@@ -64,7 +64,7 @@
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo",
     "format": "npx prettier --write .",
     "prepare": "husky",
-    "e2e-test": "pnpm -w client run e2e-test",
+    "e2e-test": "pnpm run --filter {client} e2e-test",
     "unit-test": "pnpm -r test",
     "vscode:prepublish": "pnpm run build",
     "watch": "tsc -b -w"
