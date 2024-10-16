@@ -160,7 +160,6 @@ export class LanguageService {
   }
 
   findDefinition(params: DefinitionParams): Location[] | undefined {
-    console.log("findDefinition");
     const textDocument = this.documents.get(params.textDocument.uri);
     if (textDocument == null) {
       return undefined;
@@ -181,7 +180,6 @@ export class LanguageService {
     const beforeMatches =
       lineBefore.match(/([A-Za-z_][A-Za-z0-9_\\.]+)$/g) ?? [];
     const afterMatches = lineAfter.match(/^[\w]+/g) ?? [];
-    console.log("Matches" + beforeMatches + " " + afterMatches);
     if (
       beforeMatches.length == 0 ||
       afterMatches.length == 0 ||
@@ -190,8 +188,15 @@ export class LanguageService {
     ) {
       return undefined;
     }
-    const subroutineId = beforeMatches[0] + afterMatches[0];
-    console.log("SubroutineId: " + subroutineId);
+    let subroutineId = beforeMatches[0] + afterMatches[0];
+    if(!subroutineId.includes(".")){
+      //local method
+      const className = textDocument.uri.match(/([A-Z][A-Za-z0-9_]*)\.jack$/)?.[1];
+      if(className == null){
+        return undefined;
+      }
+      subroutineId = className + "." + subroutineId;
+    }
 
     const matchedSubroutines = this.findSymbol({
       position: params.position,
@@ -199,7 +204,6 @@ export class LanguageService {
       textDocument: textDocument,
       matchMode: "equals",
     });
-    console.log("matchedSubroutines: " + matchedSubroutines);
     const symbol = matchedSubroutines?.[0][1] ?? undefined;
     if (
       symbol == null ||
