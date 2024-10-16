@@ -1,9 +1,8 @@
 {
   "name": "nand2tetris-jack-lsp",
-  "description": "A language server for nand2tetris jack language",
+  "description": "Language server for Jack language from Nand2tetris course",
   "version": "0.1.0",
   "author": "Roman Lukash",
-  "categories": [],
   "contributes": {
     "languages": [
       {
@@ -53,6 +52,9 @@
   "activationEvents": [
     "onLanguage:jack"
   ],
+  "categories": [
+    "Languages"
+],
   "keywords": [
     "nand2tetris jack language-server"
   ],
