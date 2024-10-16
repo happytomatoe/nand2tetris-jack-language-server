@@ -3,52 +3,9 @@
 import { AbstractParseTreeVisitor } from "antlr4ng";
 
 
-import { SubroutineScope, LocalSymbolTable } from "../symbol";
 
 
-import { ProgramContext } from "./JackParser.js";
-import { ClassDeclarationContext } from "./JackParser.js";
-import { ClassNameContext } from "./JackParser.js";
-import { ClassVarDecContext } from "./JackParser.js";
-import { FieldListContext } from "./JackParser.js";
-import { FieldNameContext } from "./JackParser.js";
-import { SubroutineDeclarationContext } from "./JackParser.js";
-import { SubroutineTypeContext } from "./JackParser.js";
-import { SubroutineDecWithoutTypeContext } from "./JackParser.js";
-import { SubroutineNameContext } from "./JackParser.js";
-import { SubroutineReturnTypeContext } from "./JackParser.js";
-import { VarTypeContext } from "./JackParser.js";
-import { ParameterListContext } from "./JackParser.js";
-import { ParameterContext } from "./JackParser.js";
-import { ParameterNameContext } from "./JackParser.js";
-import { SubroutineBodyContext } from "./JackParser.js";
-import { RBraceContext } from "./JackParser.js";
-import { VarDeclarationContext } from "./JackParser.js";
-import { VarNameInDeclarationContext } from "./JackParser.js";
-import { StatementsContext } from "./JackParser.js";
-import { StatementContext } from "./JackParser.js";
-import { LetStatementContext } from "./JackParser.js";
-import { EqualsContext } from "./JackParser.js";
-import { IfElseStatementContext } from "./JackParser.js";
-import { IfStatementContext } from "./JackParser.js";
-import { IfExpressionContext } from "./JackParser.js";
-import { ElseStatementContext } from "./JackParser.js";
-import { WhileStatementContext } from "./JackParser.js";
-import { WhileExpressionContext } from "./JackParser.js";
-import { DoStatementContext } from "./JackParser.js";
-import { SubroutineCallContext } from "./JackParser.js";
-import { SubroutineIdContext } from "./JackParser.js";
-import { ReturnStatementContext } from "./JackParser.js";
-import { ExpressionListContext } from "./JackParser.js";
-import { ExpressionContext } from "./JackParser.js";
-import { ConstantContext } from "./JackParser.js";
-import { VarNameContext } from "./JackParser.js";
-import { ArrayAccessContext } from "./JackParser.js";
-import { UnaryOperationContext } from "./JackParser.js";
-import { GroupedExpressionContext } from "./JackParser.js";
-import { BooleanLiteralContext } from "./JackParser.js";
-import { UnaryOperatorContext } from "./JackParser.js";
-import { BinaryOperatorContext } from "./JackParser.js";
+import { ArrayAccessContext, BinaryOperatorContext, BooleanLiteralContext, ClassDeclarationContext, ClassNameContext, ClassVarDecContext, ConstantContext, DoStatementContext, ElseStatementContext, EqualsContext, ExpressionContext, ExpressionListContext, FieldListContext, FieldNameContext, GroupedExpressionContext, IfElseStatementContext, IfExpressionContext, IfStatementContext, LetStatementContext, ParameterContext, ParameterListContext, ParameterNameContext, ProgramContext, RBraceContext, ReturnStatementContext, StatementContext, StatementsContext, SubroutineBodyContext, SubroutineCallContext, SubroutineDeclarationContext, SubroutineDecWithoutTypeContext, SubroutineIdContext, SubroutineNameContext, SubroutineReturnTypeContext, SubroutineTypeContext, UnaryOperationContext, UnaryOperatorContext, VarDeclarationContext, VarNameContext, VarNameInDeclarationContext, VarTypeContext, WhileExpressionContext, WhileStatementContext } from "./JackParser.js";
 
 
 /**
