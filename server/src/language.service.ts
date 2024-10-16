@@ -6,100 +6,26 @@ import * as path from "path";
 import * as prettier from "prettier";
 import { JackPlugin } from "prettier-plugin-jack";
 import {
-	CompletionItem,
-	CompletionItemKind,
-	CompletionList,
-	DefinitionParams,
-	Diagnostic,
-	DiagnosticSeverity,
-	DocumentFormattingParams,
-	InsertTextFormat,
-	Location,
-	Position,
-	Range,
-	TextDocumentPositionParams,
-	TextDocuments,
-	TextEdit
+  CompletionItem,
+  CompletionItemKind,
+  CompletionList,
+  DefinitionParams,
+  Diagnostic,
+  DiagnosticSeverity,
+  DocumentFormattingParams,
+  InsertTextFormat,
+  Location,
+  Position,
+  Range,
+  TextDocumentPositionParams,
+  TextDocuments,
+  TextEdit,
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
 
 export class LanguageService {
   constructor(private documents: TextDocuments<TextDocument>) {}
-  provideCodeCompletions(
-    _textDocumentPosition: TextDocumentPositionParams
-  ): CompletionList {
-    const textDocument = this.documents.get(
-      _textDocumentPosition.textDocument.uri
-    );
-    if (textDocument == null) {
-      return { items: [], isIncomplete: true };
-    }
-    const pos = _textDocumentPosition.position;
-    const line = textDocument
-      .getText()
-      .substring(
-        textDocument.offsetAt({ line: pos.line, character: 0 }),
-        textDocument.offsetAt(pos)
-      );
-    const regex = /([A-Za-z_][A-Za-z0-9_]*\.)$/g;
-    const matches = line.match(regex);
-    if (matches == null || matches.length == 0) {
-      return { items: [], isIncomplete: true };
-    }
-    const className = textDocument.uri.match(/([A-Z][A-Za-z0-9_]*\.)jack$/);
-    let subroutineId = matches[0].replace(/^this./, className?.[1] ?? "this.");
-
-    const documentBeforeCurrentCharacter = textDocument.getText({
-      start: { line: 0, character: 0 },
-      end: _textDocumentPosition.position,
-    });
-    const localSubroutines = documentBeforeCurrentCharacter.match(
-      /(?:function|method|constructor)\s[A-za-z_0-9]+\s([A-za-z_0-9]+)/g
-    );
-    if (localSubroutines == null) {
-      return { items: [], isIncomplete: true };
-    }
-
-    const globalSymbols = createGlobalSymbolTable(textDocument.uri);
-
-    //find local symbol type and set it to subroutineId
-    if (localSubroutines.length > 0) {
-      const subroutineName = localSubroutines.pop()?.split(" ").pop();
-      if (subroutineName != null) {
-        const t = getLocalSymbols(textDocument, globalSymbols, subroutineName);
-        if (t != null) {
-          const identifier = subroutineId.replace(".", "");
-          const symbol =
-            t.arguments.find((a) => a.name === identifier) ??
-            t.locals.find((a) => a.name == identifier);
-          if (symbol) {
-            subroutineId = symbol.type + ".";
-          }
-        }
-      }
-    }
-    const matchedSubroutines = Object.entries(globalSymbols).filter(
-      ([globalSymbol, _]) => globalSymbol.startsWith(subroutineId)
-    );
-    const items = matchedSubroutines.map(([k, v]) => {
-      const label = k.substring(k.indexOf(".") + 1);
-      const params = v.subroutineInfo?.paramNames
-        .map((v, i) => {
-          return "${" + (i + 1) + ":" + v + "}";
-        })
-        .join(",");
-      return {
-        label: label,
-        kind: CompletionItemKind.Function,
-        data: k,
-        insertText: label + "(" + params + ")",
-        insertTextFormat: InsertTextFormat.Snippet,
-      } as CompletionItem;
-    });
-    return { isIncomplete: false, items };
-  }
-
   async validateTextDocument(
     textDocument: TextDocument | undefined
   ): Promise<Diagnostic[]> {
@@ -183,8 +109,59 @@ export class LanguageService {
     }
   }
 
+  provideCodeCompletions(
+    _textDocumentPosition: TextDocumentPositionParams
+  ): CompletionList {
+    const textDocument = this.documents.get(
+      _textDocumentPosition.textDocument.uri
+    );
+    if (textDocument == null) {
+      return { items: [], isIncomplete: true };
+    }
+    const pos = _textDocumentPosition.position;
+    const line = textDocument
+      .getText()
+      .substring(
+        textDocument.offsetAt({ line: pos.line, character: 0 }),
+        textDocument.offsetAt(pos)
+      );
+    const identifierRegex = /([A-Za-z_][A-Za-z0-9_]*\.)$/g;
+    const matches = line.match(identifierRegex);
+    if (matches == null || matches.length == 0) {
+      return { items: [], isIncomplete: true };
+    }
+    const subroutineId = matches[0]
+
+    const matchedSubroutines = this.findSymbol({
+      position: _textDocumentPosition.position,
+      subroutineId: subroutineId,
+      textDocument: textDocument,
+      matchMode: 'startsWith'
+    });
+    if (matchedSubroutines == null) {
+      return { items: [], isIncomplete: true };
+    }
+    const items = matchedSubroutines.map(([k, v]) => {
+      const label = k.substring(k.indexOf(".") + 1);
+      const params = v.subroutineInfo?.paramNames
+        .map((v, i) => {
+          return "${" + (i + 1) + ":" + v + "}";
+        })
+        .join(",");
+      return {
+        label: label,
+        kind: CompletionItemKind.Function,
+        data: k,
+        insertText: label + "(" + params + ")",
+        insertTextFormat: InsertTextFormat.Snippet,
+      } as CompletionItem;
+    });
+    return { isIncomplete: false, items };
+  }
+
+
   findDefinition(params: DefinitionParams): Location[] | undefined {
-    // connection.console.log("Params: " + params);
+    console.log("findDefinition");
     const textDocument = this.documents.get(params.textDocument.uri);
     if (textDocument == null) {
       return undefined;
@@ -202,13 +179,9 @@ export class LanguageService {
         textDocument.offsetAt({ line: pos.line, character: pos.character }),
         textDocument.offsetAt({ line: pos.line + 1, character: 0 })
       );
-    const symbolTable: GlobalSymbolTable = createGlobalSymbolTable(
-      textDocument.uri
-    );
-    const beforeMatches = lineBefore.match(/([A-Z][A-Za-z0-9_\\.]+)$/g) ?? [];
+    const beforeMatches = lineBefore.match(/([A-Za-z_][A-Za-z0-9_\\.]+)$/g) ?? [];
     const afterMatches = lineAfter.match(/^[\w]+/g) ?? [];
-    // connection.console.log("Before matches: " + beforeMatches);
-    // connection.console.log("After matches: " + afterMatches);
+    console.log("Matches" +beforeMatches+" "+ afterMatches);
     if (
       beforeMatches.length == 0 ||
       afterMatches.length == 0 ||
@@ -217,10 +190,17 @@ export class LanguageService {
     ) {
       return undefined;
     }
-    const classNameFunctionName = beforeMatches[0] + afterMatches[0];
-
-    const symbol = symbolTable[classNameFunctionName];
-    // connection.console.log("Symbol " + JSON.stringify(symbol));
+    const subroutineId = beforeMatches[0] + afterMatches[0]
+    console.log("SubroutineId: " + subroutineId)
+    
+    const matchedSubroutines = this.findSymbol({
+      position: params.position,
+      subroutineId: subroutineId,
+      textDocument: textDocument,
+      matchMode: 'equals',
+    });
+    console.log("matchedSubroutines: " + matchedSubroutines);
+    const symbol = matchedSubroutines?.[0][1] ?? undefined;
     if (
       symbol == null ||
       symbol.filename == null ||
@@ -236,6 +216,57 @@ export class LanguageService {
       end: { line: end.line - 1, character: end.character },
     });
     return [res];
+  }
+
+  private findSymbol(t: {
+    textDocument: TextDocument;
+    position: Position;
+    subroutineId: string;
+    matchMode: SubroutineMatchMode;
+  }) {
+    const { textDocument, position } = t;
+    let subroutineId = t.subroutineId;
+    const documentBeforeCurrentCharacter = textDocument.getText({
+      start: { line: 0, character: 0 },
+      end: position,
+    });
+    const localSubroutines = documentBeforeCurrentCharacter.match(
+      /(?:function|method|constructor)\s[A-za-z_0-9]+\s([A-za-z_0-9]+)/g
+    );
+    if (localSubroutines == null) {
+      return undefined;
+    }
+
+    const globalSymbols = createGlobalSymbolTable(textDocument.uri);
+
+    //find local symbol type and set it to subroutineId
+    if (localSubroutines.length > 0) {
+      const subroutineName = localSubroutines.pop()?.split(" ").pop();
+      if (subroutineName != null) {
+        const t = getLocalSymbols(textDocument, globalSymbols, subroutineName);
+        if (t != null) {
+          const identifier = subroutineId.substring(0, subroutineId.indexOf("."));
+          const symbol =
+            t.arguments.find((a) => a.name === identifier) ??
+            t.locals.find((a) => a.name == identifier);
+          if (symbol) {
+            subroutineId = symbol.type + subroutineId.substring(subroutineId.indexOf("."));
+          }
+        }
+      }
+    }
+    return Object.entries(globalSymbols).filter(([globalSymbol, _]) => {
+      switch (t.matchMode) {
+        case "startsWith":
+          return globalSymbol.startsWith(subroutineId);
+        case "equals":
+          return globalSymbol === subroutineId ;
+        default: {
+          const exhaustiveCheck: never = t.matchMode;
+          throw new Error(`Unhandled mode case: ${exhaustiveCheck}`);
+        }
+      }
+    });
   }
 }
 
@@ -266,6 +297,7 @@ function getLocalSymbols(
     );
   return s?.symbols;
 }
+type SubroutineMatchMode = "startsWith" | "equals";
 
 function createGlobalSymbolTable(textDocumentUri: string): GlobalSymbolTable {
   const compiler = new Compiler();
