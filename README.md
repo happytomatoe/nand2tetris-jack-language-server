@@ -39,4 +39,5 @@ Jack programming language support for Nand2tetris course
 
 ## Special thanks
 Syntax file is vendored from  https://github.com/Throvn/vscode-nand2tetris
+
 Snippets from https://github.com/AvivYaish/nand-ide
