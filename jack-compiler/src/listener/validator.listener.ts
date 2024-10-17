@@ -162,6 +162,7 @@ export class ValidatorListener extends JackParserListener {
     if (ctx.IDENTIFIER() != null) {
       const type = ctx.IDENTIFIER()?.getText() ?? "";
       if (this.globalSymbolTable[type] == null) {
+        //TODO: check if we need to add ctx.stop to other exceptions
         this.addError(UnknownClassError(asSpan(assertExists(ctx.start), ctx.stop ?? ctx.start), type));
       }
     }
