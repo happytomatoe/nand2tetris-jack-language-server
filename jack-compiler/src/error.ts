@@ -10,7 +10,7 @@ export interface Span {
 export const asSpan = (
   { line, start, stop: startEnd }: Token,
   stop?: Token | null
-): Span => ({ line, start, end: stop ? stop.stop + 1 : startEnd + 1 });
+): Span => ({ line, start, end: stop ? stop.stop  : startEnd });
 
 export type JackCompilerErrorType =
   | "ConstructorMushReturnThisError"
