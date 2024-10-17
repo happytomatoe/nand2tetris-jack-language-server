@@ -79,13 +79,13 @@
   ],
   "scripts": {
     "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
-    "build": "yarn clean && tsc -b && yarn workspaces run  build",
+    "build": "yarn clean && tsc -b && yarn workspaces run build",
     "ci": "yarn lint && yarn unit-test",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo dist",
     "format": "npx prettier --write .",
     "prepare": "husky",
     "e2e-test": "cd client && yarn e2e-test",
-    "unit-test": "npm -r test",
+    "unit-test": "yarn workspace prettier-plugin-jack run test; yarn workspace jack-compiler run test ",
     "watch": "tsc -b -w",
     "package":"vsce package --yarn -o dist/"
   }
