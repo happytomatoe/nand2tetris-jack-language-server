@@ -1,0 +1,1 @@
+- Change enums to namespaces and type

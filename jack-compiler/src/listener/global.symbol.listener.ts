@@ -3,7 +3,7 @@ import {
   SubroutineDeclarationContext,
   VarNameInDeclarationContext,
 } from "../generated/JackParser";
-import { DuplicatedClassError, DuplicatedSubroutineError } from "../error";
+import { asSpan, DuplicatedClassError, DuplicatedSubroutineError, JackCompilerError } from "../error";
 import {
   GenericSymbol,
   GlobalSymbolTable,
@@ -20,7 +20,7 @@ export class GlobalSymbolTableListener extends JackParserListener {
   // key can be class or <class>.<subroutine_name>
   public globalSymbolTable: GlobalSymbolTable = structuredClone(builtInSymbols);
   public className = "";
-  public errors: DuplicatedSubroutineError[] = [];
+  public errors: JackCompilerError[] = [];
   private subRoutineInfo: SubroutineInfo = {} as SubroutineInfo;
   private subroutineVarsCount = 0;
   private stopProcessingSubroutines = false;
@@ -36,10 +36,8 @@ export class GlobalSymbolTableListener extends JackParserListener {
       if (classNameCtx.start == null) {
         throw new Error("Start token should not be null");
       }
-      const e = new DuplicatedClassError(
-        classNameCtx.start.line,
-        classNameCtx.start.start,
-        classNameCtx.stop.stop + 1,
+      const e = DuplicatedClassError(
+        asSpan(classNameCtx.start, classNameCtx.stop),
         className
       );
       this.errors.push(e);
@@ -76,10 +74,8 @@ export class GlobalSymbolTableListener extends JackParserListener {
         throw new Error("Start token should not be null");
       }
       this.errors.push(
-        new DuplicatedSubroutineError(
-          nameCtx.IDENTIFIER().symbol.line,
-          nameCtx.start.start,
-          nameCtx.start.stop,
+         DuplicatedSubroutineError(
+          asSpan(nameCtx.start, nameCtx.stop),
           subroutineName
         )
       );

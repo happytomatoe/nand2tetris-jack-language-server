@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { DuplicatedClassError, DuplicatedSubroutineError } from "../src/error";
+import { DuplicatedClassError, DuplicatedSubroutineError, JackCompilerErrorType } from "../src/error";
 import { GlobalSymbolTableListener } from "../src/listener/global.symbol.listener";
 import {
   GenericSymbol,
@@ -37,7 +37,7 @@ describe("Jack binder", () => {
               return 1;
           }
       }`;
-    testBinder(input, DuplicatedSubroutineError);
+    testBinder(input, "DuplicatedSubroutineError");
   });
 
   test("duplicated class", () => {
@@ -46,13 +46,13 @@ describe("Jack binder", () => {
       }`;
     const globalSymbolTableListener = new GlobalSymbolTableListener();
     testBinder(input, undefined, globalSymbolTableListener);
-    testBinder(input, DuplicatedClassError, globalSymbolTableListener);
+    testBinder(input, "DuplicatedClassError", globalSymbolTableListener);
   });
   test("duplicated built in class", () => {
     const input = `
       class Math {
       }`;
-    testBinder(input, DuplicatedClassError);
+    testBinder(input, "DuplicatedClassError");
   });
   test("basic", () => {
     const expected: GlobalSymbolTable = {
@@ -156,7 +156,7 @@ describe("Jack binder", () => {
     expect(globalSymbolsListener.globalSymbolTable).toEqual(expected);
   });
 });
-function testBinder<T extends { name: string }>(
+function testBinder<T extends JackCompilerErrorType>(
   input: string,
   expectedError?: T,
   globalSymbolTableListener = new GlobalSymbolTableListener()
@@ -170,11 +170,11 @@ function testBinder<T extends { name: string }>(
     }
     try {
       expect(errors.length).toBe(1);
-      expect(errors[0]).toBeInstanceOf(expectedError);
-    } catch (e) {
+      expect(errors[0].type).toEqual(expectedError);
+    } catch (_error) {
       throw new Error(
-        `Expected error ${expectedError.name} but got '` +
-          errors.join(",") +
+        `Expected error ${expectedError} but got '` +
+          JSON.stringify(errors) +
           "'"
       );
     }

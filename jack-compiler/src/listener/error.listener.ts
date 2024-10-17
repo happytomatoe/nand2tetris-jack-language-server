@@ -11,7 +11,8 @@ import {
   Recognizer,
   Token,
 } from "antlr4ng";
-import { JackCompilerError, LexerOrParserError } from "../error";
+import { asSpan, JackCompilerError, LexerOrParserError } from "../error";
+import { assertExists } from "./common";
 
 export class CustomErrorListener implements ANTLRErrorListener {
   public errors: JackCompilerError[] = [];
@@ -25,19 +26,31 @@ export class CustomErrorListener implements ANTLRErrorListener {
   ): void {
     if (offendingSymbol != null || (e != null && e.offendingToken != null)) {
       const t = offendingSymbol ?? (e?.offendingToken as Token);
-      this.errors.push(new LexerOrParserError(line, t.start, t.stop + 1, msg));
-    } else if (e instanceof NoViableAltException) {
       this.errors.push(
-        new LexerOrParserError(
-          line,
-          e.startToken?.start ?? 0,
-          (e.startToken?.stop ?? 0) + 1,
+        LexerOrParserError(
+          { line: line, start: t.start, end: t.stop + 1 },
+          msg
+        )
+      );
+    } else if (e instanceof NoViableAltException) {
+      //theoretically we can't get this exception
+      this.errors.push(
+        LexerOrParserError(
+          asSpan(
+            assertExists(
+              e.startToken ?? e.offendingToken,
+              "Cant find start token for NoViableAltException"
+            )
+          ),
           msg
         )
       );
     } else if (e instanceof LexerNoViableAltException) {
       this.errors.push(
-        new LexerOrParserError(line, e.startIndex, e.startIndex + 1, msg)
+        LexerOrParserError(
+          { line: line, start: e.startIndex, end: e.startIndex + 1 },
+          msg
+        )
       );
     } else {
       console.error("Don't know how to handle this error");
