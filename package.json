@@ -1,9 +1,10 @@
 {
   "name": "nand2tetris-jack-lsp",
-  "description": "Language server for Jack language from Nand2tetris course",
+  "description": "Validation, code completion, syntax highlighting, snippets for Jack language from Nand2tetris course",
   "version": "0.1.0",
   "author": "Roman Lukash",
   "private": true,
+  "icon": "icons/banner.png",
   "contributes": {
     "languages": [
       {
@@ -87,6 +88,6 @@
     "e2e-test": "cd client && yarn e2e-test",
     "unit-test": "yarn workspace prettier-plugin-jack run test; yarn workspace jack-compiler run test ",
     "watch": "tsc -b -w",
-    "package":"vsce package --yarn -o dist/"
+    "package":"vsce package --yarn"
   }
 }
