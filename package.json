@@ -78,6 +78,7 @@
     "client"
   ],
   "scripts": {
+    "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
     "build": "yarn clean && tsc -b && yarn workspaces run  build",
     "ci": "yarn lint && yarn unit-test",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo dist",
