@@ -1,6 +1,5 @@
 import { Token } from "antlr4ng";
 
-
 export interface Span {
   start: number;
   end: number;
@@ -11,7 +10,7 @@ export interface Span {
 export const asSpan = (
   { line, start, stop: startEnd }: Token,
   stop?: Token | null
-): Span => ({ line, start, end: stop ? stop.stop : startEnd });
+): Span => ({ line, start, end: stop ? stop.stop + 1 : startEnd + 1 });
 
 export type JackCompilerErrorType =
   | "ConstructorMushReturnThisError"
@@ -50,10 +49,9 @@ export function makeJackCompilerError(
   return {
     type,
     span,
-    msg
+    msg,
   };
 }
-
 
 export const ConstructorMushReturnThisError = (span: Span) =>
   makeJackCompilerError(
@@ -139,7 +137,7 @@ export const IntLiteralIsOutOfRangeError = (
     `Integer constant(${value}) is out of range. Min value is ${min} and max value is ${max}`
   );
 
-export const LexerOrParserError = (span: Span, msg?: string) =>
+export const LexerOrParserError = (span: Span, msg: string) =>
   makeJackCompilerError("LexerOrParserError", span, msg);
 
 export const MethodCalledAsFunctionError = (span: Span, subroutineId: string) =>
@@ -199,7 +197,7 @@ export const UnknownSubroutineCallError = (
   );
 
 export const UnreachableCodeError = (span: Span) =>
-  makeJackCompilerError("UnreachableCodeError", span);
+  makeJackCompilerError("UnreachableCodeError", span, `Unreachable code`);
 
 export const VoidSubroutineReturnsValueError = (span: Span) =>
   makeJackCompilerError(
