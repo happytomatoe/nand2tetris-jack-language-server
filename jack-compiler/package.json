@@ -1,7 +1,7 @@
 {
   "name": "jack-compiler",
   "description": "Nand2tetris jack compiler",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Roman Lukash",
   "dependencies": {
     "antlr4ng": "^3.0.7"
@@ -12,6 +12,7 @@
     "@swc/core": "^1.7.26",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.13",
+    "@types/node": "^20.16.10",
     "antlr4ng-cli": "^2.0.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5"

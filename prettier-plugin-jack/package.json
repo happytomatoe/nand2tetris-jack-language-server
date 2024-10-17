@@ -1,11 +1,11 @@
 {
   "name": "prettier-plugin-jack",
   "description": "Prettier plugin for jack language",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Roman Lukash",
   "dependencies": {
     "antlr4ng": "^3.0.7",
-    "jack-compiler": "workspace:*"
+    "jack-compiler": "0.1.0"
   },
   "devDependencies": {
     "@types/chai": "^5.0.0",

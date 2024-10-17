@@ -11,3 +11,4 @@ jack-compiler/grammar/.antlr
 **/.antlr
 .idea
 **/*.iml
+build

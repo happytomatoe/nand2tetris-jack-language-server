@@ -1,9 +1,10 @@
 {
-  "name": "jack-lsp-client",
+  "name": "nand2tetris-jack-lsp-client",
   "description": "VSCode part of a language server",
   "version": "0.0.1",
   "author": "Roman Lukash",
   "dependencies": {
+    "nand2tetris-jack-server": "0.1.0",
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
@@ -21,6 +22,7 @@
   "publisher": "roman-lukash",
   "repository": "happytomatoe/nand2tetris-jack-lsp",
   "scripts": {
-    "e2e-test": "CODE_TESTS_PATH=\"$(pwd)/out/test\" CODE_TESTS_WORKSPACE=\"$(pwd)/testFixture\" node \"$(pwd)/out/test/runTest\""
+    "e2e-test": "CODE_TESTS_PATH=\"$(pwd)/out/test\" CODE_TESTS_WORKSPACE=\"$(pwd)/testFixture\" node \"$(pwd)/out/test/runTest\"",
+    "build":"tsc -b"
   }
 }

@@ -1,12 +1,13 @@
 {
-  "name": "lsp-sample-server",
-  "description": "Example implementation of a language server in node.",
-  "version": "1.0.0",
+  "name": "nand2tetris-jack-server",
+  "description": "Jack language server",
+  "version": "0.1.0",
+  "private": true,
   "author": "Microsoft Corporation",
   "dependencies": {
-    "jack-compiler": "workspace:*",
+    "jack-compiler": "0.1.0",
     "prettier": "^3.3.3",
-    "prettier-plugin-jack": "workspace:*",
+    "prettier-plugin-jack": "0.1.0",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11",
     "vscode-uri": "^3.0.8"
