@@ -17,13 +17,13 @@ export let platformEol: string;
  */
 export async function activate(docUri: vscode.Uri) {
   // The extensionId is `publisher.name` from package.json
-  const ext = vscode.extensions.getExtension("roman-lukash.nand2tetris-jack-lsp");
+  const ext = vscode.extensions.getExtension("roman-lukash.nand2tetris-jack-language-server");
   assert(ext != null);
   await ext.activate();
   try {
     doc = await vscode.workspace.openTextDocument(docUri);
     editor = await vscode.window.showTextDocument(doc);
-    await sleep(250); // Wait for server activation
+    await sleep(200); // Wait for server activation
   } catch (e) {
     console.error(e);
   }
