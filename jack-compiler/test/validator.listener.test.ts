@@ -13,7 +13,7 @@ import {
   testResourceDirs,
 } from "./test.helper";
 import { GlobalSymbolTableListener } from "../src/listener/global.symbol.listener";
-import { JackCompilerErrorType } from '../src/error';
+import { JackCompilerErrorType } from "../src/error";
 
 describe("Jack validator listener", () => {
   const jestConsole = console;

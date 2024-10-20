@@ -1,16 +1,31 @@
-import { Token } from "antlr4ng";
+import { ParserRuleContext, TerminalNode } from "antlr4ng";
+import { assertExists } from "./listener/common";
 
 export interface Span {
   start: number;
   end: number;
   line: number;
 }
+export const terminalNodeToSpan = (node: TerminalNode): Span => {
+  const s = node.getSymbol();
+  return {
+    line: s.line,
+    start: s.start,
+    end: s.stop + 1,
+  };
+};
 
-/** Utility to convert an antlr Token to a nand2tetris Span */
-export const asSpan = (
-  { line, start, stop: startEnd }: Token,
-  stop?: Token | null
-): Span => ({ line, start, end: stop ? stop.stop  : startEnd });
+export const ruleContextToSpan = (ctx: ParserRuleContext): Span => {
+  const start = assertExists(
+    ctx.start,
+    " Cannot find start token when creating an error"
+  );
+  return {
+    line: start.line,
+    start: start.start,
+    end: ctx.stop ? ctx.stop.stop + 1 : start.stop,
+  };
+};
 
 export type JackCompilerErrorType =
   | "ConstructorMushReturnThisError"
@@ -122,8 +137,7 @@ export const IncorrectParamsNumberInSubroutineCallError = (
   makeJackCompilerError(
     "IncorrectParamsNumberInSubroutineCallError",
     span,
-    `Subroutine ${subroutineName} (declared to accept ${expectedParamsCount} parameter(s)) called with  ${actualParamsCount} parameter(s)`
-  );
+    `Expected ${expectedParamsCount} arguments, but got ${actualParamsCount}`);
 
 export const IntLiteralIsOutOfRangeError = (
   span: Span,
@@ -206,9 +220,9 @@ export const VoidSubroutineReturnsValueError = (span: Span) =>
     "Cannot return a value from a void subroutine"
   );
 
-export const WrongLiteralTypeError = (span: Span, typeName: string) =>
+export const WrongLiteralTypeError = (span: Span, expectedTypeName: string, actualTypeName:string) =>
   makeJackCompilerError(
     "WrongLiteralTypeError",
     span,
-    `Value is expected to be of type ${typeName}`
+    `Cannot assign ${actualTypeName} type to ${expectedTypeName}`
   );

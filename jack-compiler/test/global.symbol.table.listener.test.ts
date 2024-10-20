@@ -1,13 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { DuplicatedClassError, DuplicatedSubroutineError, JackCompilerErrorType } from "../src/error";
+import { builtInSymbols } from "../src/builtins";
+import { JackCompilerErrorType } from "../src/error";
 import { GlobalSymbolTableListener } from "../src/listener/global.symbol.listener";
 import {
   GenericSymbol,
   GlobalSymbolTable,
   SubroutineType,
 } from "../src/symbol";
-import { builtInSymbols } from "../src/builtins";
 import {
   createSubroutineSymbol,
   getTestResourcePath,

@@ -11,7 +11,7 @@ import {
   Recognizer,
   Token,
 } from "antlr4ng";
-import { asSpan, JackCompilerError, LexerOrParserError } from "../error";
+import { ruleContextToSpan, JackCompilerError, LexerOrParserError } from "../error";
 import { assertExists } from "./common";
 
 export class CustomErrorListener implements ANTLRErrorListener {
@@ -36,7 +36,7 @@ export class CustomErrorListener implements ANTLRErrorListener {
       //theoretically we can't get this exception
       this.errors.push(
         LexerOrParserError(
-          asSpan(
+          ruleContextToSpan(
             assertExists(
               e.startToken ?? e.offendingToken,
               "Cant find start token for NoViableAltException"

@@ -3,7 +3,7 @@ import {
   SubroutineDeclarationContext,
   VarNameInDeclarationContext,
 } from "../generated/JackParser";
-import { asSpan, DuplicatedClassError, DuplicatedSubroutineError, JackCompilerError } from "../error";
+import { ruleContextToSpan, DuplicatedClassError, DuplicatedSubroutineError, JackCompilerError } from "../error";
 import {
   GenericSymbol,
   GlobalSymbolTable,
@@ -37,7 +37,7 @@ export class GlobalSymbolTableListener extends JackParserListener {
         throw new Error("Start token should not be null");
       }
       const e = DuplicatedClassError(
-        asSpan(classNameCtx.start, classNameCtx.stop),
+        ruleContextToSpan(classNameCtx),
         className
       );
       this.errors.push(e);
@@ -75,7 +75,7 @@ export class GlobalSymbolTableListener extends JackParserListener {
       }
       this.errors.push(
          DuplicatedSubroutineError(
-          asSpan(nameCtx.start, nameCtx.stop),
+          ruleContextToSpan(nameCtx),
           subroutineName
         )
       );
