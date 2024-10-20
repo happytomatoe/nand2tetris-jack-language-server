@@ -29,7 +29,7 @@ suite("Should get diagnostics", () => {
     await testDiagnostics(docUri, [
       {
         message: "Class B doesn't exist",
-        range: toRange(1, 7, 1, 7),
+        range: toRange(1, 7, 1, 8),
         severity: vscode.DiagnosticSeverity.Error,
       },
     ]);
