@@ -40,6 +40,7 @@ suite("Should get diagnostics", () => {
     const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
     assert.equal(actualDiagnostics.length, 0);
   });
+  //TODO: add smoke tests for other language server function - like go to definition and code completion
 });
 
 function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
