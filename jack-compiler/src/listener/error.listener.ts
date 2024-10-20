@@ -11,7 +11,10 @@ import {
   Recognizer,
   Token,
 } from "antlr4ng";
-import { ruleContextToSpan, JackCompilerError, LexerOrParserError } from "../error";
+import {
+  JackCompilerError,
+  LexerOrParserError
+} from "../error";
 import { assertExists } from "./common";
 
 export class CustomErrorListener implements ANTLRErrorListener {
@@ -27,21 +30,17 @@ export class CustomErrorListener implements ANTLRErrorListener {
     if (offendingSymbol != null || (e != null && e.offendingToken != null)) {
       const t = offendingSymbol ?? (e?.offendingToken as Token);
       this.errors.push(
-        LexerOrParserError(
-          { line: line, start: t.start, end: t.stop + 1 },
-          msg
-        )
+        LexerOrParserError({ line: line, start: t.start, end: t.stop + 1 }, msg)
       );
     } else if (e instanceof NoViableAltException) {
       //theoretically we can't get this exception
+      const token = assertExists(
+        e.startToken ?? e.offendingToken,
+        "Cant find start token for NoViableAltException"
+      );
       this.errors.push(
         LexerOrParserError(
-          ruleContextToSpan(
-            assertExists(
-              e.startToken ?? e.offendingToken,
-              "Cant find start token for NoViableAltException"
-            )
-          ),
+          { line: token.line, start: token.start, end: token.stop },
           msg
         )
       );
