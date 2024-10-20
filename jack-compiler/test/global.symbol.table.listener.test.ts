@@ -29,7 +29,7 @@ describe("Jack binder", () => {
 
   test("should fail on duplicated subroutine", () => {
     const input = `
-      class A {
+      class Main {
           function void f(){
               return;
           }
@@ -42,7 +42,7 @@ describe("Jack binder", () => {
 
   test("duplicated class", () => {
     const input = `
-      class A {
+      class Main {
       }`;
     const globalSymbolTableListener = new GlobalSymbolTableListener();
     testBinder(input, undefined, globalSymbolTableListener);
