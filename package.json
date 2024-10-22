@@ -80,7 +80,7 @@
     "e2e-test": "cd client && pnpm run e2e-test",
     "unit-test": "pnpm -r run test ",
     "watch": "tsc -b -w",
-    "package": "vsce package --no-dependencies",
+    "package": "pnpm run tsup:prod && vsce package --no-dependencies",
     "unpackage": "rm -rf package && mkdir package && npm run package ; cp *.vsix package && cd package && unzip *.vsix"
   }
 }
