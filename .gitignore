@@ -13,3 +13,5 @@ jack-compiler/grammar/.antlr
 **/*.iml
 build
 *.vsix
+package
+dist

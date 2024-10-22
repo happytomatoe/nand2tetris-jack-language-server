@@ -14,7 +14,7 @@ export function activate(context: ExtensionContext) {
   console.log("Jack language server is active!");
   // The server is implemented in node
   const serverModule = context.asAbsolutePath(
-    path.join("server", "out", "server.js"),
+    path.join("dist","server", "src", "server.js"),
   );
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used

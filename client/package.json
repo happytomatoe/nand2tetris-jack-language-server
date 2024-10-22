@@ -3,8 +3,8 @@
   "description": "VSCode part of a language server",
   "version": "0.0.1",
   "author": "Roman Lukash",
+  "type": "module",
   "dependencies": {
-    "nand2tetris-jack-server": "0.1.0",
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {

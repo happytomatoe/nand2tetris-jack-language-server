@@ -1,10 +1,9 @@
 {
   "name": "nand2tetris-jack-language-server",
-  "displayName":"Nand2tetris jack language server",
+  "displayName": "Nand2tetris jack language server",
   "description": "Validation, code completion, syntax highlighting, snippets for Jack language from Nand2tetris course",
   "version": "0.2.0",
   "author": "Roman Lukash",
-  "private": true,
   "icon": "icons/banner.png",
   "contributes": {
     "languages": [
@@ -38,6 +37,7 @@
     "@eslint/js": "^9.12.0",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.16.10",
+    "esbuild": "^0.24.0",
     "eslint": "^9.12.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "glob": "^11.0.0",
@@ -45,6 +45,7 @@
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "rimraf": "^6.0.1",
+    "tsup": "^8.3.0",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.8.1",
     "vsce": "^2.15.0"
@@ -62,17 +63,17 @@
     "nand2tetris jack language-server"
   ],
   "license": "MIT",
-  "main": "client/out/extension.js",
+  "main": "dist/client/src/extension.js",
   "publisher": "roman-lukash",
   "repository": {
     "type": "git",
     "url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
   },
   "workspaces": [
-    "server",
-    "jack-compiler",
-    "prettier-plugin-jack",
-    "client"
+    "./server",
+    "./jack-compiler",
+    "./prettier-plugin-jack",
+    "./client"
   ],
   "scripts": {
     "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
@@ -84,6 +85,7 @@
     "e2e-test": "cd client && yarn e2e-test",
     "unit-test": "yarn workspace prettier-plugin-jack run test; yarn workspace jack-compiler run test ",
     "watch": "tsc -b -w",
-    "package":"vsce package --yarn"
+    "package": "vsce package --no-yarn",
+    "unpackage": "rm -rf package && mkdir package && npm run package ; cp *.vsix package && cd package && unzip *.vsix"
   }
 }
