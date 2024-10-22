@@ -71,8 +71,7 @@
   },
   "scripts": {
     "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
-    "build": "pnpm run clean && tsc -b && pnpm -r run build",
-    "tsup":"tsup",
+    "build": "pnpm run clean && tsc -b && pnpm -r run build && tsup",
     "tsup:prod":"tsup --minify",
     "ci": "pnpm run lint && pnpm run unit-test",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo dist",
