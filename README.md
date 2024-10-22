@@ -7,7 +7,7 @@ Jack programming language support for Nand2tetris course
 ## Features
 - Validation
 - Basic formatting 
-- Subroutine code completion
+- code completion for subroutines
 - Go to subroutine/class definition
 
 ## Special thanks
