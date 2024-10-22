@@ -69,23 +69,19 @@
     "type": "git",
     "url": "https://github.com/happytomatoe/nand2tetris-jack-lsp"
   },
-  "workspaces": [
-    "./server",
-    "./jack-compiler",
-    "./prettier-plugin-jack",
-    "./client"
-  ],
   "scripts": {
     "lint": "eslint ./client/src ./server/src ./jack-compiler/src ./prettier-plugin-jack/src --fix",
-    "build": "yarn clean && tsc -b && yarn workspaces run build",
-    "ci": "yarn lint && yarn unit-test",
+    "build": "pnpm run clean && tsc -b && pnpm -r run build",
+    "tsup":"tsup",
+    "tsup:prod":"tsup --minify",
+    "ci": "pnpm run lint && pnpm run unit-test",
     "clean": "rimraf tsconfig.tsbuildinfo **/out **/tsconfig.tsbuildinfo dist",
     "format": "npx prettier --write .",
     "prepare": "husky",
-    "e2e-test": "cd client && yarn e2e-test",
-    "unit-test": "yarn workspace prettier-plugin-jack run test; yarn workspace jack-compiler run test ",
+    "e2e-test": "cd client && pnpm run e2e-test",
+    "unit-test": "pnpm -r run test ",
     "watch": "tsc -b -w",
-    "package": "vsce package --no-yarn",
+    "package": "vsce package --no-dependencies",
     "unpackage": "rm -rf package && mkdir package && npm run package ; cp *.vsix package && cd package && unzip *.vsix"
   }
 }

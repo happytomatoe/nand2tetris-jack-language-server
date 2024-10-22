@@ -5,9 +5,9 @@
   "private": true,
   "author": "Microsoft Corporation",
   "dependencies": {
-    "jack-compiler": "0.1.0",
+    "jack-compiler": "workspace:*",
     "prettier": "^3.3.3",
-    "prettier-plugin-jack": "0.1.0",
+    "prettier-plugin-jack": "workspace:*",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11",
     "vscode-uri": "^3.0.8"

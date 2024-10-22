@@ -5,7 +5,7 @@
   "author": "Roman Lukash",
   "dependencies": {
     "antlr4ng": "^3.0.7",
-    "jack-compiler": "0.1.0"
+    "jack-compiler": "workspace:*"
   },
   "devDependencies": {
     "@types/chai": "^5.0.0",

@@ -14,14 +14,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 20
-          cache: 'yarn'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: yarn
+        run: pnpm run
 
       - name: Compile
-        run: yarn  build
+        run: pnpm run  build
       - name: Run unit tests
-        run: yarn ci
+        run: pnpm run ci
       - name: Run tests
-        run: xvfb-run -a yarn e2e-test
+        run: xvfb-run -a pnpm run e2e-test
