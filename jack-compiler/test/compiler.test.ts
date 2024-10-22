@@ -636,6 +636,7 @@ describe("Jack compiler", () => {
                 return
             function A.a 0
                 call A.b 0
+                pop temp 0
                 push constant 0
                 return
         `;
@@ -674,6 +675,7 @@ describe("Jack compiler", () => {
                 pop local 0
                 push local 0
                 call A.b 1
+                pop temp 0
                 push constant 0
                 return
         `;

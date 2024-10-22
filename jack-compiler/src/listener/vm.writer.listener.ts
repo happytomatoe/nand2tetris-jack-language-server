@@ -3,6 +3,7 @@ import {
   ArrayAccessContext,
   ClassDeclarationContext,
   ConstantContext,
+  DoStatementContext,
   ExpressionContext,
   IfElseStatementContext,
   IfExpressionContext,
@@ -79,12 +80,12 @@ export class VMWriter extends JackParserListener {
     const symbol = this.globalSymbolTable[this.className + "." + name];
     if (symbol == undefined) {
       throw new Error(
-        `Can't find subroutine ${name} in class ${this.className} in symbol table`
+        `Can't find subroutine ${name} in class ${this.className} in symbol table`,
       );
     }
     if (symbol.subroutineInfo == null) {
       throw new Error(
-        `Subroutine info not found for subroutine ${name} in class ${this.className}`
+        `Subroutine info not found for subroutine ${name} in class ${this.className}`,
       );
     }
     this.result += `function ${this.className}.${name} ${symbol.subroutineInfo.localVarsCount}\n`;
@@ -159,34 +160,34 @@ export class VMWriter extends JackParserListener {
     if (ctx.varName() != null) {
       const varNameCtx = assertExists(
         ctx.varName(),
-        "Variable name cannot be null"
+        "Variable name cannot be null",
       );
       const varName = varNameCtx.IDENTIFIER().getText();
       const symbol = this.localSymbolTable.lookup(varName);
       if (symbol == undefined) {
         throw new Error(
-          `Cannot find variable ${varName} in arguments or local variables`
+          `Cannot find variable ${varName} in arguments or local variables`,
         );
       }
       this.pushSymbolOntoStack(symbol);
     } else if (ctx.binaryOperator() != null) {
       const binaryOp = assertExists(
         ctx.binaryOperator(),
-        "Binary operator cannot be null"
+        "Binary operator cannot be null",
       ).getText();
       if (binaryOperationToVmCmd[binaryOp] == undefined) {
         throw new Error(`Unknown binary operator ${binaryOp}`);
       }
-      this.result += "\t" + binaryOperationToVmCmd[binaryOp] + "\n";
+      this.result += "    " + binaryOperationToVmCmd[binaryOp] + "\n";
     } else if (ctx.unaryOperation() != null) {
       const unaryOp = assertExists(
         ctx.unaryOperation()?.unaryOperator(),
-        "Unary operation cannot be null"
+        "Unary operation cannot be null",
       ).getText();
       if (unaryOperationToVmCmd[unaryOp] == null) {
         throw new Error(`Unknown unary operator ${unaryOp}`);
       }
-      this.result += "\t" + unaryOperationToVmCmd[unaryOp] + "\n";
+      this.result += "    " + unaryOperationToVmCmd[unaryOp] + "\n";
     }
   };
   pushSymbolOntoStack(symbol: VariableSymbol) {
@@ -196,11 +197,11 @@ export class VMWriter extends JackParserListener {
     if (ctx.varName() != null) {
       const varNameCtx = assertExists(ctx.varName(), "Var name cannot be null");
       const symbol = this.localSymbolTable.lookup(
-        varNameCtx.IDENTIFIER().getText()
+        varNameCtx.IDENTIFIER().getText(),
       );
       if (symbol == undefined) {
         throw new Error(
-          `Can't find variable ${ctx.varName()?.IDENTIFIER().getText()} in local symbol table`
+          `Can't find variable ${ctx.varName()?.IDENTIFIER().getText()} in local symbol table`,
         );
       }
       this.result += `    pop ${scopeTypeToString(symbol.scope)} ${symbol.index}\n`;
@@ -223,7 +224,7 @@ export class VMWriter extends JackParserListener {
       parent.endLabel = this.createLabel();
       this.result += `    goto ${parent.endLabel}\n`;
     }
-    this.result += `    label ${ctx.endLabel}\n`;
+    this.result += `label ${ctx.endLabel} \n`;
   };
   override exitIfExpression = (ctx: IfExpressionContext) => {
     const parent = ctx.parent as IfStatementContext;
@@ -231,14 +232,14 @@ export class VMWriter extends JackParserListener {
   };
   override exitIfElseStatement = (ctx: IfElseStatementContext) => {
     if (ctx.endLabel) {
-      this.result += `    label ${ctx.endLabel} \n`;
+      this.result += `label ${ctx.endLabel}\n`;
     }
   };
   //while
   override enterWhileStatement = (ctx: WhileStatementContext) => {
     ctx.startLabel = this.createLabel();
     ctx.endLabel = this.createLabel();
-    this.result += `    label ${ctx.startLabel} \n`;
+    this.result += `label ${ctx.startLabel}\n`;
   };
   override exitWhileExpression = (ctx: WhileExpressionContext) => {
     const parent = ctx.parent as WhileStatementContext;
@@ -247,14 +248,14 @@ export class VMWriter extends JackParserListener {
 
   override exitWhileStatement = (ctx: WhileStatementContext) => {
     this.result += `    goto ${ctx.startLabel}\n`;
-    this.result += `    label ${ctx.endLabel}\n`;
+    this.result += `label ${ctx.endLabel}\n`;
   };
 
   override enterSubroutineCall = (ctx: SubroutineCallContext) => {
     const { callType, symbol } = getCallType(
       ctx.subroutineId(),
       this.className,
-      this.localSymbolTable
+      this.localSymbolTable,
     );
     if (callType === CallType.VarMethod) {
       if (symbol == null)
@@ -270,7 +271,7 @@ export class VMWriter extends JackParserListener {
     const { callType, subroutineIdText } = getCallType(
       ctx.subroutineId(),
       this.className,
-      this.localSymbolTable
+      this.localSymbolTable,
     );
     switch (callType) {
       case CallType.ClassFunctionOrConstructor: {
@@ -288,6 +289,9 @@ export class VMWriter extends JackParserListener {
         throw new Error(`Unknown call type ${callType}`);
     }
   };
+  override exitDoStatement = (ctx: DoStatementContext) => {
+    this.result += `   pop temp 0\n`;
+  };
   //return
   override exitReturnStatement = (ctx: ReturnStatementContext) => {
     if (ctx.expression() == null) {
@@ -298,7 +302,7 @@ export class VMWriter extends JackParserListener {
   //Utils
   ifNotGoto(endLabel: string) {
     this.result += "    not\n";
-    this.result += `    if-goto ${endLabel} \n`;
+    this.result += `    if-goto ${endLabel}\n`;
   }
   getLabel(ind: number) {
     return `${this.className}_${ind} `;

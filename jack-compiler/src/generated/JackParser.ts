@@ -2,14 +2,10 @@
 // Generated from JackParser.g4 by ANTLR 4.13.1
 
 import * as antlr from "antlr4ng";
-import { Token } from "antlr4ng";
 
 import { JackParserListener } from "./JackParserListener.js";
 import { JackParserVisitor } from "./JackParserVisitor.js";
 
-// for running tests with parameters, TODO: discuss strategy for typed parameters in CI
-
-type int = number;
 
 import { SubroutineScope, LocalSymbolTable } from "../symbol";
 

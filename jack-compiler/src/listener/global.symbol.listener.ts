@@ -25,7 +25,7 @@ export class GlobalSymbolTableListener extends JackParserListener {
   private subroutineVarsCount = 0;
   private stopProcessingSubroutines = false;
   private subroutineId = "";
-  public filename: string = "";
+  public filename = "";
   override enterClassDeclaration = (ctx: ClassDeclarationContext) => {
     const classNameCtx = ctx.className();
     const id = classNameCtx.IDENTIFIER();
