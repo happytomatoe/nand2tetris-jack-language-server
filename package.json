@@ -2,7 +2,7 @@
   "name": "nand2tetris-jack-language-server",
   "displayName":"Nand2tetris jack language server",
   "description": "Validation, code completion, syntax highlighting, snippets for Jack language from Nand2tetris course",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Roman Lukash",
   "private": true,
   "icon": "icons/banner.png",
