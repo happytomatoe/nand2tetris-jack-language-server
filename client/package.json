@@ -3,7 +3,6 @@
   "description": "VSCode part of a language server",
   "version": "0.0.1",
   "author": "Roman Lukash",
-  "type": "module",
   "dependencies": {
     "vscode-languageclient": "^9.0.1"
   },
