@@ -1,6 +1,6 @@
 # Nand2tetris jack language server
 
-Jack programming language support for Nand2tetris course
+Jack programming language support for [Nand2tetris course](https://www.coursera.org/learn/build-a-computer)
 
 ![Screenshot from 2024-10-16 21-29-36.png](docs/Screenshot%20from%202024-10-16%2021-29-36.png)
 
